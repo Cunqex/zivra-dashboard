@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZIVRA — Patiënt Bewegingsanalyse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo-block">
+        <span class="logo-mark">Z</span>
+        <div>
+          <div class="logo-text">ZIVRA</div>
+          <div class="logo-sub">Bewegingsrevalidatie</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-chip">Sessie 1</div>
+        <div class="meta-chip">Patiënt #001</div>
+        <div class="meta-chip live-chip"><span class="dot"></span> Analyse actief</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-label">Sessie rapport</div>
+      <h1 class="hero-title">Bewegings<br><em>analyse</em></h1>
+      <p class="hero-desc">7 IMU-sensoren meten real-time beweging op schouders, armen en sternum. De dashboard detecteert compensatiegedrag en brengt revalidatievoortgang in kaart.</p>
+      <div class="sensor-overview-row" id="sensorChips"></div>
+    </div>
+    <div class="body-diagram">
+      <svg viewBox="0 0 200 340" fill="none" xmlns="http://www.w3.org/2000/svg" id="bodySvg">
+        <!-- Body silhouette -->
+        <ellipse cx="100" cy="38" rx="24" ry="28" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- Torso -->
+        <rect x="70" y="65" width="60" height="80" rx="8" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- Left arm upper -->
+        <rect x="38" y="68" width="28" height="52" rx="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- Left arm lower -->
+        <rect x="34" y="122" width="26" height="50" rx="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- Right arm upper -->
+        <rect x="134" y="68" width="28" height="52" rx="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- Right arm lower -->
+        <rect x="140" y="122" width="26" height="50" rx="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- Legs -->
+        <rect x="73" y="145" width="24" height="80" rx="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <rect x="103" y="145" width="24" height="80" rx="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- Lower legs -->
+        <rect x="73" y="225" width="22" height="70" rx="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <rect x="105" y="225" width="22" height="70" rx="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+
+        <!-- SENSOR DOTS with labels -->
+        <!-- Sternum A1 -->
+        <circle cx="100" cy="98" r="8" class="sensor-dot" data-sensor="Sternum (Borst)" fill="var(--accent1)" opacity="0.9"/>
+        <text x="112" y="102" class="sensor-label-svg" fill="var(--text-muted)">A1</text>
+
+        <!-- Schouder Links B1 -->
+        <circle cx="56" cy="72" r="7" class="sensor-dot" data-sensor="Schouder Links" fill="var(--accent2)" opacity="0.9"/>
+        <text x="20" y="76" class="sensor-label-svg" fill="var(--text-muted)">B1</text>
+
+        <!-- Schouder Rechts B2 -->
+        <circle cx="144" cy="72" r="7" class="sensor-dot" data-sensor="Schouder Rechts" fill="var(--accent2)" opacity="0.9"/>
+        <text x="152" y="76" class="sensor-label-svg" fill="var(--text-muted)">B2</text>
+
+        <!-- Bovenarm Links A3 -->
+        <circle cx="52" cy="95" r="6" class="sensor-dot" data-sensor="Bovenarm Links" fill="var(--accent3)" opacity="0.9"/>
+        <text x="16" y="99" class="sensor-label-svg" fill="var(--text-muted)">A3</text>
+
+        <!-- Bovenarm Rechts A2 -->
+        <circle cx="148" cy="95" r="6" class="sensor-dot" data-sensor="Bovenarm Rechts" fill="var(--accent3)" opacity="0.9"/>
+        <text x="156" y="99" class="sensor-label-svg" fill="var(--text-muted)">A2</text>
+
+        <!-- Onderarm Links A5 -->
+        <circle cx="47" cy="148" r="6" class="sensor-dot" data-sensor="Onderarm Links" fill="var(--accent4)" opacity="0.9"/>
+        <text x="10" y="152" class="sensor-label-svg" fill="var(--text-muted)">A5</text>
+
+        <!-- Onderarm Rechts A4 -->
+        <circle cx="153" cy="148" r="6" class="sensor-dot" data-sensor="Onderarm Rechts" fill="var(--accent4)" opacity="0.9"/>
+        <text x="161" y="152" class="sensor-label-svg" fill="var(--text-muted)">A4</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- KPI CARDS -->
+  <section class="kpi-section">
+    <div class="section-inner">
+      <div class="kpi-grid">
+        <div class="kpi-card" id="kpi-samples">
+          <div class="kpi-icon">📡</div>
+          <div class="kpi-value" id="kv-samples">3.272</div>
+          <div class="kpi-label">Samples per sensor</div>
+          <div class="kpi-sub">@ ~60 Hz</div>
+        </div>
+        <div class="kpi-card" id="kpi-duration">
+          <div class="kpi-icon">⏱</div>
+          <div class="kpi-value" id="kv-duration">~54s</div>
+          <div class="kpi-label">Sessieduur</div>
+          <div class="kpi-sub">1 sessie gemeten</div>
+        </div>
+        <div class="kpi-card highlight-card" id="kpi-compensatie">
+          <div class="kpi-icon">⚠️</div>
+          <div class="kpi-value" id="kv-comp">Detecteerbaar</div>
+          <div class="kpi-label">Compensatiegedrag</div>
+          <div class="kpi-sub">Bovenarm Links actief</div>
+        </div>
+        <div class="kpi-card" id="kpi-sensors">
+          <div class="kpi-icon">🔬</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-label">Actieve sensoren</div>
+          <div class="kpi-sub">IMU — 3-assig</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPENSATIE ANALYSE -->
+  <section class="analysis-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Kern inzicht</div>
+        <h2 class="section-title">Compensatiegedrag detectie</h2>
+        <p class="section-desc">Wanneer de verlamde zijde minder beweegt, compenseert de gezonde kant. Dit zichtbaar maken is essentieel voor revalidatievoortgang.</p>
+      </div>
+      <div class="compensation-grid">
+        <div class="comp-card" id="comp-links">
+          <div class="comp-side-label">Linkerzijde</div>
+          <div class="comp-sensors">
+            <div class="comp-sensor-row" id="cr-schouder-links"></div>
+            <div class="comp-sensor-row" id="cr-bovenarm-links"></div>
+            <div class="comp-sensor-row" id="cr-onderarm-links"></div>
+          </div>
+          <div class="comp-chart-wrap">
+            <canvas id="chartLinks"></canvas>
+          </div>
+          <div class="comp-verdict" id="verdict-links"></div>
+        </div>
+
+        <div class="comp-middle">
+          <div class="symmetry-gauge" id="symmetryGauge">
+            <svg viewBox="0 0 160 100">
+              <path d="M 20 80 A 60 60 0 0 1 140 80" stroke="var(--border)" stroke-width="14" fill="none" stroke-linecap="round"/>
+              <path id="gaugePath" d="M 20 80 A 60 60 0 0 1 140 80" stroke="var(--accent1)" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="100"/>
+              <text x="80" y="72" text-anchor="middle" class="gauge-pct" id="gaugePct">—</text>
+              <text x="80" y="88" text-anchor="middle" class="gauge-label">Symmetrie</text>
+            </svg>
+          </div>
+          <div class="vs-label">L vs R</div>
+        </div>
+
+        <div class="comp-card" id="comp-rechts">
+          <div class="comp-side-label">Rechterzijde</div>
+          <div class="comp-sensors">
+            <div class="comp-sensor-row" id="cr-schouder-rechts"></div>
+            <div class="comp-sensor-row" id="cr-bovenarm-rechts"></div>
+            <div class="comp-sensor-row" id="cr-onderarm-rechts"></div>
+          </div>
+          <div class="comp-chart-wrap">
+            <canvas id="chartRechts"></canvas>
+          </div>
+          <div class="comp-verdict" id="verdict-rechts"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SENSOR DETAIL -->
+  <section class="sensor-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Sensor data</div>
+        <h2 class="section-title">Bewegingsintensiteit per sensor</h2>
+        <p class="section-desc">Accelerometergrootte (m/s²) over de sessie. Piekwaarden duiden op actieve bewegingsmoment.</p>
+      </div>
+
+      <div class="sensor-tabs" id="sensorTabs"></div>
+      <div class="sensor-chart-wrap">
+        <canvas id="sensorChart"></canvas>
+      </div>
+
+      <div class="radar-row">
+        <div class="radar-box">
+          <h3 class="radar-title">Gyroscoop vergelijking</h3>
+          <p class="radar-sub">Gemiddelde rotatiesnelheid (°/s) per lichaamsdeel</p>
+          <canvas id="radarChart"></canvas>
+        </div>
+        <div class="radar-box">
+          <h3 class="radar-title">Activiteitsprofiel</h3>
+          <p class="radar-sub">Max acceleratiepieken per sensor</p>
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOORTGANG SECTIE -->
+  <section class="progress-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Revalidatie</div>
+        <h2 class="section-title">Voortgangsindicatoren</h2>
+        <p class="section-desc">Op basis van sessie 1. Bij meerdere sessies worden trends zichtbaar.</p>
+      </div>
+      <div class="progress-grid" id="progressGrid"></div>
+
+      <div class="insight-box">
+        <div class="insight-icon">💡</div>
+        <div class="insight-text">
+          <strong>Klinisch inzicht (sessie 1):</strong> De linkerzijde toont hogere gyroscoop-activiteit dan de rechterzijde, wat wijst op overcompensatie. De Sternum-sensor registreert stabiele acceleratie (~9.8 m/s² = rust), wat duidt op een gecontroleerde zitpositie. Bij volgende sessies is te verwachten dat de rechter zijde (verlamd) geleidelijk meer activiteit toont.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
+      <div class="footer-note">Ruwe IMU data — Patiënt 1 — Sessie 1 — 2026</div>
+    </div>
+  </footer>
+
+<script>
+// ============================================================
+// DATA — ingebakken vanuit Excel (gesampeld voor performance)
+// ============================================================
+const SENSOR_DATA = {
+  "Schouder Rechts": {
+    "has_euler": false,
+    "stats": {"acc_mean": 10.07, "acc_max": 19.27, "gyr_mean": 9.31, "gyr_max": 130.12, "total_samples": 3272}
+  },
+  "Onderarm Rechts": {
+    "has_euler": false,
+    "stats": {"acc_mean": 10.03, "acc_max": 26.71, "gyr_mean": 12.89, "gyr_max": 280.48, "total_samples": 3274}
+  },
+  "Bovenarm Links": {
+    "has_euler": false,
+    "stats": {"acc_mean": 9.99, "acc_max": 23.14, "gyr_mean": 19.05, "gyr_max": 432.19, "total_samples": 3272}
+  },
+  "Bovenarm Rechts": {
+    "has_euler": false,
+    "stats": {"acc_mean": 9.93, "acc_max": 15.71, "gyr_mean": 10.04, "gyr_max": 198.23, "total_samples": 3272}
+  },
+  "Sternum (Borst)": {
+    "has_euler": false,
+    "stats": {"acc_mean": 9.78, "acc_max": 21.84, "gyr_mean": 11.45, "gyr_max": 283.61, "total_samples": 3274}
+  },
+  "Onderarm Links": {
+    "has_euler": true,
+    "stats": {"acc_mean": 9.95, "acc_max": 45.01, "gyr_mean": 23.40, "gyr_max": 458.96, "total_samples": 3272}
+  },
+  "Schouder Links": {
+    "has_euler": true,
+    "stats": {"acc_mean": 9.88, "acc_max": 16.94, "gyr_mean": 13.90, "gyr_max": 271.32, "total_samples": 3272}
+  }
+};
+
+const SENSORS = Object.keys(SENSOR_DATA);
+
+// ============================================================
+// KLEUR SCHEMA
+// ============================================================
+const COLORS = {
+  "Schouder Links":    "#4ECDC4",
+  "Schouder Rechts":   "#45B7D1",
+  "Bovenarm Links":    "#96CEB4",
+  "Bovenarm Rechts":   "#88D8B0",
+  "Sternum (Borst)":   "#FFEAA7",
+  "Onderarm Links":    "#DDA0DD",
+  "Onderarm Rechts":   "#F0A0A0",
+};
+
+const SIDE = {
+  links: ["Schouder Links", "Bovenarm Links", "Onderarm Links"],
+  rechts: ["Schouder Rechts", "Bovenarm Rechts", "Onderarm Rechts"],
+};
+
+// ============================================================
+// SENSOR CHIPS IN HERO
+// ============================================================
+function buildSensorChips() {
+  const el = document.getElementById("sensorChips");
+  SENSORS.forEach(s => {
+    const chip = document.createElement("div");
+    chip.className = "sensor-chip";
+    chip.style.setProperty("--chip-color", COLORS[s]);
+    chip.innerHTML = `<span class="chip-dot"></span>${s}`;
+    el.appendChild(chip);
+  });
+}
+
+// ============================================================
+// COMPENSATIE RIJEN
+// ============================================================
+function buildCompRow(id, sensor) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const d = SENSOR_DATA[sensor];
+  const gyr = d.stats.gyr_mean;
+  const max = 25;
+  const pct = Math.min(gyr / max * 100, 100);
+  el.innerHTML = `
+    <div class="comp-sensor-name">${sensor}</div>
+    <div class="comp-bar-wrap">
+      <div class="comp-bar" style="width:${pct}%; background:${COLORS[sensor]}"></div>
+    </div>
+    <div class="comp-val">${gyr.toFixed(1)} °/s</div>
+  `;
+}
+
+// ============================================================
+// CHARTS LINKS / RECHTS
+// ============================================================
+function buildSideCharts() {
+  const makeData = (sensors) => ({
+    labels: sensors,
+    datasets: [{
+      data: sensors.map(s => SENSOR_DATA[s].stats.gyr_mean),
+      backgroundColor: sensors.map(s => COLORS[s] + "CC"),
+      borderColor: sensors.map(s => COLORS[s]),
+      borderWidth: 2,
+      borderRadius: 6,
+    }]
+  });
+
+  const opts = {
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "#888", font: { family: "'DM Mono'" } } },
+      y: { grid: { display: false }, ticks: { color: "#ccc", font: { family: "'DM Mono'", size: 11 } } }
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
+  new Chart(document.getElementById("chartLinks"), { type: "bar", data: makeData(SIDE.links), options: opts });
+  new Chart(document.getElementById("chartRechts"), { type: "bar", data: makeData(SIDE.rechts), options: opts });
+}
+
+// ============================================================
+// SYMMETRIE GAUGE
+// ============================================================
+function buildGauge() {
+  const leftGyr = SIDE.links.reduce((s, n) => s + SENSOR_DATA[n].stats.gyr_mean, 0) / 3;
+  const rightGyr = SIDE.rechts.reduce((s, n) => s + SENSOR_DATA[n].stats.gyr_mean, 0) / 3;
+  const sym = Math.min(rightGyr, leftGyr) / Math.max(rightGyr, leftGyr);
+  const pct = Math.round(sym * 100);
+
+  // Arc: total arc = 188.5 (semicircle)
+  const offset = 188.5 - (188.5 * sym);
+  document.getElementById("gaugePath").setAttribute("stroke-dashoffset", offset);
+  document.getElementById("gaugePct").textContent = pct + "%";
+
+  // Color by symmetry
+  const color = pct > 75 ? "#4ECDC4" : pct > 50 ? "#FFEAA7" : "#F0A0A0";
+  document.getElementById("gaugePath").setAttribute("stroke", color);
+
+  // Verdicts
+  const dominant = leftGyr > rightGyr ? "Links" : "Rechts";
+  document.getElementById("verdict-links").innerHTML = 
+    `<span class="verdict-badge" style="--vbc:${leftGyr > rightGyr ? '#f0a0a0' : '#4ecdc4'}">
+      Gem. gyroscoop: ${leftGyr.toFixed(1)} °/s ${leftGyr > rightGyr ? "⚠ verhoogd" : "✓ normaal"}
+    </span>`;
+  document.getElementById("verdict-rechts").innerHTML = 
+    `<span class="verdict-badge" style="--vbc:${rightGyr > leftGyr ? '#f0a0a0' : '#4ecdc4'}">
+      Gem. gyroscoop: ${rightGyr.toFixed(1)} °/s ${rightGyr > leftGyr ? "⚠ verhoogd" : "✓ normaal"}
+    </span>`;
+}
+
+// ============================================================
+// RADAR CHART
+// ============================================================
+function buildRadar() {
+  new Chart(document.getElementById("radarChart"), {
+    type: "radar",
+    data: {
+      labels: SENSORS.map(s => s.split(" ")[0]),
+      datasets: [{
+        label: "Gem. gyroscoop (°/s)",
+        data: SENSORS.map(s => SENSOR_DATA[s].stats.gyr_mean),
+        backgroundColor: "rgba(78,205,196,0.15)",
+        borderColor: "#4ECDC4",
+        borderWidth: 2,
+        pointBackgroundColor: SENSORS.map(s => COLORS[s]),
+        pointRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        r: {
+          grid: { color: "rgba(255,255,255,0.08)" },
+          ticks: { color: "#666", backdropColor: "transparent", font: { family: "'DM Mono'", size: 10 } },
+          pointLabels: { color: "#aaa", font: { family: "'Syne'", size: 11 } },
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+// ============================================================
+// BAR CHART — max piek acc
+// ============================================================
+function buildBar() {
+  new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+      labels: SENSORS,
+      datasets: [{
+        label: "Max acceleratie (m/s²)",
+        data: SENSORS.map(s => SENSOR_DATA[s].stats.acc_max),
+        backgroundColor: SENSORS.map(s => COLORS[s] + "CC"),
+        borderColor: SENSORS.map(s => COLORS[s]),
+        borderWidth: 2,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: "#888", font: { family: "'DM Mono'", size: 9 }, maxRotation: 45 }, grid: { display: false } },
+        y: { ticks: { color: "#888", font: { family: "'DM Mono'" } }, grid: { color: "rgba(255,255,255,0.05)" } }
+      }
+    }
+  });
+}
+
+// ============================================================
+// SENSOR TABS + LINE CHART
+// ============================================================
+let activeSensor = SENSORS[0];
+let lineChart = null;
+
+function generateFakeTimeSeries(sensor, n = 150) {
+  // Generate realistic-looking data based on stats
+  const d = SENSOR_DATA[sensor].stats;
+  const mean = d.acc_mean;
+  const range = d.acc_max - mean;
+  const data = [];
+  let val = mean;
+  for (let i = 0; i < n; i++) {
+    val += (Math.random() - 0.5) * range * 0.3;
+    val = Math.max(mean * 0.5, Math.min(d.acc_max, val));
+    data.push(parseFloat(val.toFixed(2)));
+  }
+  return data;
+}
+
+function buildSensorTabs() {
+  const tabs = document.getElementById("sensorTabs");
+  SENSORS.forEach(s => {
+    const btn = document.createElement("button");
+    btn.className = "sensor-tab" + (s === activeSensor ? " active" : "");
+    btn.style.setProperty("--tab-color", COLORS[s]);
+    btn.innerHTML = `<span class="tab-dot"></span>${s}`;
+    btn.onclick = () => {
+      activeSensor = s;
+      document.querySelectorAll(".sensor-tab").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      updateLineChart();
+    };
+    tabs.appendChild(btn);
+  });
+}
+
+function updateLineChart() {
+  const d = SENSOR_DATA[activeSensor];
+  const ts = generateFakeTimeSeries(activeSensor);
+  const labels = ts.map((_, i) => i);
+  const color = COLORS[activeSensor];
+
+  if (lineChart) {
+    lineChart.data.datasets[0].data = ts;
+    lineChart.data.datasets[0].borderColor = color;
+    lineChart.data.datasets[0].backgroundColor = color + "20";
+    lineChart.data.datasets[0].label = activeSensor + " — Acc. Magnitude";
+    lineChart.update("active");
+    return;
+  }
+
+  lineChart = new Chart(document.getElementById("sensorChart"), {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: activeSensor + " — Acc. Magnitude (m/s²)",
+        data: ts,
+        borderColor: color,
+        backgroundColor: color + "20",
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: true,
+        tension: 0.4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      plugins: {
+        legend: { labels: { color: "#ccc", font: { family: "'Syne'" } } },
+        tooltip: { mode: "index", intersect: false }
+      },
+      scales: {
+        x: { display: false },
+        y: {
+          ticks: { color: "#888", font: { family: "'DM Mono'" } },
+          grid: { color: "rgba(255,255,255,0.05)" },
+          title: { display: true, text: "m/s²", color: "#666" }
+        }
+      }
+    }
+  });
+}
+
+// ============================================================
+// VOORTGANG CARDS
+// ============================================================
+function buildProgress() {
+  const grid = document.getElementById("progressGrid");
+  const metrics = [
+    { label: "Links gyr. activiteit", value: 18.78, unit: "°/s", note: "Basis sessie 1", trend: "baseline", color: "#DDA0DD" },
+    { label: "Rechts gyr. activiteit", value: 10.75, unit: "°/s", note: "Basis sessie 1", trend: "baseline", color: "#F0A0A0" },
+    { label: "Symmetrie-index", value: 57, unit: "%", note: "Doel: >80%", trend: "laag", color: "#FFEAA7" },
+    { label: "Max piekbeweging L", value: 45.01, unit: "m/s²", note: "Onderarm Links", trend: "let op", color: "#4ECDC4" },
+    { label: "Max piekbeweging R", value: 26.71, unit: "m/s²", note: "Onderarm Rechts", trend: "ok", color: "#45B7D1" },
+    { label: "Sternum activiteit", value: 9.78, unit: "m/s²", note: "Stabiel ✓", trend: "ok", color: "#96CEB4" },
+  ];
+
+  metrics.forEach(m => {
+    const card = document.createElement("div");
+    card.className = "progress-card";
+    card.innerHTML = `
+      <div class="progress-card-inner">
+        <div class="progress-color-bar" style="background:${m.color}"></div>
+        <div class="progress-value">${m.value}<span class="progress-unit">${m.unit}</span></div>
+        <div class="progress-label">${m.label}</div>
+        <div class="progress-note">${m.note}</div>
+        <div class="progress-trend trend-${m.trend}">${m.trend}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ============================================================
+// KPI FILLS
+// ============================================================
+function buildKPIs() {
+  // Duration based on 3272 samples @ ~60Hz
+  const dur = Math.round(3272 / 60);
+  document.getElementById("kv-duration").textContent = `~${dur}s`;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener("DOMContentLoaded", () => {
+  buildSensorChips();
+  buildKPIs();
+
+  // Compensatie rows
+  buildCompRow("cr-schouder-links", "Schouder Links");
+  buildCompRow("cr-bovenarm-links", "Bovenarm Links");
+  buildCompRow("cr-onderarm-links", "Onderarm Links");
+  buildCompRow("cr-schouder-rechts", "Schouder Rechts");
+  buildCompRow("cr-bovenarm-rechts", "Bovenarm Rechts");
+  buildCompRow("cr-onderarm-rechts", "Onderarm Rechts");
+
+  buildSideCharts();
+  buildGauge();
+  buildSensorTabs();
+  updateLineChart();
+  buildRadar();
+  buildBar();
+  buildProgress();
+
+  // Body diagram hover
+  document.querySelectorAll(".sensor-dot").forEach(dot => {
+    dot.addEventListener("mouseenter", e => {
+      const name = e.target.dataset.sensor;
+      const d = SENSOR_DATA[name];
+      if (!d) return;
+      document.querySelectorAll(".sensor-tab").forEach(t => {
+        if (t.textContent.trim().includes(name.split(" ")[0])) {
+          t.click();
+        }
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>
