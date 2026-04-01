@@ -1,34 +1,27 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ZIVRA — Sessies</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="data.js"></script>
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo-block">
-      <span class="logo-mark">Z</span>
-      <div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div>
-    </div>
+    <a href="index.html" class="logo-block"><span class="logo-mark">Z</span><div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div></a>
     <nav class="main-nav">
-      <a href="index.html"     class="nav-link">Dashboard</a>
-      <a href="patient.html"   class="nav-link">Patiënt</a>
-      <a href="sessies.html"   class="nav-link active">Sessies</a>
-      <a href="voortgang.html" class="nav-link">Voortgang</a>
-      <a href="sensoren.html"  class="nav-link">Sensoren</a>
+      <a href="index.html" class="nav-link">Dashboard</a><a href="patient.html" class="nav-link">Patiënt</a>
+      <a href="sessies.html" class="nav-link active">Sessies</a><a href="voortgang.html" class="nav-link">Voortgang</a><a href="sensoren.html" class="nav-link">Sensoren</a>
     </nav>
-    <div class="header-meta">
-      <div class="meta-chip">Sessie 1</div>
-      <div class="meta-chip">Patiënt #001</div>
-      <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
+    <div class="patient-selector" id="patientSelector">
+      <div class="ps-trigger" id="psTrigger"><span class="ps-avatar" id="psAvatar">V</span><div class="ps-info"><div class="ps-name" id="psName">Varisha Doggen</div><div class="ps-id" id="psId">#329500</div></div><svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="ps-dropdown" id="psDropdown"><div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div><div class="ps-list" id="psList"></div></div>
     </div>
+    <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
   </div>
 </header>
 
@@ -36,123 +29,108 @@
   <div class="page-hero-inner">
     <div class="page-hero-label">Sessieoverzicht</div>
     <h1 class="page-hero-title">Alle sessies</h1>
-    <p class="page-hero-desc">Chronologisch overzicht van alle gemeten sessies. Sessie 1 is beschikbaar; sessies 2–10 worden toegevoegd na elke behandeling.</p>
+    <p class="page-hero-desc" id="pageDesc">Chronologisch overzicht van alle gemeten sessies.</p>
   </div>
 </div>
 
 <section>
   <div class="section-inner">
+    <div class="sessies-table-wrap"><table class="sessies-table" id="sessiesTable"></table></div>
 
-    <!-- Tabel -->
-    <div class="sessies-table-wrap">
-      <table class="sessies-table">
-        <thead>
-          <tr>
-            <th>Sessie</th>
-            <th>Datum</th>
-            <th>Duur</th>
-            <th>Samples</th>
-            <th>Symmetrie-index</th>
-            <th>Comp. gedrag L</th>
-            <th>Comp. gedrag R</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="row-active">
-            <td><strong>Sessie 1</strong></td>
-            <td>02-02-2026</td>
-            <td>~54s</td>
-            <td>3.272</td>
-            <td><span class="sym-badge sym-low">57%</span></td>
-            <td>18.8 °/s ⚠</td>
-            <td>10.8 °/s ✓</td>
-            <td style="color:var(--accent)">✓ Geanalyseerd</td>
-          </tr>
-          <tr><td>Sessie 2</td><td>09-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~61%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-          <tr><td>Sessie 3</td><td>12-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~66%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-          <tr><td>Sessie 4</td><td>16-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~70%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-          <tr><td>Sessie 5</td><td>19-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~73%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-          <tr><td>Sessie 6</td><td>23-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~76%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-          <tr><td>Sessie 7</td><td>26-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~79%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-          <tr><td>Sessie 8</td><td>02-03-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~82%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-          <tr><td>Sessie 9</td><td>05-03-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~84%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-          <tr><td>Sessie 10</td><td>09-03-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~86%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
-        </tbody>
-      </table>
+    <div class="section-header" style="margin-top:52px">
+      <div class="section-tag">Detail</div>
+      <h2 class="section-title">Welzijn per sessie</h2>
     </div>
-
-    <!-- Sessie 1 detail -->
-    <div class="section-header" style="margin-top:48px">
-      <div class="section-tag">Sessie 1 — detail</div>
-      <h2 class="section-title">Sensorwaardes sessie 1</h2>
-      <p class="section-desc">Gemiddelde en maximale waarden per sensor tijdens de eerste gemeten sessie.</p>
+    <div class="radar-row">
+      <div class="radar-box"><h3 class="radar-title">Pijn, Frustratie &amp; Energie</h3><p class="radar-sub">Score per sessie (1–10)</p><div style="height:220px"><canvas id="wellbeingChart"></canvas></div></div>
+      <div class="radar-box"><h3 class="radar-title">Symmetrie-index verloop</h3><p class="radar-sub">Progressie per sessie (%)</p><div style="height:220px"><canvas id="symChart"></canvas></div></div>
     </div>
-
-    <div class="sessies-table-wrap">
-      <table class="sessies-table">
-        <thead>
-          <tr>
-            <th>Sensor</th>
-            <th>Positie</th>
-            <th>Gem. acceleratie</th>
-            <th>Max acceleratie</th>
-            <th>Gem. gyroscoop</th>
-            <th>Max gyroscoop</th>
-            <th>Samples</th>
-          </tr>
-        </thead>
-        <tbody id="sensorTableBody"></tbody>
-      </table>
-    </div>
-
   </div>
 </section>
 
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
-    <div class="footer-links">
-      <a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a>
-      <a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a>
-    </div>
-    <div class="footer-note">IMU data — Patiënt #001 — Sessie 1 — 2026</div>
+    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a></div>
+    <div class="footer-note">IMU data — 2026</div>
   </div>
 </footer>
 
 <script>
-const COLORS = {
-  "Sternum (Borst)": "#4ECDC4", "Schouder Links": "#A29BFE", "Schouder Rechts": "#45B7D1",
-  "Bovenarm Links": "#FD79A8", "Bovenarm Rechts": "#FDCB6E", "Onderarm Links": "#6C5CE7", "Onderarm Rechts": "#00B894",
-};
-const SENSOR_DATA = {
-  "Sternum (Borst)":  { id:"A1", stats:{ acc_mean:9.78,  acc_max:21.84, gyr_mean:11.45, gyr_max:283.61, total_samples:3274 }},
-  "Schouder Links":   { id:"B1", stats:{ acc_mean:9.88,  acc_max:16.94, gyr_mean:13.90, gyr_max:271.32, total_samples:3272 }},
-  "Schouder Rechts":  { id:"B2", stats:{ acc_mean:10.07, acc_max:19.27, gyr_mean:9.31,  gyr_max:130.12, total_samples:3272 }},
-  "Bovenarm Links":   { id:"A3", stats:{ acc_mean:9.99,  acc_max:23.14, gyr_mean:19.05, gyr_max:432.19, total_samples:3272 }},
-  "Bovenarm Rechts":  { id:"A2", stats:{ acc_mean:9.93,  acc_max:15.71, gyr_mean:10.04, gyr_max:198.23, total_samples:3272 }},
-  "Onderarm Links":   { id:"A5", stats:{ acc_mean:9.95,  acc_max:45.01, gyr_mean:23.40, gyr_max:458.96, total_samples:3272 }},
-  "Onderarm Rechts":  { id:"A4", stats:{ acc_mean:10.03, acc_max:26.71, gyr_mean:12.89, gyr_max:280.48, total_samples:3274 }},
-};
+let currentNr = ALL_PATIENTS_META[0].nr;
+let charts = {};
 
-const tbody = document.getElementById("sensorTableBody");
-Object.entries(SENSOR_DATA).forEach(([name, data]) => {
-  const d = data.stats;
-  const isHigh = name.includes("Links") && d.gyr_mean > 15;
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td><span style="display:inline-flex;align-items:center;gap:8px">
-      <span style="width:10px;height:10px;border-radius:50%;background:${COLORS[name]};flex-shrink:0;display:inline-block"></span>
-      <strong>${name}</strong></span></td>
-    <td><span style="font-family:'DM Mono';font-size:12px;color:var(--text-muted)">${data.id}</span></td>
-    <td>${d.acc_mean.toFixed(2)} m/s²</td>
-    <td>${d.acc_max.toFixed(2)} m/s²</td>
-    <td style="color:${isHigh?"var(--danger)":"var(--text)"}">${d.gyr_mean.toFixed(2)} °/s ${isHigh?"⚠":""}</td>
-    <td>${d.gyr_max.toFixed(2)} °/s</td>
-    <td style="font-family:'DM Mono';font-size:12px">${d.total_samples.toLocaleString("nl-NL")}</td>
-  `;
-  tbody.appendChild(tr);
-});
+function buildPatientList() {
+  const list = document.getElementById("psList");
+  ALL_PATIENTS_META.forEach(p => {
+    const el = document.createElement("div"); el.className="ps-item"; el.dataset.nr=p.nr;
+    el.innerHTML=`<span class="ps-item-avatar">${p.naam[0]}</span><div class="ps-item-info"><div class="ps-item-name">${p.naam}</div><div class="ps-item-meta">#${p.nr} · ${p.kliniek}</div></div><span class="ps-item-caras">${p.caras}</span>`;
+    el.addEventListener("click",()=>{selectPatient(p.nr);closeDropdown();});
+    list.appendChild(el);
+  });
+}
+function openDropdown()  { document.getElementById("psDropdown").classList.add("open"); document.getElementById("psSearch").focus(); }
+function closeDropdown() { document.getElementById("psDropdown").classList.remove("open"); document.getElementById("psSearch").value=""; filterList(""); }
+document.getElementById("psTrigger").addEventListener("click",e=>{e.stopPropagation();document.getElementById("psDropdown").classList.contains("open")?closeDropdown():openDropdown();});
+document.addEventListener("click",e=>{if(!document.getElementById("patientSelector").contains(e.target))closeDropdown();});
+document.getElementById("psSearch").addEventListener("input",e=>filterList(e.target.value.toLowerCase()));
+function filterList(q){document.querySelectorAll(".ps-item").forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?"":"none");}
+
+function selectPatient(nr) {
+  currentNr = nr;
+  const p  = ALL_PATIENTS_META.find(x=>x.nr===nr);
+  const ss = ALL_SESSIONS[nr]||[];
+  document.getElementById("psAvatar").textContent = p.naam[0];
+  document.getElementById("psName").textContent   = p.naam;
+  document.getElementById("psId").textContent     = "#"+p.nr;
+  document.getElementById("pageDesc").textContent = `${p.naam} · ${ss.length} sessie${ss.length!==1?'s':''} geregistreerd`;
+  document.querySelectorAll(".ps-item").forEach(el=>el.classList.toggle("active",el.dataset.nr===nr));
+  buildTable(ss);
+  buildCharts(ss);
+}
+
+function buildTable(ss) {
+  const t = document.getElementById("sessiesTable");
+  t.innerHTML = `<thead><tr><th>Sessie</th><th>Sym. index</th><th>Pijnscore</th><th>Frustratiescore</th><th>Energie</th><th>Comp. (Holomoves)</th><th>Blokki</th><th>Ketel correct</th></tr></thead>`;
+  const tb = document.createElement("tbody");
+  ss.forEach(s => {
+    const sc = s.sym_index<60?"sym-low":s.sym_index<80?"sym-mid":"sym-high";
+    const pc = s.pijn>6?"sym-low":s.pijn>3?"sym-mid":"sym-high";
+    const tr = document.createElement("tr");
+    if (s.sessie === ss.length) tr.className = "row-active";
+    tr.innerHTML = `
+      <td><strong>S${s.sessie}</strong></td>
+      <td><span class="sym-badge ${sc}">${s.sym_index}%</span></td>
+      <td><span class="sym-badge ${pc}">${s.pijn}/10</span></td>
+      <td>${s.frustratie}/10</td>
+      <td style="color:${s.energie>=7?'var(--ok)':s.energie>=4?'var(--warn)':'var(--danger)'}">${s.energie}/10</td>
+      <td><span class="sym-badge ${s.compensatie==='Nee'?'sym-high':'sym-low'}">${s.compensatie}</span></td>
+      <td style="font-size:12px;color:var(--text-muted)">${s.blokki_status||'—'}</td>
+      <td>${s.ketel_correct??'—'}/${s.ketel_aangeboden??'—'}</td>`;
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+}
+
+function buildCharts(ss) {
+  const labels = ss.map(s=>`S${s.sessie}`);
+  const co = {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#aaa",font:{family:"'Syne'"},boxWidth:12}},tooltip:{mode:"index",intersect:false}},scales:{x:{ticks:{color:"#888",font:{family:"'DM Mono'"}},grid:{display:false}},y:{ticks:{color:"#888",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}}}};
+
+  if(charts.wb) charts.wb.destroy();
+  charts.wb = new Chart(document.getElementById("wellbeingChart"),{type:"line",data:{labels,datasets:[
+    {label:"Pijn",data:ss.map(s=>s.pijn),borderColor:"#ff7675",backgroundColor:"#ff767522",borderWidth:2,pointRadius:4,fill:false,tension:0.4},
+    {label:"Frustratie",data:ss.map(s=>s.frustratie),borderColor:"#FDCB6E",backgroundColor:"#FDCB6E22",borderWidth:2,pointRadius:4,fill:false,tension:0.4},
+    {label:"Energie",data:ss.map(s=>s.energie),borderColor:"#00B894",backgroundColor:"#00B89422",borderWidth:2,pointRadius:4,fill:false,tension:0.4},
+  ]},options:{...co,scales:{...co.scales,y:{min:0,max:10,...co.scales.y}}}});
+
+  if(charts.sym) charts.sym.destroy();
+  charts.sym = new Chart(document.getElementById("symChart"),{type:"line",data:{labels,datasets:[
+    {label:"Symmetrie-index",data:ss.map(s=>s.sym_index),borderColor:"#4ECDC4",backgroundColor:"#4ECDC433",borderWidth:3,pointRadius:5,fill:true,tension:0.4},
+    {label:"Doel (80%)",data:Array(labels.length).fill(80),borderColor:"#00B894",borderDash:[4,3],borderWidth:1.5,pointRadius:0},
+  ]},options:{...co,scales:{...co.scales,y:{min:30,max:100,ticks:{color:"#888",font:{family:"'DM Mono'"},callback:v=>v+"%"},grid:{color:"rgba(255,255,255,0.04)"}}}}});
+}
+
+document.addEventListener("DOMContentLoaded",()=>{buildPatientList();selectPatient(currentNr);});
 </script>
 </body>
 </html>

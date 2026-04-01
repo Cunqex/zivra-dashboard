@@ -1,34 +1,27 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ZIVRA — Voortgang</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="data.js"></script>
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo-block">
-      <span class="logo-mark">Z</span>
-      <div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div>
-    </div>
+    <a href="index.html" class="logo-block"><span class="logo-mark">Z</span><div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div></a>
     <nav class="main-nav">
-      <a href="index.html"     class="nav-link">Dashboard</a>
-      <a href="patient.html"   class="nav-link">Patiënt</a>
-      <a href="sessies.html"   class="nav-link">Sessies</a>
-      <a href="voortgang.html" class="nav-link active">Voortgang</a>
-      <a href="sensoren.html"  class="nav-link">Sensoren</a>
+      <a href="index.html" class="nav-link">Dashboard</a><a href="patient.html" class="nav-link">Patiënt</a>
+      <a href="sessies.html" class="nav-link">Sessies</a><a href="voortgang.html" class="nav-link active">Voortgang</a><a href="sensoren.html" class="nav-link">Sensoren</a>
     </nav>
-    <div class="header-meta">
-      <div class="meta-chip">Sessie 1</div>
-      <div class="meta-chip">Patiënt #001</div>
-      <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
+    <div class="patient-selector" id="patientSelector">
+      <div class="ps-trigger" id="psTrigger"><span class="ps-avatar" id="psAvatar">V</span><div class="ps-info"><div class="ps-name" id="psName">Varisha Doggen</div><div class="ps-id" id="psId">#329500</div></div><svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="ps-dropdown" id="psDropdown"><div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div><div class="ps-list" id="psList"></div></div>
     </div>
+    <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
   </div>
 </header>
 
@@ -36,160 +29,116 @@
   <div class="page-hero-inner">
     <div class="page-hero-label">Revalidatie</div>
     <h1 class="page-hero-title">Voortgang &amp; prognose</h1>
-    <p class="page-hero-desc">Gedetailleerde revalidatie-indicatoren en verwachte herstelcurve op basis van sessie 1.</p>
+    <p class="page-hero-desc" id="pageDesc">Gedetailleerde revalidatie-indicatoren per patiënt.</p>
   </div>
 </div>
 
 <section>
   <div class="section-inner">
-
-    <!-- Doelen / goal meters -->
     <div class="section-header">
       <div class="section-tag">Behandeldoelen</div>
       <h2 class="section-title">Voortgang naar doelwaarden</h2>
-      <p class="section-desc">Huidige meetwaarden vs. gestelde behandeldoelen. Gebaseerd op sessie 1.</p>
     </div>
+    <div class="timeline-block" style="margin-bottom:32px"><div class="goal-meter" id="goalMeter"></div></div>
 
-    <div class="timeline-block" style="margin-bottom:32px">
-      <div class="goal-meter" id="goalMeter"></div>
-    </div>
-
-    <!-- Charts rij 1 -->
     <div class="voortgang-row">
-      <div class="chart-card">
-        <div class="chart-card-title">Symmetrie-index — verloop</div>
-        <div class="chart-card-sub">Gemeten (S1) + verwachte herstelcurve</div>
-        <div class="chart-card-wrap"><canvas id="symChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-title">Gyroscoop-asymmetrie L vs R</div>
-        <div class="chart-card-sub">Gemiddelde rotatiesnelheid per sessie (°/s)</div>
-        <div class="chart-card-wrap"><canvas id="gyrChart"></canvas></div>
-      </div>
+      <div class="chart-card"><div class="chart-card-title">Symmetrie-index — verloop</div><div class="chart-card-sub">Gemeten per sessie + doelwaarde</div><div class="chart-card-wrap"><canvas id="symChart"></canvas></div></div>
+      <div class="chart-card"><div class="chart-card-title">Welzijn — pijn, frustratie, energie</div><div class="chart-card-sub">Scores per sessie (schaal 1–10)</div><div class="chart-card-wrap"><canvas id="wbChart"></canvas></div></div>
     </div>
-
-    <!-- Charts rij 2 -->
     <div class="voortgang-row">
-      <div class="chart-card">
-        <div class="chart-card-title">Compensatiegedrag — links/rechts ratio</div>
-        <div class="chart-card-sub">Hoe lager de ratio, hoe minder compensatie nodig</div>
-        <div class="chart-card-wrap"><canvas id="compChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-title">Maximale piekbeweging per zijde</div>
-        <div class="chart-card-sub">Max acceleratie (m/s²) — linkerzijde vs rechterzijde</div>
-        <div class="chart-card-wrap"><canvas id="peakChart"></canvas></div>
-      </div>
+      <div class="chart-card"><div class="chart-card-title">Holomoves — reiken score %</div><div class="chart-card-sub">Behaalde score als % van maximum</div><div class="chart-card-wrap"><canvas id="reikChart"></canvas></div></div>
+      <div class="chart-card"><div class="chart-card-title">Magische Ketel — treffscore</div><div class="chart-card-sub">Correct beantwoord per sessie</div><div class="chart-card-wrap"><canvas id="ketelChart"></canvas></div></div>
     </div>
 
-    <!-- Klinisch inzicht -->
-    <div class="insight-box">
-      <div class="insight-icon">📈</div>
-      <div class="insight-text">
-        <strong>Prognose op basis van sessie 1:</strong>
-        Bij consistente therapietrouw (2× per week) wordt verwacht dat de symmetrie-index na 5 weken de doelwaarde van 80% benadert.
-        De gyroscoop-asymmetrie (verschil L–R) zou moeten afnemen van 74% naar minder dan 20%.
-        Het compensatiegedrag in de onderarm links (max 45 m/s²) is de belangrijkste focuspunt voor de komende sessies.
-      </div>
-    </div>
+    <div class="insight-box" id="insightBox"></div>
   </div>
 </section>
 
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
-    <div class="footer-links">
-      <a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a>
-      <a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a>
-    </div>
-    <div class="footer-note">IMU data — Patiënt #001 — Sessie 1 — 2026</div>
+    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a></div>
+    <div class="footer-note">IMU data — 2026</div>
   </div>
 </footer>
 
 <script>
-const SESSIONS = ["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10"];
-const MEASURED = [57,null,null,null,null,null,null,null,null,null];
-const PROJECTED= [null,61,66,70,73,76,79,82,84,86];
-const TARGET   = Array(10).fill(80);
+let currentNr = ALL_PATIENTS_META[0].nr;
+let charts = {};
 
-const chartOpts = (yMin, yMax, yLabel) => ({
-  responsive:true, maintainAspectRatio:false,
-  plugins:{ legend:{labels:{color:"#aaa",font:{family:"'Syne'"},boxWidth:12}}, tooltip:{mode:"index",intersect:false} },
-  scales:{
-    x:{ticks:{color:"#888",font:{family:"'DM Mono'",size:11}},grid:{color:"rgba(255,255,255,0.04)"}},
-    y:{min:yMin,max:yMax,ticks:{color:"#888",font:{family:"'DM Mono'"},callback:v=>v+yLabel},grid:{color:"rgba(255,255,255,0.04)"}}
-  }
-});
+function buildPatientList() {
+  const list = document.getElementById("psList");
+  ALL_PATIENTS_META.forEach(p => {
+    const el=document.createElement("div");el.className="ps-item";el.dataset.nr=p.nr;
+    el.innerHTML=`<span class="ps-item-avatar">${p.naam[0]}</span><div class="ps-item-info"><div class="ps-item-name">${p.naam}</div><div class="ps-item-meta">#${p.nr} · ${p.kliniek}</div></div><span class="ps-item-caras">${p.caras}</span>`;
+    el.addEventListener("click",()=>{selectPatient(p.nr);closeDropdown();});
+    list.appendChild(el);
+  });
+}
+function openDropdown(){document.getElementById("psDropdown").classList.add("open");document.getElementById("psSearch").focus();}
+function closeDropdown(){document.getElementById("psDropdown").classList.remove("open");document.getElementById("psSearch").value="";filterList("");}
+document.getElementById("psTrigger").addEventListener("click",e=>{e.stopPropagation();document.getElementById("psDropdown").classList.contains("open")?closeDropdown():openDropdown();});
+document.addEventListener("click",e=>{if(!document.getElementById("patientSelector").contains(e.target))closeDropdown();});
+document.getElementById("psSearch").addEventListener("input",e=>filterList(e.target.value.toLowerCase()));
+function filterList(q){document.querySelectorAll(".ps-item").forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?"":"none");}
 
-// Symmetrie chart
-new Chart(document.getElementById("symChart"), {
-  type:"line",
-  data:{ labels:SESSIONS, datasets:[
-    { label:"Gemeten", data:MEASURED, borderColor:"#4ECDC4", backgroundColor:"#4ECDC433", borderWidth:3, pointRadius:7, pointBackgroundColor:"#4ECDC4", fill:false, tension:0.4, spanGaps:false },
-    { label:"Verwacht", data:PROJECTED, borderColor:"#A29BFE", borderDash:[6,4], borderWidth:2, pointRadius:4, pointBackgroundColor:"#A29BFE", fill:false, tension:0.4, spanGaps:true },
-    { label:"Doel (80%)", data:TARGET, borderColor:"#00B894", borderDash:[3,3], borderWidth:1.5, pointRadius:0, fill:false }
-  ]},
-  options:chartOpts(40,100,"%")
-});
+function selectPatient(nr) {
+  currentNr = nr;
+  const p  = ALL_PATIENTS_META.find(x=>x.nr===nr);
+  const ss = ALL_SESSIONS[nr]||[];
+  const first=ss[0]||{}, last=ss[ss.length-1]||{};
+  document.getElementById("psAvatar").textContent=p.naam[0];
+  document.getElementById("psName").textContent=p.naam;
+  document.getElementById("psId").textContent="#"+p.nr;
+  document.getElementById("pageDesc").textContent=`${p.naam} · ${ss.length} sessies`;
+  document.querySelectorAll(".ps-item").forEach(el=>el.classList.toggle("active",el.dataset.nr===nr));
 
-// Gyroscoop asymmetrie
-new Chart(document.getElementById("gyrChart"), {
-  type:"bar",
-  data:{ labels:SESSIONS, datasets:[
-    { label:"Links (gemeten/verwacht)", data:[18.8,17.2,15.8,14.5,13.5,12.6,12.0,11.5,11.1,10.8], backgroundColor:"#A29BFEaa", borderColor:"#A29BFE", borderWidth:2, borderRadius:4 },
-    { label:"Rechts (gemeten/verwacht)", data:[10.8,11.5,12.2,12.9,13.3,13.7,14.0,14.2,14.4,14.5], backgroundColor:"#45B7D1aa", borderColor:"#45B7D1", borderWidth:2, borderRadius:4 },
-  ]},
-  options:{...chartOpts(0,25,"°/s"), plugins:{...chartOpts(0,25,"°/s").plugins, tooltip:{mode:"index",intersect:false}}}
-});
+  // Goal meters
+  const gm = document.getElementById("goalMeter"); gm.innerHTML='';
+  const goals=[
+    {label:"Symmetrie-index",current:last.sym_index||0,target:80,unit:"%",color:"#4ECDC4"},
+    {label:"Pijnscore",current:last.pijn||0,target:3,unit:"/10",color:"#ff7675",invert:true},
+    {label:"Frustratiescore",current:last.frustratie||0,target:3,unit:"/10",color:"#FDCB6E",invert:true},
+    {label:"Energieniveau",current:last.energie||0,target:8,unit:"/10",color:"#00B894"},
+  ];
+  goals.forEach(g=>{
+    const pct=g.invert?Math.max(0,Math.min(100,g.target/g.current*100)):Math.max(0,Math.min(100,g.current/g.target*100));
+    const div=document.createElement("div");div.className="goal-row";
+    div.innerHTML=`<div class="goal-header"><span class="goal-label">${g.label}</span><span class="goal-value">${g.current}${g.unit} <span style="color:var(--text-muted);font-weight:400">/ doel ${g.target}${g.unit}</span></span></div><div class="goal-track"><div class="goal-fill" style="width:${pct}%;background:${g.color}"></div></div>`;
+    gm.appendChild(div);
+  });
 
-// Compensatie ratio
-new Chart(document.getElementById("compChart"), {
-  type:"line",
-  data:{ labels:SESSIONS, datasets:[
-    { label:"L/R ratio gyroscoop", data:[1.74,1.49,1.29,1.12,1.01,0.92,0.86,0.81,0.77,0.74], borderColor:"#FD79A8", backgroundColor:"#FD79A822", borderWidth:2.5, pointRadius:5, fill:true, tension:0.4 },
-    { label:"Doelwaarde (ratio 1.0)", data:Array(10).fill(1.0), borderColor:"#00B894", borderDash:[4,3], borderWidth:1.5, pointRadius:0 }
-  ]},
-  options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:"#aaa",font:{family:"'Syne'"},boxWidth:12}}}, scales:{ x:{ticks:{color:"#888",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}}, y:{min:0.6,max:2.0,ticks:{color:"#888",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}} } }
-});
+  const labels=ss.map(s=>`S${s.sessie}`);
+  const co={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#aaa",font:{family:"'Syne'"},boxWidth:12}},tooltip:{mode:"index",intersect:false}},scales:{x:{ticks:{color:"#888",font:{family:"'DM Mono'"}},grid:{display:false}},y:{ticks:{color:"#888",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}}}};
 
-// Piekbeweging
-new Chart(document.getElementById("peakChart"), {
-  type:"bar",
-  data:{ labels:SESSIONS, datasets:[
-    { label:"Max piek links",  data:[45.0,38,33,29,26,24,22,21,20,19], backgroundColor:"#6C5CE7aa", borderColor:"#6C5CE7", borderWidth:2, borderRadius:4 },
-    { label:"Max piek rechts", data:[26.7,27,28,29,30,31,32,33,34,35], backgroundColor:"#00B894aa", borderColor:"#00B894", borderWidth:2, borderRadius:4 },
-  ]},
-  options:{...chartOpts(0,55,"m/s²")}
-});
+  if(charts.sym)charts.sym.destroy();
+  charts.sym=new Chart(document.getElementById("symChart"),{type:"line",data:{labels,datasets:[
+    {label:"Symmetrie",data:ss.map(s=>s.sym_index),borderColor:"#4ECDC4",backgroundColor:"#4ECDC433",borderWidth:3,pointRadius:5,fill:true,tension:0.4},
+    {label:"Doel (80%)",data:Array(labels.length).fill(80),borderColor:"#00B894",borderDash:[3,3],borderWidth:1.5,pointRadius:0},
+  ]},options:{...co,scales:{...co.scales,y:{min:30,max:100,ticks:{color:"#888",font:{family:"'DM Mono'"},callback:v=>v+"%"},grid:{color:"rgba(255,255,255,0.04)"}}}}});
 
-// GOAL METERS
-const goals = [
-  { label:"Symmetrie-index", current:57,  target:80,  unit:"%",   color:"#4ECDC4" },
-  { label:"Links gyroscoop",  current:18.8,target:12,  unit:"°/s", color:"#A29BFE", invert:true },
-  { label:"Rechts gyroscoop", current:10.8,target:15,  unit:"°/s", color:"#45B7D1" },
-  { label:"L/R ratio",        current:1.74,target:1.0, unit:"",    color:"#FD79A8", invert:true },
-  { label:"Max piek links",   current:45,  target:20,  unit:"m/s²",color:"#6C5CE7", invert:true },
-  { label:"Max piek rechts",  current:26.7,target:35,  unit:"m/s²",color:"#00B894" },
-];
+  if(charts.wb)charts.wb.destroy();
+  charts.wb=new Chart(document.getElementById("wbChart"),{type:"line",data:{labels,datasets:[
+    {label:"Pijn",data:ss.map(s=>s.pijn),borderColor:"#ff7675",borderWidth:2,pointRadius:4,fill:false,tension:0.4},
+    {label:"Frustatie",data:ss.map(s=>s.frustratie),borderColor:"#FDCB6E",borderWidth:2,pointRadius:4,fill:false,tension:0.4},
+    {label:"Energie",data:ss.map(s=>s.energie),borderColor:"#00B894",borderWidth:2,pointRadius:4,fill:false,tension:0.4},
+  ]},options:{...co,scales:{...co.scales,y:{min:0,max:10,...co.scales.y}}}});
 
-const gm = document.getElementById("goalMeter");
-goals.forEach(g => {
-  const pct = g.invert
-    ? Math.max(0, Math.min(100, (g.target / g.current) * 100))
-    : Math.max(0, Math.min(100, (g.current / g.target) * 100));
-  const div = document.createElement("div");
-  div.className = "goal-row";
-  div.innerHTML = `
-    <div class="goal-header">
-      <span class="goal-label">${g.label}</span>
-      <span class="goal-value">${g.current}${g.unit} <span style="color:var(--text-muted);font-weight:400">/ doel ${g.target}${g.unit}</span></span>
-    </div>
-    <div class="goal-track">
-      <div class="goal-fill" style="width:${pct}%;background:${g.color}"></div>
-    </div>
-  `;
-  gm.appendChild(div);
-});
+  const parseScore=(v)=>{if(!v||!String(v).includes('/'))return 0;const[a,b]=String(v).split('/');return b>0?Math.round(a/b*100):0;};
+  if(charts.reik)charts.reik.destroy();
+  charts.reik=new Chart(document.getElementById("reikChart"),{type:"bar",data:{labels,datasets:[{label:"Reiken %",data:ss.map(s=>parseScore(s.reiken)),backgroundColor:"#4ECDC488",borderColor:"#4ECDC4",borderWidth:2,borderRadius:4}]},options:{...co,scales:{...co.scales,y:{min:0,max:100,ticks:{color:"#888",font:{family:"'DM Mono'"},callback:v=>v+"%"},grid:{color:"rgba(255,255,255,0.04)"}}}}});
+
+  if(charts.ketel)charts.ketel.destroy();
+  charts.ketel=new Chart(document.getElementById("ketelChart"),{type:"bar",data:{labels,datasets:[
+    {label:"Correct",data:ss.map(s=>s.ketel_correct),backgroundColor:"#00B89488",borderColor:"#00B894",borderWidth:2,borderRadius:4},
+    {label:"Overgeslagen",data:ss.map(s=>s.ketel_overgeslagen),backgroundColor:"#ff767544",borderColor:"#ff7675",borderWidth:2,borderRadius:4},
+  ]},options:{...co}});
+
+  const symDiff=(last.sym_index||0)-(first.sym_index||0);
+  document.getElementById("insightBox").innerHTML=`<div class="insight-icon">📈</div><div class="insight-text"><strong>Prognose — ${p.naam}:</strong> Symmetrie ging van <strong>${first.sym_index||'—'}%</strong> naar <strong>${last.sym_index||'—'}%</strong> (+${symDiff} pp over ${ss.length} sessies). ${(last.sym_index||0)>=80?"✅ Doelwaarde bereikt!":"Nog "+(80-(last.sym_index||0))+" pp te gaan."} Pijnscore trending: ${last.pijn>first.pijn?"⚠ verhoogd":"✓ gelijk of gedaald"}.</div>`;
+}
+
+document.addEventListener("DOMContentLoaded",()=>{buildPatientList();selectPatient(currentNr);});
 </script>
 </body>
 </html>

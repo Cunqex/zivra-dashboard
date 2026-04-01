@@ -1144,3 +1144,327 @@ table.sessies-table {
   .footer-inner { flex-direction: column; text-align: center; }
   .footer-links { flex-wrap: wrap; justify-content: center; }
 }
+
+/* ============================================================
+   PATIENT SELECTOR
+   ============================================================ */
+.patient-selector {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ps-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  min-width: 220px;
+}
+
+.ps-trigger:hover { border-color: var(--accent); background: var(--bg3); }
+
+.ps-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), #6C5CE7);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 14px;
+  color: #0a0b0f;
+  flex-shrink: 0;
+}
+
+.ps-info { flex: 1; min-width: 0; }
+
+.ps-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ps-id {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.ps-chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.ps-dropdown.open ~ .ps-trigger .ps-chevron,
+.ps-trigger:has(+ .ps-dropdown.open) .ps-chevron { transform: rotate(180deg); }
+
+.ps-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 340px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+  z-index: 300;
+  display: none;
+  overflow: hidden;
+}
+
+.ps-dropdown.open { display: block; }
+
+.ps-search-wrap {
+  padding: 12px 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ps-search {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  outline: none;
+}
+
+.ps-search:focus { border-color: var(--accent); }
+
+.ps-list {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.ps-list::-webkit-scrollbar { width: 4px; }
+.ps-list::-webkit-scrollbar-track { background: transparent; }
+.ps-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.ps-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ps-item:hover { background: var(--bg3); }
+.ps-item.active { background: rgba(78,205,196,0.08); }
+
+.ps-item-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: var(--bg4);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.ps-item-info { flex: 1; min-width: 0; }
+
+.ps-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ps-item-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.ps-item-caras {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   GAMES / WELZIJN SECTIE
+   ============================================================ */
+.games-section {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Welzijn cards */
+.games-wellbeing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.wb-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.wb-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.wb-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.wb-title { font-size: 15px; font-weight: 700; }
+
+.wb-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.wb-current {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.wb-chart-wrap { height: 110px; }
+
+/* Game tabs */
+.game-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.game-tab {
+  padding: 9px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.game-tab:hover { border-color: var(--border2); color: var(--text); }
+
+.game-tab.active {
+  background: var(--bg3);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* Game panels */
+.game-panel { display: none; }
+.game-panel.active { display: block; }
+
+.game-panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.game-panel-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+
+.game-panel-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.game-table-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.game-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.game-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.game-table td {
+  padding: 10px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.game-table tr:last-child td { border-bottom: none; }
+.game-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.game-chart-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Responsive additions */
+@media (max-width: 1100px) {
+  .games-wellbeing-grid { grid-template-columns: 1fr; }
+  .game-panel-grid { grid-template-columns: 1fr; }
+  .ps-trigger { min-width: 160px; }
+  .ps-dropdown { width: 280px; }
+}
+
+@media (max-width: 720px) {
+  .games-wellbeing-grid { grid-template-columns: 1fr; }
+  .game-tabs { flex-wrap: wrap; }
+  .ps-trigger { min-width: 120px; }
+  .ps-name { display: none; }
+  .ps-dropdown { width: calc(100vw - 40px); right: -20px; }
+}

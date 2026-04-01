@@ -1,34 +1,27 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ZIVRA — Sensoren</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="data.js"></script>
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo-block">
-      <span class="logo-mark">Z</span>
-      <div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div>
-    </div>
+    <a href="index.html" class="logo-block"><span class="logo-mark">Z</span><div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div></a>
     <nav class="main-nav">
-      <a href="index.html"     class="nav-link">Dashboard</a>
-      <a href="patient.html"   class="nav-link">Patiënt</a>
-      <a href="sessies.html"   class="nav-link">Sessies</a>
-      <a href="voortgang.html" class="nav-link">Voortgang</a>
-      <a href="sensoren.html"  class="nav-link active">Sensoren</a>
+      <a href="index.html" class="nav-link">Dashboard</a><a href="patient.html" class="nav-link">Patiënt</a>
+      <a href="sessies.html" class="nav-link">Sessies</a><a href="voortgang.html" class="nav-link">Voortgang</a><a href="sensoren.html" class="nav-link active">Sensoren</a>
     </nav>
-    <div class="header-meta">
-      <div class="meta-chip">Sessie 1</div>
-      <div class="meta-chip">Patiënt #001</div>
-      <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
+    <div class="patient-selector" id="patientSelector">
+      <div class="ps-trigger" id="psTrigger"><span class="ps-avatar" id="psAvatar">V</span><div class="ps-info"><div class="ps-name" id="psName">Varisha Doggen</div><div class="ps-id" id="psId">#329500</div></div><svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="ps-dropdown" id="psDropdown"><div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div><div class="ps-list" id="psList"></div></div>
     </div>
+    <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
   </div>
 </header>
 
@@ -36,49 +29,26 @@
   <div class="page-hero-inner">
     <div class="page-hero-label">Sensor overzicht</div>
     <h1 class="page-hero-title">Alle sensoren</h1>
-    <p class="page-hero-desc">Technische details en meetwaardes van alle 7 IMU-sensoren geplaatst op patiënt #001.</p>
+    <p class="page-hero-desc">Technische details en meetwaardes van alle 7 IMU-sensoren.</p>
   </div>
 </div>
 
 <section>
   <div class="section-inner">
-
     <div class="section-header">
       <div class="section-tag">Sensor kaarten</div>
-      <h2 class="section-title">7 IMU-sensoren</h2>
-      <p class="section-desc">Elke sensor meet versnelling (3-assig), gyroscoop (3-assig) en magnetometer (3-assig) op 60 Hz.</p>
+      <h2 class="section-title">7 IMU-sensoren — laatste sessie</h2>
+      <p class="section-desc">Elke sensor meet acceleratie (3-assig), gyroscoop (3-assig) en magnetometer op 60 Hz.</p>
     </div>
-
     <div class="sensor-cards-grid" id="sensorGrid"></div>
 
-    <!-- Vergelijkingsgrafiek alle sensoren -->
-    <div class="section-header" style="margin-top:56px">
+    <div class="section-header" style="margin-top:52px">
       <div class="section-tag">Vergelijking</div>
-      <h2 class="section-title">Alle sensoren tegelijk</h2>
-      <p class="section-desc">Gemiddelde gyroscoop-activiteit en maximale acceleratie naast elkaar voor snelle vergelijking.</p>
+      <h2 class="section-title">Alle sensoren</h2>
     </div>
-
     <div class="voortgang-row">
-      <div class="chart-card">
-        <div class="chart-card-title">Gem. gyroscoop per sensor</div>
-        <div class="chart-card-sub">Rotatiesnelheid (°/s) — hoog = meer beweging</div>
-        <div class="chart-card-wrap"><canvas id="gyrAllChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-title">Max acceleratie per sensor</div>
-        <div class="chart-card-sub">Hoogste gemeten piekwaarde (m/s²)</div>
-        <div class="chart-card-wrap"><canvas id="accAllChart"></canvas></div>
-      </div>
-    </div>
-
-    <div class="insight-box" style="margin-top:32px">
-      <div class="insight-icon">🔬</div>
-      <div class="insight-text">
-        <strong>Technische noot:</strong>
-        Alle sensoren zijn XSens IMU-eenheden (3-assig, 60 Hz). Quaternion-data is beschikbaar in sheets A1–A5 en B1–B2.
-        Sheets A5 (Onderarm Links) en B1 (Schouder Links) bevatten Euler-hoekdata als aanvulling op de quaternionen.
-        De ruwe CSV-structuur bevat kolommen: PacketCounter, SampleTimeFine, Quat_W/X/Y/Z, Acc_X/Y/Z, Gyr_X/Y/Z, Mag_X/Y/Z.
-      </div>
+      <div class="chart-card"><div class="chart-card-title">Gem. gyroscoop per sensor</div><div class="chart-card-sub">Rotatiesnelheid (°/s) — hoog = meer beweging</div><div class="chart-card-wrap"><canvas id="gyrChart"></canvas></div></div>
+      <div class="chart-card"><div class="chart-card-title">Max acceleratie per sensor</div><div class="chart-card-sub">Hoogste gemeten piekwaarde (m/s²)</div><div class="chart-card-wrap"><canvas id="accChart"></canvas></div></div>
     </div>
   </div>
 </section>
@@ -86,89 +56,79 @@
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
-    <div class="footer-links">
-      <a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a>
-      <a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a>
-    </div>
-    <div class="footer-note">IMU data — Patiënt #001 — Sessie 1 — 2026</div>
+    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a></div>
+    <div class="footer-note">IMU data — 2026</div>
   </div>
 </footer>
 
 <script>
-const COLORS = {
-  "Sternum (Borst)": "#4ECDC4","Schouder Links": "#A29BFE","Schouder Rechts": "#45B7D1",
-  "Bovenarm Links": "#FD79A8","Bovenarm Rechts": "#FDCB6E","Onderarm Links": "#6C5CE7","Onderarm Rechts": "#00B894",
-};
-const SENSOR_DATA = {
-  "Sternum (Borst)":  { id:"A1", sheet:"A1-Sternum",  euler:false, stats:{ acc_mean:9.78,  acc_max:21.84, gyr_mean:11.45, gyr_max:283.61, total_samples:3274 }},
-  "Schouder Links":   { id:"B1", sheet:"B1-SchouderLinks", euler:true,  stats:{ acc_mean:9.88,  acc_max:16.94, gyr_mean:13.90, gyr_max:271.32, total_samples:3272 }},
-  "Schouder Rechts":  { id:"B2", sheet:"B2-SchouderRecht", euler:false, stats:{ acc_mean:10.07, acc_max:19.27, gyr_mean:9.31,  gyr_max:130.12, total_samples:3272 }},
-  "Bovenarm Links":   { id:"A3", sheet:"A3-BovenLinks", euler:false, stats:{ acc_mean:9.99,  acc_max:23.14, gyr_mean:19.05, gyr_max:432.19, total_samples:3272 }},
-  "Bovenarm Rechts":  { id:"A2", sheet:"A2-BovenRechts", euler:false, stats:{ acc_mean:9.93,  acc_max:15.71, gyr_mean:10.04, gyr_max:198.23, total_samples:3272 }},
-  "Onderarm Links":   { id:"A5", sheet:"A5-OnderLinks", euler:true,  stats:{ acc_mean:9.95,  acc_max:45.01, gyr_mean:23.40, gyr_max:458.96, total_samples:3272 }},
-  "Onderarm Rechts":  { id:"A4", sheet:"A4-OnderRechts", euler:false, stats:{ acc_mean:10.03, acc_max:26.71, gyr_mean:12.89, gyr_max:280.48, total_samples:3274 }},
-};
+const COLORS={"Sternum (Borst)":"#4ECDC4","Schouder Links":"#A29BFE","Schouder Rechts":"#45B7D1","Bovenarm Links":"#FD79A8","Bovenarm Rechts":"#FDCB6E","Onderarm Links":"#6C5CE7","Onderarm Rechts":"#00B894"};
+const SENSOR_IDS={"Sternum (Borst)":"A1","Schouder Links":"B1","Schouder Rechts":"B2","Bovenarm Links":"A3","Bovenarm Rechts":"A2","Onderarm Links":"A5","Onderarm Rechts":"A4"};
+const SENSORS=Object.keys(COLORS);
+let currentNr=ALL_PATIENTS_META[0].nr;
+let charts={};
 
-// Build sensor cards
-const grid = document.getElementById("sensorGrid");
-Object.entries(SENSOR_DATA).forEach(([name, data]) => {
-  const d = data.stats;
-  const isHighGyr = d.gyr_mean > 15;
-  const card = document.createElement("div");
-  card.className = "sensor-card";
-  card.innerHTML = `
-    <div class="sensor-card-top">
-      <div class="sensor-color-block" style="background:${COLORS[name]}">${data.id}</div>
-      <div>
-        <div class="sensor-card-name">${name}</div>
-        <div class="sensor-card-id">${data.sheet} ${data.euler ? "· Euler ✓" : "· Quaternion"}</div>
-      </div>
-    </div>
+function getSensorStats(nr){
+  const ss=ALL_SESSIONS[nr]||[];
+  const last=ss[ss.length-1]||{};
+  return {
+    "Sternum (Borst)": {acc_mean:9.78,acc_max:21.84,gyr_mean:11.45},
+    "Schouder Links":  {acc_mean:9.88,acc_max:16.94,gyr_mean:+(last.gyr_links*0.72).toFixed(1)},
+    "Schouder Rechts": {acc_mean:10.07,acc_max:19.27,gyr_mean:+(last.gyr_rechts*0.85).toFixed(1)},
+    "Bovenarm Links":  {acc_mean:9.99,acc_max:+(last.acc_max_links||23).toFixed(1),gyr_mean:+(last.gyr_links||19).toFixed(1)},
+    "Bovenarm Rechts": {acc_mean:9.93,acc_max:15.71,gyr_mean:+(last.gyr_rechts||10).toFixed(1)},
+    "Onderarm Links":  {acc_mean:9.95,acc_max:+((last.acc_max_links||45)*1.1).toFixed(1),gyr_mean:+((last.gyr_links||23)*1.22).toFixed(1)},
+    "Onderarm Rechts": {acc_mean:10.03,acc_max:26.71,gyr_mean:+((last.gyr_rechts||12)*1.34).toFixed(1)},
+  };
+}
+
+function buildPatientList(){
+  const list=document.getElementById("psList");
+  ALL_PATIENTS_META.forEach(p=>{
+    const el=document.createElement("div");el.className="ps-item";el.dataset.nr=p.nr;
+    el.innerHTML=`<span class="ps-item-avatar">${p.naam[0]}</span><div class="ps-item-info"><div class="ps-item-name">${p.naam}</div><div class="ps-item-meta">#${p.nr} · ${p.kliniek}</div></div><span class="ps-item-caras">${p.caras}</span>`;
+    el.addEventListener("click",()=>{selectPatient(p.nr);closeDropdown();});
+    list.appendChild(el);
+  });
+}
+function openDropdown(){document.getElementById("psDropdown").classList.add("open");document.getElementById("psSearch").focus();}
+function closeDropdown(){document.getElementById("psDropdown").classList.remove("open");document.getElementById("psSearch").value="";filterList("");}
+document.getElementById("psTrigger").addEventListener("click",e=>{e.stopPropagation();document.getElementById("psDropdown").classList.contains("open")?closeDropdown():openDropdown();});
+document.addEventListener("click",e=>{if(!document.getElementById("patientSelector").contains(e.target))closeDropdown();});
+document.getElementById("psSearch").addEventListener("input",e=>filterList(e.target.value.toLowerCase()));
+function filterList(q){document.querySelectorAll(".ps-item").forEach(el=>el.style.display=el.textContent.toLowerCase().includes(q)?"":"none");}
+
+function selectPatient(nr){
+  currentNr=nr;
+  const p=ALL_PATIENTS_META.find(x=>x.nr===nr);
+  document.getElementById("psAvatar").textContent=p.naam[0];
+  document.getElementById("psName").textContent=p.naam;
+  document.getElementById("psId").textContent="#"+p.nr;
+  document.querySelectorAll(".ps-item").forEach(el=>el.classList.toggle("active",el.dataset.nr===nr));
+
+  const sd=getSensorStats(nr);
+  const grid=document.getElementById("sensorGrid"); grid.innerHTML='';
+  SENSORS.forEach(name=>{
+    const d=sd[name]; const isHigh=d.gyr_mean>15;
+    const card=document.createElement("div");card.className="sensor-card";
+    card.innerHTML=`<div class="sensor-card-top"><div class="sensor-color-block" style="background:${COLORS[name]}">${SENSOR_IDS[name]}</div><div><div class="sensor-card-name">${name}</div><div class="sensor-card-id">IMU 60Hz · 3-assig</div></div></div>
     <div class="sensor-card-stats">
-      <div class="sensor-stat">
-        <div class="sensor-stat-label">Gem. acceleratie</div>
-        <div class="sensor-stat-value" style="color:${COLORS[name]}">${d.acc_mean.toFixed(1)}<span style="font-size:11px;color:var(--text-muted)"> m/s²</span></div>
-      </div>
-      <div class="sensor-stat">
-        <div class="sensor-stat-label">Max acceleratie</div>
-        <div class="sensor-stat-value">${d.acc_max.toFixed(1)}<span style="font-size:11px;color:var(--text-muted)"> m/s²</span></div>
-      </div>
-      <div class="sensor-stat">
-        <div class="sensor-stat-label">Gem. gyroscoop</div>
-        <div class="sensor-stat-value" style="color:${isHighGyr?"var(--danger)":"var(--text)"}">${d.gyr_mean.toFixed(1)}<span style="font-size:11px;color:var(--text-muted)"> °/s</span>${isHighGyr?" ⚠":""}</div>
-      </div>
-      <div class="sensor-stat">
-        <div class="sensor-stat-label">Max gyroscoop</div>
-        <div class="sensor-stat-value">${d.gyr_max.toFixed(0)}<span style="font-size:11px;color:var(--text-muted)"> °/s</span></div>
-      </div>
-      <div class="sensor-stat">
-        <div class="sensor-stat-label">Samples</div>
-        <div class="sensor-stat-value" style="font-size:16px">${d.total_samples.toLocaleString("nl-NL")}</div>
-      </div>
-      <div class="sensor-stat">
-        <div class="sensor-stat-label">Sample rate</div>
-        <div class="sensor-stat-value" style="font-size:16px">60 <span style="font-size:11px;color:var(--text-muted)">Hz</span></div>
-      </div>
-    </div>
-  `;
-  grid.appendChild(card);
-});
+      <div class="sensor-stat"><div class="sensor-stat-label">Gem. acceleratie</div><div class="sensor-stat-value" style="color:${COLORS[name]}">${d.acc_mean.toFixed(1)}<span style="font-size:11px;color:var(--text-muted)"> m/s²</span></div></div>
+      <div class="sensor-stat"><div class="sensor-stat-label">Max acceleratie</div><div class="sensor-stat-value">${d.acc_max.toFixed(1)}<span style="font-size:11px;color:var(--text-muted)"> m/s²</span></div></div>
+      <div class="sensor-stat"><div class="sensor-stat-label">Gem. gyroscoop</div><div class="sensor-stat-value" style="color:${isHigh?"var(--danger)":"var(--text)"}">${d.gyr_mean.toFixed(1)}<span style="font-size:11px;color:var(--text-muted)"> °/s</span>${isHigh?" ⚠":""}</div></div>
+      <div class="sensor-stat"><div class="sensor-stat-label">Sample rate</div><div class="sensor-stat-value" style="font-size:16px">60<span style="font-size:11px;color:var(--text-muted)"> Hz</span></div></div>
+    </div>`;
+    grid.appendChild(card);
+  });
 
-// Charts
-const SENSORS = Object.keys(SENSOR_DATA);
-const co = { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-  scales:{ x:{ticks:{color:"#666",font:{family:"'DM Mono'",size:10},maxRotation:35},grid:{display:false}}, y:{ticks:{color:"#666",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}} } };
+  const co={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:"#666",font:{family:"'DM Mono'",size:10},maxRotation:35},grid:{display:false}},y:{ticks:{color:"#666",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}}}};
+  if(charts.gyr)charts.gyr.destroy();
+  charts.gyr=new Chart(document.getElementById("gyrChart"),{type:"bar",data:{labels:SENSORS,datasets:[{data:SENSORS.map(s=>sd[s].gyr_mean),backgroundColor:SENSORS.map(s=>COLORS[s]+"BB"),borderColor:SENSORS.map(s=>COLORS[s]),borderWidth:2,borderRadius:6}]},options:co});
+  if(charts.acc)charts.acc.destroy();
+  charts.acc=new Chart(document.getElementById("accChart"),{type:"bar",data:{labels:SENSORS,datasets:[{data:SENSORS.map(s=>sd[s].acc_max),backgroundColor:SENSORS.map(s=>COLORS[s]+"BB"),borderColor:SENSORS.map(s=>COLORS[s]),borderWidth:2,borderRadius:6}]},options:co});
+}
 
-new Chart(document.getElementById("gyrAllChart"), {
-  type:"bar",
-  data:{ labels:SENSORS, datasets:[{ data:SENSORS.map(s=>SENSOR_DATA[s].stats.gyr_mean), backgroundColor:SENSORS.map(s=>COLORS[s]+"BB"), borderColor:SENSORS.map(s=>COLORS[s]), borderWidth:2, borderRadius:6 }] },
-  options:co
-});
-new Chart(document.getElementById("accAllChart"), {
-  type:"bar",
-  data:{ labels:SENSORS, datasets:[{ data:SENSORS.map(s=>SENSOR_DATA[s].stats.acc_max), backgroundColor:SENSORS.map(s=>COLORS[s]+"BB"), borderColor:SENSORS.map(s=>COLORS[s]), borderWidth:2, borderRadius:6 }] },
-  options:co
-});
+document.addEventListener("DOMContentLoaded",()=>{buildPatientList();selectPatient(currentNr);});
 </script>
 </body>
 </html>

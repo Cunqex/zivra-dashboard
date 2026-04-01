@@ -1,127 +1,146 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ZIVRA — Patiënt #001</title>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZIVRA — Patiënt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="data.js"></script>
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo-block">
-      <span class="logo-mark">Z</span>
-      <div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div>
-    </div>
+    <a href="index.html" class="logo-block"><span class="logo-mark">Z</span><div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div></a>
     <nav class="main-nav">
-      <a href="index.html"     class="nav-link">Dashboard</a>
-      <a href="patient.html"   class="nav-link active">Patiënt</a>
-      <a href="sessies.html"   class="nav-link">Sessies</a>
+      <a href="index.html" class="nav-link">Dashboard</a>
+      <a href="patient.html" class="nav-link active">Patiënt</a>
+      <a href="sessies.html" class="nav-link">Sessies</a>
       <a href="voortgang.html" class="nav-link">Voortgang</a>
-      <a href="sensoren.html"  class="nav-link">Sensoren</a>
+      <a href="sensoren.html" class="nav-link">Sensoren</a>
     </nav>
-    <div class="header-meta">
-      <div class="meta-chip">Sessie 1</div>
-      <div class="meta-chip">Patiënt #001</div>
-      <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
+    <div class="patient-selector" id="patientSelector">
+      <div class="ps-trigger" id="psTrigger">
+        <span class="ps-avatar" id="psAvatar">V</span>
+        <div class="ps-info"><div class="ps-name" id="psName">Varisha Doggen</div><div class="ps-id" id="psId">#329500</div></div>
+        <svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div class="ps-dropdown" id="psDropdown">
+        <div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div>
+        <div class="ps-list" id="psList"></div>
+      </div>
     </div>
+    <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
   </div>
 </header>
 
 <div class="page-hero">
   <div class="page-hero-inner">
     <div class="page-hero-label">Patiëntdossier</div>
-    <h1 class="page-hero-title">Patiënt #001</h1>
-    <p class="page-hero-desc">Klinisch overzicht, diagnose en behandelplan op basis van IMU-bewegingsdata.</p>
+    <h1 class="page-hero-title" id="pageTitle">Patiënt</h1>
+    <p class="page-hero-desc" id="pageDesc">Klinisch overzicht, diagnose en behandelplan.</p>
   </div>
 </div>
 
 <section>
   <div class="section-inner">
     <div class="patient-grid">
-      <!-- Patiëntkaart -->
       <div class="patient-card">
-        <div class="patient-avatar">P</div>
-        <div class="patient-name">Patiënt #001</div>
-        <div class="patient-id">ID: ZVR-2026-001</div>
-        <div class="patient-detail-row"><span class="pd-key">Leeftijd</span><span class="pd-val">58 jaar</span></div>
-        <div class="patient-detail-row"><span class="pd-key">Geslacht</span><span class="pd-val">Man</span></div>
-        <div class="patient-detail-row"><span class="pd-key">Aanvangsdatum</span><span class="pd-val">02-02-2026</span></div>
-        <div class="patient-detail-row"><span class="pd-key">Behandelaar</span><span class="pd-val">Dr. A. Jansen</span></div>
-        <div class="patient-detail-row"><span class="pd-key">Afdeling</span><span class="pd-val">Neurorevalidatie</span></div>
-        <div class="patient-detail-row"><span class="pd-key">Sessies afgerond</span><span class="pd-val">1 / 10</span></div>
-        <div class="patient-detail-row"><span class="pd-key">Status</span><span class="pd-val" style="color:var(--accent)">Actief in behandeling</span></div>
+        <div class="patient-avatar" id="patAvatar">V</div>
+        <div class="patient-name" id="patName">—</div>
+        <div class="patient-id" id="patId">—</div>
+        <div id="patDetails"></div>
       </div>
-
-      <!-- Diagnose & behandelplan -->
       <div class="diagnosis-card">
         <div class="diagnosis-title">Diagnose &amp; behandelplan</div>
-
-        <div class="diag-row">
-          <div class="diag-label">Primaire diagnose</div>
-          <div class="diag-value">Hemiparese links — post-CVA (ischemisch)</div>
-        </div>
-        <div class="diag-row">
-          <div class="diag-label">Aangedane zijde</div>
-          <div class="diag-value status-zorgelijk">Rechterzijde (verlamd / beperkte motoriek)</div>
-        </div>
-        <div class="diag-row">
-          <div class="diag-label">Compenserende zijde</div>
-          <div class="diag-value status-matig">Linkerzijde (overactief — compensatiegedrag detecteerbaar)</div>
-        </div>
-        <div class="diag-row">
-          <div class="diag-label">Symmetrie-index sessie 1</div>
-          <div class="diag-value status-zorgelijk">57% — zorgelijk (&lt;60%)</div>
-        </div>
-        <div class="diag-row">
-          <div class="diag-label">Behandeldoel</div>
-          <div class="diag-value">Symmetrie-index verhogen naar &gt;80% in 10 sessies</div>
-        </div>
-        <div class="diag-row">
-          <div class="diag-label">Behandelmethode</div>
-          <div class="diag-value">IMU-gestuurde bewegingstherapie — bilateraal</div>
-        </div>
-        <div class="diag-row">
-          <div class="diag-label">Frequentie</div>
-          <div class="diag-value">2× per week, sessies van ~55 seconden gemeten activiteit</div>
-        </div>
-        <div class="diag-row">
-          <div class="diag-label">Verwachte sessies</div>
-          <div class="diag-value">10 sessies (5 weken)</div>
-        </div>
-        <div class="diag-row">
-          <div class="diag-label">Volgende sessie</div>
-          <div class="diag-value" style="color:var(--accent)">09-02-2026</div>
-        </div>
+        <div id="diagDetails"></div>
       </div>
     </div>
-
-    <!-- Klinisch inzicht box -->
-    <div class="insight-box">
-      <div class="insight-icon">🩺</div>
-      <div class="insight-text">
-        <strong>Aanbeveling arts — sessie 1:</strong>
-        Significante gyroscoop-asymmetrie gedetecteerd (L: 18.8 °/s vs R: 10.8 °/s).
-        Onderarm links toont piekwaarden tot 45 m/s², wat wijst op compensatoire bewegingsstrategieën.
-        Aanbeveling: geforceerde gebruik van de rechterzijde bij oefeningen om neurale activatie te stimuleren.
-        Evaluatie na sessie 3.
-      </div>
-    </div>
+    <div class="insight-box" id="insightBox"></div>
   </div>
 </section>
 
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
-    <div class="footer-links">
-      <a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a>
-      <a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a>
-    </div>
-    <div class="footer-note">IMU data — Patiënt #001 — Sessie 1 — 2026</div>
+    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a></div>
+    <div class="footer-note">IMU data — 2026</div>
   </div>
 </footer>
+
+<script>
+let currentNr = ALL_PATIENTS_META[0].nr;
+
+function buildPatientList() {
+  const list = document.getElementById("psList");
+  ALL_PATIENTS_META.forEach(p => {
+    const el = document.createElement("div");
+    el.className = "ps-item"; el.dataset.nr = p.nr;
+    el.innerHTML = `<span class="ps-item-avatar">${p.naam[0]}</span><div class="ps-item-info"><div class="ps-item-name">${p.naam}</div><div class="ps-item-meta">#${p.nr} · ${p.kliniek}</div></div><span class="ps-item-caras">${p.caras}</span>`;
+    el.addEventListener("click", () => { selectPatient(p.nr); closeDropdown(); });
+    list.appendChild(el);
+  });
+}
+
+function openDropdown()  { document.getElementById("psDropdown").classList.add("open"); document.getElementById("psSearch").focus(); }
+function closeDropdown() { document.getElementById("psDropdown").classList.remove("open"); document.getElementById("psSearch").value=""; filterList(""); }
+document.getElementById("psTrigger").addEventListener("click", e => { e.stopPropagation(); document.getElementById("psDropdown").classList.contains("open")?closeDropdown():openDropdown(); });
+document.addEventListener("click", e => { if(!document.getElementById("patientSelector").contains(e.target)) closeDropdown(); });
+document.getElementById("psSearch").addEventListener("input", e => filterList(e.target.value.toLowerCase()));
+function filterList(q) { document.querySelectorAll(".ps-item").forEach(el => el.style.display = el.textContent.toLowerCase().includes(q)?"":"none"); }
+
+function selectPatient(nr) {
+  currentNr = nr;
+  const p = ALL_PATIENTS_META.find(x => x.nr === nr);
+  const ss = ALL_SESSIONS[nr] || [];
+  const first = ss[0]||{}, last = ss[ss.length-1]||{};
+
+  document.getElementById("psAvatar").textContent = p.naam[0];
+  document.getElementById("psName").textContent   = p.naam;
+  document.getElementById("psId").textContent     = "#"+p.nr;
+  document.querySelectorAll(".ps-item").forEach(el => el.classList.toggle("active", el.dataset.nr===nr));
+
+  document.getElementById("pageTitle").textContent = p.naam;
+  document.getElementById("pageDesc").textContent  = `${p.caras} · ${p.kliniek} · ${p.zijde} aangedaan`;
+  document.getElementById("patAvatar").textContent = p.naam[0];
+  document.getElementById("patName").textContent   = p.naam;
+  document.getElementById("patId").textContent     = "ID: ZVR-2026-"+p.nr;
+
+  const row = (k,v) => `<div class="patient-detail-row"><span class="pd-key">${k}</span><span class="pd-val">${v}</span></div>`;
+  document.getElementById("patDetails").innerHTML =
+    row("Leeftijd", p.leeftijd+" jaar") +
+    row("Geslacht", p.geslacht) +
+    row("Aangedane zijde", p.zijde) +
+    row("CARAS groep", p.caras) +
+    row("Kliniek", p.kliniek) +
+    row("Sessies afgerond", ss.length+" / 10") +
+    row("Status", `<span style="color:var(--accent)">Actief in behandeling</span>`);
+
+  const symColor = (last.sym_index||0) < 60 ? "status-zorgelijk" : (last.sym_index||0) < 80 ? "status-matig" : "status-ok";
+  const diag = (k,v,cls="") => `<div class="diag-row"><div class="diag-label">${k}</div><div class="diag-value ${cls}">${v}</div></div>`;
+  document.getElementById("diagDetails").innerHTML =
+    diag("Aangedane zijde", `${p.zijde} (verlamd / beperkte motoriek)`, "status-zorgelijk") +
+    diag("Symmetrie-index nu", `${last.sym_index||'—'}% — ${(last.sym_index||0)<60?"zorgelijk":(last.sym_index||0)<80?"matig":"goed"}`, symColor) +
+    diag("Behandeldoel", "Symmetrie-index verhogen naar >80% in 10 sessies") +
+    diag("Pijnscore laatste sessie", `${last.pijn||'—'}/10`) +
+    diag("Frustratiescore laatste sessie", `${last.frustratie||'—'}/10`) +
+    diag("Energieniveau laatste sessie", `${last.energie||'—'}/10`) +
+    diag("Behandelmethode", "IMU-gestuurde bewegingstherapie") +
+    diag("CARAS groep", p.caras);
+
+  const symDiff = (last.sym_index||0) - (first.sym_index||0);
+  document.getElementById("insightBox").innerHTML = `
+    <div class="insight-icon">🩺</div>
+    <div class="insight-text">
+      <strong>Klinisch overzicht — ${p.naam}:</strong>
+      Symmetrie ging van <strong>${first.sym_index||'—'}%</strong> naar <strong>${last.sym_index||'—'}%</strong>
+      over ${ss.length} sessie${ss.length!==1?'s':''} (+${symDiff} pp).
+      Laatste pijnscore: <strong>${last.pijn||'—'}/10</strong>.
+      ${(last.sym_index||0)>=80?"✅ Doelwaarde bereikt!":"📌 Nog "+(80-(last.sym_index||0))+" pp te gaan voor doel (80%)."}
+    </div>`;
+}
+
+document.addEventListener("DOMContentLoaded", () => { buildPatientList(); selectPatient(currentNr); });
+</script>
 </body>
 </html>
