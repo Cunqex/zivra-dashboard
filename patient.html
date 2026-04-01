@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZIVRA — Patiënt #001</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-block">
+      <span class="logo-mark">Z</span>
+      <div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html"     class="nav-link">Dashboard</a>
+      <a href="patient.html"   class="nav-link active">Patiënt</a>
+      <a href="sessies.html"   class="nav-link">Sessies</a>
+      <a href="voortgang.html" class="nav-link">Voortgang</a>
+      <a href="sensoren.html"  class="nav-link">Sensoren</a>
+    </nav>
+    <div class="header-meta">
+      <div class="meta-chip">Sessie 1</div>
+      <div class="meta-chip">Patiënt #001</div>
+      <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
+    </div>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-label">Patiëntdossier</div>
+    <h1 class="page-hero-title">Patiënt #001</h1>
+    <p class="page-hero-desc">Klinisch overzicht, diagnose en behandelplan op basis van IMU-bewegingsdata.</p>
+  </div>
+</div>
+
+<section>
+  <div class="section-inner">
+    <div class="patient-grid">
+      <!-- Patiëntkaart -->
+      <div class="patient-card">
+        <div class="patient-avatar">P</div>
+        <div class="patient-name">Patiënt #001</div>
+        <div class="patient-id">ID: ZVR-2026-001</div>
+        <div class="patient-detail-row"><span class="pd-key">Leeftijd</span><span class="pd-val">58 jaar</span></div>
+        <div class="patient-detail-row"><span class="pd-key">Geslacht</span><span class="pd-val">Man</span></div>
+        <div class="patient-detail-row"><span class="pd-key">Aanvangsdatum</span><span class="pd-val">02-02-2026</span></div>
+        <div class="patient-detail-row"><span class="pd-key">Behandelaar</span><span class="pd-val">Dr. A. Jansen</span></div>
+        <div class="patient-detail-row"><span class="pd-key">Afdeling</span><span class="pd-val">Neurorevalidatie</span></div>
+        <div class="patient-detail-row"><span class="pd-key">Sessies afgerond</span><span class="pd-val">1 / 10</span></div>
+        <div class="patient-detail-row"><span class="pd-key">Status</span><span class="pd-val" style="color:var(--accent)">Actief in behandeling</span></div>
+      </div>
+
+      <!-- Diagnose & behandelplan -->
+      <div class="diagnosis-card">
+        <div class="diagnosis-title">Diagnose &amp; behandelplan</div>
+
+        <div class="diag-row">
+          <div class="diag-label">Primaire diagnose</div>
+          <div class="diag-value">Hemiparese links — post-CVA (ischemisch)</div>
+        </div>
+        <div class="diag-row">
+          <div class="diag-label">Aangedane zijde</div>
+          <div class="diag-value status-zorgelijk">Rechterzijde (verlamd / beperkte motoriek)</div>
+        </div>
+        <div class="diag-row">
+          <div class="diag-label">Compenserende zijde</div>
+          <div class="diag-value status-matig">Linkerzijde (overactief — compensatiegedrag detecteerbaar)</div>
+        </div>
+        <div class="diag-row">
+          <div class="diag-label">Symmetrie-index sessie 1</div>
+          <div class="diag-value status-zorgelijk">57% — zorgelijk (&lt;60%)</div>
+        </div>
+        <div class="diag-row">
+          <div class="diag-label">Behandeldoel</div>
+          <div class="diag-value">Symmetrie-index verhogen naar &gt;80% in 10 sessies</div>
+        </div>
+        <div class="diag-row">
+          <div class="diag-label">Behandelmethode</div>
+          <div class="diag-value">IMU-gestuurde bewegingstherapie — bilateraal</div>
+        </div>
+        <div class="diag-row">
+          <div class="diag-label">Frequentie</div>
+          <div class="diag-value">2× per week, sessies van ~55 seconden gemeten activiteit</div>
+        </div>
+        <div class="diag-row">
+          <div class="diag-label">Verwachte sessies</div>
+          <div class="diag-value">10 sessies (5 weken)</div>
+        </div>
+        <div class="diag-row">
+          <div class="diag-label">Volgende sessie</div>
+          <div class="diag-value" style="color:var(--accent)">09-02-2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Klinisch inzicht box -->
+    <div class="insight-box">
+      <div class="insight-icon">🩺</div>
+      <div class="insight-text">
+        <strong>Aanbeveling arts — sessie 1:</strong>
+        Significante gyroscoop-asymmetrie gedetecteerd (L: 18.8 °/s vs R: 10.8 °/s).
+        Onderarm links toont piekwaarden tot 45 m/s², wat wijst op compensatoire bewegingsstrategieën.
+        Aanbeveling: geforceerde gebruik van de rechterzijde bij oefeningen om neurale activatie te stimuleren.
+        Evaluatie na sessie 3.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
+    <div class="footer-links">
+      <a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a>
+      <a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a>
+    </div>
+    <div class="footer-note">IMU data — Patiënt #001 — Sessie 1 — 2026</div>
+  </div>
+</footer>
+</body>
+</html>

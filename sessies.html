@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZIVRA — Sessies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-block">
+      <span class="logo-mark">Z</span>
+      <div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html"     class="nav-link">Dashboard</a>
+      <a href="patient.html"   class="nav-link">Patiënt</a>
+      <a href="sessies.html"   class="nav-link active">Sessies</a>
+      <a href="voortgang.html" class="nav-link">Voortgang</a>
+      <a href="sensoren.html"  class="nav-link">Sensoren</a>
+    </nav>
+    <div class="header-meta">
+      <div class="meta-chip">Sessie 1</div>
+      <div class="meta-chip">Patiënt #001</div>
+      <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
+    </div>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-label">Sessieoverzicht</div>
+    <h1 class="page-hero-title">Alle sessies</h1>
+    <p class="page-hero-desc">Chronologisch overzicht van alle gemeten sessies. Sessie 1 is beschikbaar; sessies 2–10 worden toegevoegd na elke behandeling.</p>
+  </div>
+</div>
+
+<section>
+  <div class="section-inner">
+
+    <!-- Tabel -->
+    <div class="sessies-table-wrap">
+      <table class="sessies-table">
+        <thead>
+          <tr>
+            <th>Sessie</th>
+            <th>Datum</th>
+            <th>Duur</th>
+            <th>Samples</th>
+            <th>Symmetrie-index</th>
+            <th>Comp. gedrag L</th>
+            <th>Comp. gedrag R</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-active">
+            <td><strong>Sessie 1</strong></td>
+            <td>02-02-2026</td>
+            <td>~54s</td>
+            <td>3.272</td>
+            <td><span class="sym-badge sym-low">57%</span></td>
+            <td>18.8 °/s ⚠</td>
+            <td>10.8 °/s ✓</td>
+            <td style="color:var(--accent)">✓ Geanalyseerd</td>
+          </tr>
+          <tr><td>Sessie 2</td><td>09-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~61%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+          <tr><td>Sessie 3</td><td>12-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~66%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+          <tr><td>Sessie 4</td><td>16-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~70%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+          <tr><td>Sessie 5</td><td>19-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~73%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+          <tr><td>Sessie 6</td><td>23-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~76%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+          <tr><td>Sessie 7</td><td>26-02-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~79%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+          <tr><td>Sessie 8</td><td>02-03-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~82%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+          <tr><td>Sessie 9</td><td>05-03-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~84%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+          <tr><td>Sessie 10</td><td>09-03-2026</td><td>—</td><td>—</td><td><span class="sym-badge sym-future">Verwacht ~86%</span></td><td>—</td><td>—</td><td style="color:var(--text-dim)">Gepland</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Sessie 1 detail -->
+    <div class="section-header" style="margin-top:48px">
+      <div class="section-tag">Sessie 1 — detail</div>
+      <h2 class="section-title">Sensorwaardes sessie 1</h2>
+      <p class="section-desc">Gemiddelde en maximale waarden per sensor tijdens de eerste gemeten sessie.</p>
+    </div>
+
+    <div class="sessies-table-wrap">
+      <table class="sessies-table">
+        <thead>
+          <tr>
+            <th>Sensor</th>
+            <th>Positie</th>
+            <th>Gem. acceleratie</th>
+            <th>Max acceleratie</th>
+            <th>Gem. gyroscoop</th>
+            <th>Max gyroscoop</th>
+            <th>Samples</th>
+          </tr>
+        </thead>
+        <tbody id="sensorTableBody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
+    <div class="footer-links">
+      <a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a>
+      <a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a><a href="sensoren.html">Sensoren</a>
+    </div>
+    <div class="footer-note">IMU data — Patiënt #001 — Sessie 1 — 2026</div>
+  </div>
+</footer>
+
+<script>
+const COLORS = {
+  "Sternum (Borst)": "#4ECDC4", "Schouder Links": "#A29BFE", "Schouder Rechts": "#45B7D1",
+  "Bovenarm Links": "#FD79A8", "Bovenarm Rechts": "#FDCB6E", "Onderarm Links": "#6C5CE7", "Onderarm Rechts": "#00B894",
+};
+const SENSOR_DATA = {
+  "Sternum (Borst)":  { id:"A1", stats:{ acc_mean:9.78,  acc_max:21.84, gyr_mean:11.45, gyr_max:283.61, total_samples:3274 }},
+  "Schouder Links":   { id:"B1", stats:{ acc_mean:9.88,  acc_max:16.94, gyr_mean:13.90, gyr_max:271.32, total_samples:3272 }},
+  "Schouder Rechts":  { id:"B2", stats:{ acc_mean:10.07, acc_max:19.27, gyr_mean:9.31,  gyr_max:130.12, total_samples:3272 }},
+  "Bovenarm Links":   { id:"A3", stats:{ acc_mean:9.99,  acc_max:23.14, gyr_mean:19.05, gyr_max:432.19, total_samples:3272 }},
+  "Bovenarm Rechts":  { id:"A2", stats:{ acc_mean:9.93,  acc_max:15.71, gyr_mean:10.04, gyr_max:198.23, total_samples:3272 }},
+  "Onderarm Links":   { id:"A5", stats:{ acc_mean:9.95,  acc_max:45.01, gyr_mean:23.40, gyr_max:458.96, total_samples:3272 }},
+  "Onderarm Rechts":  { id:"A4", stats:{ acc_mean:10.03, acc_max:26.71, gyr_mean:12.89, gyr_max:280.48, total_samples:3274 }},
+};
+
+const tbody = document.getElementById("sensorTableBody");
+Object.entries(SENSOR_DATA).forEach(([name, data]) => {
+  const d = data.stats;
+  const isHigh = name.includes("Links") && d.gyr_mean > 15;
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><span style="display:inline-flex;align-items:center;gap:8px">
+      <span style="width:10px;height:10px;border-radius:50%;background:${COLORS[name]};flex-shrink:0;display:inline-block"></span>
+      <strong>${name}</strong></span></td>
+    <td><span style="font-family:'DM Mono';font-size:12px;color:var(--text-muted)">${data.id}</span></td>
+    <td>${d.acc_mean.toFixed(2)} m/s²</td>
+    <td>${d.acc_max.toFixed(2)} m/s²</td>
+    <td style="color:${isHigh?"var(--danger)":"var(--text)"}">${d.gyr_mean.toFixed(2)} °/s ${isHigh?"⚠":""}</td>
+    <td>${d.gyr_max.toFixed(2)} °/s</td>
+    <td style="font-family:'DM Mono';font-size:12px">${d.total_samples.toLocaleString("nl-NL")}</td>
+  `;
+  tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>
