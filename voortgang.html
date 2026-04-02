@@ -93,63 +93,39 @@ function selectPatient(nr) {
   document.getElementById("pageDesc").textContent=`${p.naam} · ${ss.length} sessies`;
   document.querySelectorAll(".ps-item").forEach(el=>el.classList.toggle("active",el.dataset.nr===nr));
 
-  // Goal meters
+  // Goal meters — simpele balken
   const gm = document.getElementById("goalMeter"); gm.innerHTML='';
 
-  // Voor "hoger is beter": balk vult naar rechts, groen als doel bereikt
-  // Voor "lager is beter" (pijn, frustratie): balk toont huidige waarde als % van schaal (10).
-  //   Balk IS leeg als de score laag (goed) is, en vol als de score hoog (slecht) is.
-  //   Kleur gaat van groen (laag/goed) naar rood (hoog/slecht).
-  const goals=[
-    {label:"Symmetrie-index", current:last.sym_index||0, target:80,  scale:100, unit:"%",   mode:"higher"},
-    {label:"Pijnscore",        current:last.pijn||0,       target:3,   scale:10,  unit:"/10", mode:"lower"},
-    {label:"Frustratiescore",  current:last.frustratie||0, target:3,   scale:10,  unit:"/10", mode:"lower"},
-    {label:"Energieniveau",    current:last.energie||0,    target:8,   scale:10,  unit:"/10", mode:"higher"},
+  const goals = [
+    { label:"Symmetrie-index", hint:"↑ hoger is beter", current:last.sym_index||0, target:80,  pct: Math.min(100, Math.round((last.sym_index||0) / 80  * 100)) },
+    { label:"Pijnscore",        hint:"↓ lager is beter", current:last.pijn||0,       target:3,   pct: Math.min(100, Math.round((last.pijn||0)       / 10  * 100)), lower:true },
+    { label:"Frustratiescore",  hint:"↓ lager is beter", current:last.frustratie||0, target:3,   pct: Math.min(100, Math.round((last.frustratie||0) / 10  * 100)), lower:true },
+    { label:"Energieniveau",    hint:"↑ hoger is beter", current:last.energie||0,    target:8,   pct: Math.min(100, Math.round((last.energie||0)    / 10  * 100)) },
   ];
 
-  goals.forEach(g=>{
-    let pct, fillColor, statusLabel, statusClass;
-
-    if (g.mode === "higher") {
-      // Balk vult naar rechts — meer is beter
-      pct = Math.max(0, Math.min(100, g.current / g.target * 100));
-      const reached = g.current >= g.target;
-      fillColor = reached ? "#00B894" : g.current >= g.target * 0.75 ? "#FDCB6E" : "#ff7675";
-      statusLabel = reached ? "✓ Doel bereikt" : `Nog ${g.target - g.current} ${g.unit.replace('/','')} te gaan`;
-      statusClass = reached ? "goal-status--ok" : g.current >= g.target * 0.75 ? "goal-status--mid" : "goal-status--bad";
+  goals.forEach(g => {
+    // Kleur: voor "lager is beter" is laag = groen, hoog = rood
+    // Voor "hoger is beter" is hoog = groen, laag = rood
+    let color;
+    if (g.lower) {
+      color = g.current <= g.target ? "#00B894" : g.current <= 6 ? "#FDCB6E" : "#ff7675";
     } else {
-      // "Lager is beter" — balk toont huidige waarde als % van schaal
-      // Leeg = goed (lage score), vol = slecht (hoge score)
-      pct = Math.max(0, Math.min(100, g.current / g.scale * 100));
-      const reached = g.current <= g.target;
-      fillColor = reached ? "#00B894" : g.current <= g.target * 2 ? "#FDCB6E" : "#ff7675";
-      statusLabel = reached ? "✓ Doel bereikt" : `Doel: ≤${g.target}${g.unit} — nu ${g.current > g.target ? g.current - g.target : 0} te hoog`;
-      statusClass = reached ? "goal-status--ok" : g.current <= g.target * 2 ? "goal-status--mid" : "goal-status--bad";
+      color = g.pct >= 100 ? "#00B894" : g.pct >= 75 ? "#FDCB6E" : "#ff7675";
     }
 
-    const arrow = g.mode === "lower" ? "↓ lager is beter" : "↑ hoger is beter";
+    const status = g.lower
+      ? (g.current <= g.target ? "✓ Doel bereikt" : `${g.current - g.target} boven doel`)
+      : (g.pct >= 100          ? "✓ Doel bereikt" : `${g.target - g.current} te gaan`);
 
     const div = document.createElement("div");
     div.className = "goal-row";
     div.innerHTML = `
       <div class="goal-header">
-        <span class="goal-label">
-          ${g.label}
-          <span class="goal-direction">${arrow}</span>
-        </span>
-        <span class="goal-value">
-          ${g.current}${g.unit}
-          <span style="color:var(--text-muted);font-weight:400"> / doel ${g.mode==='lower'?'≤':''}${g.target}${g.unit}</span>
-        </span>
+        <span class="goal-label">${g.label} <span class="goal-direction">${g.hint}</span></span>
+        <span class="goal-value">${g.current} / ${g.lower ? '≤' : ''}${g.target} &nbsp;<span class="goal-status-inline" style="color:${color}">${status}</span></span>
       </div>
-      <div class="goal-track-wrap">
-        <div class="goal-track-outer">
-          <div class="goal-track">
-            <div class="goal-fill" style="width:${pct}%;background:${fillColor}"></div>
-          </div>
-          <div class="goal-target-marker" style="left:${g.mode==='lower' ? g.target/g.scale*100 : 100}%"></div>
-        </div>
-        <span class="goal-status ${statusClass}">${statusLabel}</span>
+      <div style="height:10px; background:#1e2230; border-radius:5px; overflow:hidden; margin-top:4px;">
+        <div style="height:10px; width:${g.pct}%; background:${color}; border-radius:5px;"></div>
       </div>
     `;
     gm.appendChild(div);
