@@ -973,33 +973,93 @@ table.sessies-table {
 
 .chart-card-wrap { height: 220px; }
 
-/* Goal meter */
+/* Goal meter — updated */
 .goal-meter {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+.goal-row { display: flex; flex-direction: column; gap: 8px; }
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.goal-label {
+  color: var(--text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.goal-direction {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.goal-value {
+  font-family: 'DM Mono', monospace;
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.goal-track-wrap {
+  display: flex;
+  align-items: center;
   gap: 14px;
 }
 
-.goal-row { display: flex; flex-direction: column; gap: 6px; }
-
-.goal-header { display: flex; justify-content: space-between; font-size: 14px; }
-
-.goal-label { color: var(--text-muted); }
-
-.goal-value { font-family: 'DM Mono', monospace; color: var(--text); font-weight: 600; }
-
 .goal-track {
-  height: 8px;
+  flex: 1;
+  height: 10px;
   background: var(--bg4);
-  border-radius: 4px;
-  overflow: hidden;
+  border-radius: 5px;
+  overflow: visible;
+  position: relative;
 }
 
 .goal-fill {
   height: 100%;
-  border-radius: 4px;
+  border-radius: 5px;
   transition: width 1s cubic-bezier(.4,0,.2,1);
+  position: relative;
 }
+
+/* Vertical marker line showing where the target/threshold is */
+.goal-target-marker {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: rgba(255,255,255,0.35);
+  border-radius: 1px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.goal-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  white-space: nowrap;
+  padding: 3px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.goal-status--ok  { background: rgba(0,184,148,0.12);   color: var(--ok);     border: 1px solid rgba(0,184,148,0.3); }
+.goal-status--mid { background: rgba(255,234,167,0.12); color: var(--warn);   border: 1px solid rgba(255,234,167,0.3); }
+.goal-status--bad { background: rgba(255,118,117,0.12); color: var(--danger); border: 1px solid rgba(255,118,117,0.3); }
 
 /* ============================================================
    SENSOREN PAGE
