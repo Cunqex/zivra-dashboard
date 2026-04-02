@@ -143,9 +143,11 @@ function selectPatient(nr) {
         </span>
       </div>
       <div class="goal-track-wrap">
-        <div class="goal-track">
-          <div class="goal-fill" style="width:${pct}%;background:${fillColor}"></div>
-          ${g.mode==='lower' ? `<div class="goal-target-marker" style="left:${g.target/g.scale*100}%"></div>` : `<div class="goal-target-marker" style="left:${Math.min(100,g.target/g.target*100)}%"></div>`}
+        <div class="goal-track-outer">
+          <div class="goal-track">
+            <div class="goal-fill" style="width:${pct}%;background:${fillColor}"></div>
+          </div>
+          <div class="goal-target-marker" style="left:${g.mode==='lower' ? g.target/g.scale*100 : 100}%"></div>
         </div>
         <span class="goal-status ${statusClass}">${statusLabel}</span>
       </div>
