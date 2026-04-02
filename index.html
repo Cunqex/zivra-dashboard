@@ -793,9 +793,9 @@ function buildProgress(ss, first, last) {
   const pijnDiff = last.pijn - first.pijn;
   const frusDiff = last.frustratie - first.frustratie;
   const metrics = [
-    { label:"Start symmetrie",     value:first.sym_index, unit:"%",   note:`Sessie 1`,           trend:"baseline", color:"#4ECDC4" },
-    { label:"Huidige symmetrie",   value:last.sym_index,  unit:"%",   note:`Doel: >80%`,          trend:last.sym_index>=80?"ok":last.sym_index>=60?"laag":"letop", color:last.sym_index>=80?"#00B894":last.sym_index>=60?"#FDCB6E":"#ff7675" },
-    { label:"Symmetrie winst",     value:(symDiff>=0?"+":"")+symDiff, unit:"pp", note:`Over ${ss.length} sessies`, trend:symDiff>0?"ok":"letop", color:"#A29BFE" },
+    { label:"Start symmetrie",     value:first.sym_index, unit:"%",   note:`Sessie 1`,           trend:"baseline", color:"linear-gradient(90deg,#4ECDC4,#45B7D1)" },
+    { label:"Huidige symmetrie",   value:last.sym_index,  unit:"%",   note:`Doel: >80%`,          trend:last.sym_index>=80?"ok":last.sym_index>=60?"laag":"letop", color:"linear-gradient(90deg,#4ECDC4,#45B7D1)" },
+    { label:"Symmetrie winst",     value:(symDiff>=0?"+":"")+symDiff, unit:"pp", note:`Over ${ss.length} sessies`, trend:symDiff>0?"ok":"letop", color:"linear-gradient(90deg,#4ECDC4,#45B7D1)" },
     { label:"Pijnscore nu",        value:last.pijn,       unit:"/10", note:pijnDiff<0?"Verbeterd ✓":"Let op", trend:last.pijn<=3?"ok":last.pijn<=6?"laag":"letop", color:"#ff7675" },
     { label:"Frustratiescore nu",  value:last.frustratie, unit:"/10", note:frusDiff<0?"Minder frustrerend":"Stabiel", trend:last.frustratie<=3?"ok":last.frustratie<=6?"laag":"letop", color:"#FDCB6E" },
     { label:"Energieniveau nu",    value:last.energie,    unit:"/10", note:"Hogere energie = beter herstel", trend:last.energie>=7?"ok":last.energie>=4?"laag":"letop", color:"#00B894" },
