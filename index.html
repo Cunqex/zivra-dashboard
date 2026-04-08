@@ -110,129 +110,88 @@
     <div class="body-hero-center">
       <div class="bh-hint">Klik op een sensor voor detail ↓</div>
 
-      <svg id="mainBodySvg" class="main-body-svg" viewBox="0 0 900 680" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg id="mainBodySvg" class="main-body-svg" viewBox="0 0 900 800" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-        <!-- =====================================================
-             LICHAAMSFIGUUR — strak en proportioneel
-             Torso centrum x=450, breed=160 (x=370..530)
-             Schouder links = (370, 155)
-             Schouder rechts = (530, 155)
-        ====================================================== -->
-
-        <!-- HOOFD — mooi rond -->
-        <ellipse cx="450" cy="55" rx="38" ry="44"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-
-        <!-- NEK — dun -->
-        <rect x="441" y="95" width="18" height="14" rx="4"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
-
-        <!-- TORSO — smaller, taller, slanker -->
-        <rect x="370" y="108" width="160" height="145" rx="22"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-
-        <!-- HEUPEN verbinding -->
-        <rect x="390" y="250" width="120" height="18" rx="8"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
-
+        <!-- HOOFD -->
+        <ellipse cx="450" cy="62" rx="46" ry="54" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <!-- NEK -->
+        <rect x="439" y="112" width="22" height="18" rx="5" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- TORSO -->
+        <rect x="358" y="128" width="184" height="172" rx="24" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <!-- HEUPEN -->
+        <rect x="378" y="296" width="144" height="20" rx="9" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
         <!-- BOVENBEEN links -->
-        <rect x="388" y="264" width="52" height="108" rx="18"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <rect x="378" y="311" width="58" height="132" rx="20" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
         <!-- BOVENBEEN rechts -->
-        <rect x="460" y="264" width="52" height="108" rx="18"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-
+        <rect x="464" y="311" width="58" height="132" rx="20" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
         <!-- KNIE links -->
-        <ellipse cx="414" cy="372" rx="18" ry="12"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <ellipse cx="407" cy="443" rx="20" ry="14" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
         <!-- KNIE rechts -->
-        <ellipse cx="486" cy="372" rx="18" ry="12"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
-
+        <ellipse cx="493" cy="443" rx="20" ry="14" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
         <!-- ONDERBEEN links -->
-        <rect x="396" y="380" width="36" height="100" rx="16"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <rect x="389" y="453" width="40" height="122" rx="18" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
         <!-- ONDERBEEN rechts -->
-        <rect x="468" y="380" width="36" height="100" rx="16"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-
+        <rect x="471" y="453" width="40" height="122" rx="18" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
         <!-- VOET links -->
-        <ellipse cx="414" cy="488" rx="26" ry="10"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <ellipse cx="409" cy="583" rx="30" ry="12" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
         <!-- VOET rechts -->
-        <ellipse cx="486" cy="488" rx="26" ry="10"
-          fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <ellipse cx="491" cy="583" rx="30" ry="12" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
 
-        <!-- =====================================================
-             STERNUM SENSOR — groot, leesbaar, midden torso
-        ====================================================== -->
+        <!-- STERNUM -->
         <g class="sensor-dot-group" data-sensor="Sternum (Borst)" style="cursor:pointer">
-          <circle cx="450" cy="190" r="46" fill="#4ECDC4" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle cx="450" cy="190" r="34" fill="#4ECDC4" class="sensor-dot-main"/>
-          <!-- label boven: sensor ID -->
-          <text x="450" y="178" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" font-weight="700" fill="#0a0b0f">A1 — Sternum</text>
-          <!-- waarde midden -->
-          <text x="450" y="192" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="600" fill="#0a0b0f" id="lbl-sternum-acc">—</text>
-          <!-- gyro onder -->
-          <text x="450" y="205" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#0a4040" id="lbl-sternum-gyr">—</text>
+          <circle cx="450" cy="218" r="48" fill="#4ECDC4" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle cx="450" cy="218" r="34" fill="#4ECDC4" class="sensor-dot-main"/>
+          <text x="450" y="213" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">A1</text>
+          <text x="450" y="230" text-anchor="middle" font-family="'Syne',sans-serif" font-size="12" font-weight="600" fill="#0a0b0f">Sternum</text>
         </g>
 
-        <!-- =====================================================
-             ARMEN — getekend door JS als lijnen
-             Schouder links  = (370, 155)
-             Schouder rechts = (530, 155)
-        ====================================================== -->
+        <!-- ARMEN — getekend door JS | schouder L=(358,168) R=(542,168) -->
         <g id="arm-links-drawn"></g>
         <g id="arm-rechts-drawn"></g>
 
-        <!-- SCHOUDER sensors — statisch op torso randen -->
+        <!-- SCHOUDER LINKS -->
         <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
-          <circle cx="370" cy="155" r="42" fill="#A29BFE" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle cx="370" cy="155" r="30" fill="#A29BFE" class="sensor-dot-main"/>
-          <text x="370" y="143" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#0a0b0f">B1 — Sch.L</text>
-          <text x="370" y="157" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="600" fill="#0a0b0f" id="lbl-schl-acc">—</text>
-          <text x="370" y="170" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#1a0a30" id="lbl-schl-gyr">—</text>
+          <circle cx="358" cy="168" r="48" fill="#A29BFE" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle cx="358" cy="168" r="34" fill="#A29BFE" class="sensor-dot-main"/>
+          <text x="358" y="163" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">B1</text>
+          <text x="358" y="180" text-anchor="middle" font-family="'Syne',sans-serif" font-size="11" font-weight="600" fill="#0a0b0f">Sch. Links</text>
         </g>
 
+        <!-- SCHOUDER RECHTS -->
         <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
-          <circle cx="530" cy="155" r="42" fill="#45B7D1" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle cx="530" cy="155" r="30" fill="#45B7D1" class="sensor-dot-main"/>
-          <text x="530" y="143" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#0a0b0f">B2 — Sch.R</text>
-          <text x="530" y="157" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="600" fill="#0a0b0f" id="lbl-schr-acc">—</text>
-          <text x="530" y="170" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" fill="#0a1a20" id="lbl-schr-gyr">—</text>
+          <circle cx="542" cy="168" r="48" fill="#45B7D1" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle cx="542" cy="168" r="34" fill="#45B7D1" class="sensor-dot-main"/>
+          <text x="542" y="163" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">B2</text>
+          <text x="542" y="180" text-anchor="middle" font-family="'Syne',sans-serif" font-size="11" font-weight="600" fill="#0a0b0f">Sch. Rechts</text>
         </g>
 
-        <!-- ARM SENSORS — positie ingesteld door JS -->
+        <!-- ARM SENSORS — positie door JS -->
         <g id="sensor-bovl" class="sensor-dot-group" data-sensor="Bovenarm Links" style="cursor:pointer">
-          <circle id="bg-bovl"  r="40" fill="#FD79A8" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle id="dot-bovl" r="28" fill="#FD79A8" class="sensor-dot-main"/>
-          <text id="lbl-bovl-id"  font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#0a0b0f" text-anchor="middle">A3 — Bov.L</text>
-          <text id="lbl-bovl-acc" font-family="'DM Mono',monospace" font-size="12" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
-          <text id="lbl-bovl-gyr" font-family="'DM Mono',monospace" font-size="10" fill="#2a0015" text-anchor="middle">—</text>
+          <circle id="bg-bovl"  r="46" fill="#FD79A8" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle id="dot-bovl" r="32" fill="#FD79A8" class="sensor-dot-main"/>
+          <text id="lbl-bovl-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">A3</text>
+          <text id="lbl-bovl-sub" font-family="'Syne',sans-serif" font-size="11" font-weight="600" fill="#0a0b0f" text-anchor="middle">Bov. Links</text>
         </g>
 
         <g id="sensor-ondl" class="sensor-dot-group" data-sensor="Onderarm Links" style="cursor:pointer">
-          <circle id="bg-ondl"  r="40" fill="#6C5CE7" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle id="dot-ondl" r="28" fill="#6C5CE7" class="sensor-dot-main"/>
-          <text id="lbl-ondl-id"  font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">A5 — Ond.L</text>
-          <text id="lbl-ondl-acc" font-family="'DM Mono',monospace" font-size="12" font-weight="600" fill="#fff" text-anchor="middle">—</text>
-          <text id="lbl-ondl-gyr" font-family="'DM Mono',monospace" font-size="10" fill="#ccc" text-anchor="middle">—</text>
+          <circle id="bg-ondl"  r="46" fill="#6C5CE7" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle id="dot-ondl" r="32" fill="#6C5CE7" class="sensor-dot-main"/>
+          <text id="lbl-ondl-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">A5</text>
+          <text id="lbl-ondl-sub" font-family="'Syne',sans-serif" font-size="11" font-weight="600" fill="#ddd" text-anchor="middle">Ond. Links</text>
         </g>
 
         <g id="sensor-bovr" class="sensor-dot-group" data-sensor="Bovenarm Rechts" style="cursor:pointer">
-          <circle id="bg-bovr"  r="40" fill="#FDCB6E" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle id="dot-bovr" r="28" fill="#FDCB6E" class="sensor-dot-main"/>
-          <text id="lbl-bovr-id"  font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#0a0b0f" text-anchor="middle">A2 — Bov.R</text>
-          <text id="lbl-bovr-acc" font-family="'DM Mono',monospace" font-size="12" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
-          <text id="lbl-bovr-gyr" font-family="'DM Mono',monospace" font-size="10" fill="#2a1a00" text-anchor="middle">—</text>
+          <circle id="bg-bovr"  r="46" fill="#FDCB6E" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle id="dot-bovr" r="32" fill="#FDCB6E" class="sensor-dot-main"/>
+          <text id="lbl-bovr-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">A2</text>
+          <text id="lbl-bovr-sub" font-family="'Syne',sans-serif" font-size="11" font-weight="600" fill="#0a0b0f" text-anchor="middle">Bov. Rechts</text>
         </g>
 
         <g id="sensor-ondr" class="sensor-dot-group" data-sensor="Onderarm Rechts" style="cursor:pointer">
-          <circle id="bg-ondr"  r="40" fill="#00B894" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle id="dot-ondr" r="28" fill="#00B894" class="sensor-dot-main"/>
-          <text id="lbl-ondr-id"  font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#0a0b0f" text-anchor="middle">A4 — Ond.R</text>
-          <text id="lbl-ondr-acc" font-family="'DM Mono',monospace" font-size="12" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
-          <text id="lbl-ondr-gyr" font-family="'DM Mono',monospace" font-size="10" fill="#001a12" text-anchor="middle">—</text>
+          <circle id="bg-ondr"  r="46" fill="#00B894" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle id="dot-ondr" r="32" fill="#00B894" class="sensor-dot-main"/>
+          <text id="lbl-ondr-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">A4</text>
+          <text id="lbl-ondr-sub" font-family="'Syne',sans-serif" font-size="11" font-weight="600" fill="#0a0b0f" text-anchor="middle">Ond. Rechts</text>
         </g>
 
       </svg>
@@ -1064,23 +1023,6 @@ function buildBodyHero(p, ss, sd) {
   document.getElementById("bh-gyr-boven-r").textContent    = sd["Bovenarm Rechts"].gyr_mean.toFixed(1)  + " °/s";
   document.getElementById("bh-gyr-onder-r").textContent    = sd["Onderarm Rechts"].gyr_mean.toFixed(1)  + " °/s";
 
-  // Dot labels: bovenste regel = acc, onderste = gyro
-  const setDot = (accId, gyrId, sensorName) => {
-    const d = sd[sensorName];
-    if (!d) return;
-    const accEl = document.getElementById(accId);
-    const gyrEl = document.getElementById(gyrId);
-    if (accEl) accEl.textContent = d.acc_mean.toFixed(1) + " m/s²";
-    if (gyrEl) gyrEl.textContent = d.gyr_mean.toFixed(1) + "°/s";
-  };
-  setDot("lbl-sternum-acc", "lbl-sternum-gyr", "Sternum (Borst)");
-  setDot("lbl-schl-acc",    "lbl-schl-gyr",    "Schouder Links");
-  setDot("lbl-schr-acc",    "lbl-schr-gyr",    "Schouder Rechts");
-  setDot("lbl-bovl-acc",    "lbl-bovl-gyr",    "Bovenarm Links");
-  setDot("lbl-bovr-acc",    "lbl-bovr-gyr",    "Bovenarm Rechts");
-  setDot("lbl-ondl-acc",    "lbl-ondl-gyr",    "Onderarm Links");
-  setDot("lbl-ondr-acc",    "lbl-ondr-gyr",    "Onderarm Rechts");
-
   // ARM BEWEGING — volledig nieuwe aanpak zonder SVG rotatie
   // Bereken arm-segmentposities via trigonometrie vanuit vaste schouderpunten op de torso.
   //
@@ -1101,26 +1043,23 @@ function buildBodyHero(p, ss, sd) {
   const ratioL = gyrL / maxGyr;
   const ratioR = gyrR / maxGyr;
 
-  // Hoek: 10° = arm nauwelijks omhoog, 65° = arm ver omhoog
   const spreadL = 10 + ratioL * 55;
   const spreadR = 10 + ratioR * 55;
 
-  // Schouder ankerpunten — exact op torso randen (nieuw: 370 en 530)
-  const SL = { x: 370, y: 155 };
-  const SR = { x: 530, y: 155 };
-
-  // Langere armen voor grotere SVG
-  const upperLen = 140;
-  const lowerLen = 120;
+  // Schouderankerpunten passend bij nieuwe SVG (torso x=358..542, y=168)
+  const SL = { x: 358, y: 168 };
+  const SR = { x: 542, y: 168 };
+  const upperLen = 168;
+  const lowerLen = 148;
 
   function armPoints(sx, sy, angle, side) {
     const rad = (angle * Math.PI) / 180;
     const dx = (side === 'L' ? -1 : 1) * Math.sin(rad);
     const dy = Math.cos(rad);
-    const elbow  = { x: sx + dx * upperLen,       y: sy + dy * upperLen };
-    const hand   = { x: elbow.x + dx * lowerLen,  y: elbow.y + dy * lowerLen };
-    const bovAcc = { x: sx + dx * upperLen * 0.5,  y: sy + dy * upperLen * 0.5 };
-    const ondAcc = { x: elbow.x + dx * lowerLen * 0.5, y: elbow.y + dy * lowerLen * 0.5 };
+    const elbow  = { x: sx + dx * upperLen,            y: sy + dy * upperLen };
+    const hand   = { x: elbow.x + dx * lowerLen,        y: elbow.y + dy * lowerLen };
+    const bovAcc = { x: sx + dx * upperLen * 0.5,        y: sy + dy * upperLen * 0.5 };
+    const ondAcc = { x: elbow.x + dx * lowerLen * 0.5,   y: elbow.y + dy * lowerLen * 0.5 };
     return { elbow, hand, bovAcc, ondAcc };
   }
 
@@ -1129,50 +1068,33 @@ function buildBodyHero(p, ss, sd) {
     if (!g) return;
     g.innerHTML = '';
     const ns = 'http://www.w3.org/2000/svg';
-
     const make = (tag, attrs) => {
       const el = document.createElementNS(ns, tag);
       Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
       return el;
     };
-
-    // Bovenarm: buitenrand + donkere vulling
-    g.appendChild(make('line', { x1:sx, y1:sy, x2:pts.elbow.x, y2:pts.elbow.y, stroke:strokeUpper, 'stroke-width':'36', 'stroke-linecap':'round' }));
-    g.appendChild(make('line', { x1:sx, y1:sy, x2:pts.elbow.x, y2:pts.elbow.y, stroke:'var(--body-fill)', 'stroke-width':'26', 'stroke-linecap':'round' }));
-
+    // Bovenarm
+    g.appendChild(make('line', { x1:sx, y1:sy, x2:pts.elbow.x, y2:pts.elbow.y, stroke:strokeUpper, 'stroke-width':'38', 'stroke-linecap':'round' }));
+    g.appendChild(make('line', { x1:sx, y1:sy, x2:pts.elbow.x, y2:pts.elbow.y, stroke:'var(--body-fill)', 'stroke-width':'28', 'stroke-linecap':'round' }));
     // Onderarm
-    g.appendChild(make('line', { x1:pts.elbow.x, y1:pts.elbow.y, x2:pts.hand.x, y2:pts.hand.y, stroke:strokeLower, 'stroke-width':'32', 'stroke-linecap':'round' }));
-    g.appendChild(make('line', { x1:pts.elbow.x, y1:pts.elbow.y, x2:pts.hand.x, y2:pts.hand.y, stroke:'var(--body-fill)', 'stroke-width':'22', 'stroke-linecap':'round' }));
-
-    // Elleboog gewricht
-    g.appendChild(make('circle', { cx:pts.elbow.x, cy:pts.elbow.y, r:'16', fill:'var(--body-fill)', stroke:'var(--body-stroke)', 'stroke-width':'2' }));
-
+    g.appendChild(make('line', { x1:pts.elbow.x, y1:pts.elbow.y, x2:pts.hand.x, y2:pts.hand.y, stroke:strokeLower, 'stroke-width':'34', 'stroke-linecap':'round' }));
+    g.appendChild(make('line', { x1:pts.elbow.x, y1:pts.elbow.y, x2:pts.hand.x, y2:pts.hand.y, stroke:'var(--body-fill)', 'stroke-width':'24', 'stroke-linecap':'round' }));
+    // Elleboog
+    g.appendChild(make('circle', { cx:pts.elbow.x, cy:pts.elbow.y, r:'17', fill:'var(--body-fill)', stroke:'var(--body-stroke)', 'stroke-width':'2' }));
     // Hand
-    g.appendChild(make('ellipse', { cx:pts.hand.x, cy:pts.hand.y, rx:'16', ry:'11', fill:'var(--body-fill)', stroke:strokeLower, 'stroke-width':'2' }));
+    g.appendChild(make('ellipse', { cx:pts.hand.x, cy:pts.hand.y, rx:'17', ry:'12', fill:'var(--body-fill)', stroke:strokeLower, 'stroke-width':'2' }));
   }
 
-  function positionSensor(bgId, dotId, idId, accId, gyrId, x, y) {
+  function positionSensor(bgId, dotId, idId, subId, x, y) {
     const cx = Math.round(x), cy = Math.round(y);
-    const setXY = (id, isText) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      if (isText) {
-        el.setAttribute('x', cx);
-        // id-label, acc-label, gyr-label op vaste offsets
-      } else {
-        el.setAttribute('cx', cx);
-        el.setAttribute('cy', cy);
-      }
-    };
     document.getElementById(bgId)?.setAttribute('cx', cx);
     document.getElementById(bgId)?.setAttribute('cy', cy);
     document.getElementById(dotId)?.setAttribute('cx', cx);
     document.getElementById(dotId)?.setAttribute('cy', cy);
-    // Text labels
-    [[idId, cy-16],[accId, cy],[gyrId, cy+14]].forEach(([id, ty]) => {
-      const el = document.getElementById(id);
-      if (el) { el.setAttribute('x', cx); el.setAttribute('y', ty); }
-    });
+    const idEl = document.getElementById(idId);
+    if (idEl) { idEl.setAttribute('x', cx); idEl.setAttribute('y', cy - 4); }
+    const subEl = document.getElementById(subId);
+    if (subEl) { subEl.setAttribute('x', cx); subEl.setAttribute('y', cy + 13); }
   }
 
   let step = 0;
@@ -1181,19 +1103,16 @@ function buildBodyHero(p, ss, sd) {
   window._armAnim = setInterval(() => {
     step++;
     const ease = 1 - Math.pow(1 - step / steps, 3);
-    const curL = spreadL * ease;
-    const curR = spreadR * ease;
-
-    const ptsL = armPoints(SL.x, SL.y, curL, 'L');
-    const ptsR = armPoints(SR.x, SR.y, curR, 'R');
+    const ptsL = armPoints(SL.x, SL.y, spreadL * ease, 'L');
+    const ptsR = armPoints(SR.x, SR.y, spreadR * ease, 'R');
 
     drawArm('arm-links-drawn',  SL.x, SL.y, ptsL, '#A29BFE', '#6C5CE7');
     drawArm('arm-rechts-drawn', SR.x, SR.y, ptsR, '#45B7D1', '#00B894');
 
-    positionSensor('bg-bovl','dot-bovl','lbl-bovl-id','lbl-bovl-acc','lbl-bovl-gyr', ptsL.bovAcc.x, ptsL.bovAcc.y);
-    positionSensor('bg-ondl','dot-ondl','lbl-ondl-id','lbl-ondl-acc','lbl-ondl-gyr', ptsL.ondAcc.x, ptsL.ondAcc.y);
-    positionSensor('bg-bovr','dot-bovr','lbl-bovr-id','lbl-bovr-acc','lbl-bovr-gyr', ptsR.bovAcc.x, ptsR.bovAcc.y);
-    positionSensor('bg-ondr','dot-ondr','lbl-ondr-id','lbl-ondr-acc','lbl-ondr-gyr', ptsR.ondAcc.x, ptsR.ondAcc.y);
+    positionSensor('bg-bovl','dot-bovl','lbl-bovl-id','lbl-bovl-sub', ptsL.bovAcc.x, ptsL.bovAcc.y);
+    positionSensor('bg-ondl','dot-ondl','lbl-ondl-id','lbl-ondl-sub', ptsL.ondAcc.x, ptsL.ondAcc.y);
+    positionSensor('bg-bovr','dot-bovr','lbl-bovr-id','lbl-bovr-sub', ptsR.bovAcc.x, ptsR.bovAcc.y);
+    positionSensor('bg-ondr','dot-ondr','lbl-ondr-id','lbl-ondr-sub', ptsR.ondAcc.x, ptsR.ondAcc.y);
 
     if (step >= steps) clearInterval(window._armAnim);
   }, 1200 / steps);
@@ -1227,8 +1146,11 @@ function initBodyHero() {
       const d = sd[name];
       tooltip.innerHTML = `
         <div class="tt-name" style="color:${COLORS[name]}">${name}</div>
-        <div class="tt-row">Gem. acc: <b>${d.acc_mean.toFixed(1)} m/s²</b></div>
-        <div class="tt-row">Gem. gyro: <b>${d.gyr_mean.toFixed(1)} °/s</b></div>
+        <div class="tt-divider"></div>
+        <div class="tt-row"><span class="tt-key">Gem. acceleratie</span><b>${d.acc_mean.toFixed(1)} m/s²</b></div>
+        <div class="tt-row"><span class="tt-key">Max acceleratie</span><b>${d.acc_max.toFixed(1)} m/s²</b></div>
+        <div class="tt-row"><span class="tt-key">Gem. gyroscoop</span><b>${d.gyr_mean.toFixed(1)} °/s</b></div>
+        <div class="tt-row"><span class="tt-key">Max gyroscoop</span><b>${d.gyr_max.toFixed(0)} °/s</b></div>
         <div class="tt-cta">↓ Klik voor tijdreeks</div>
       `;
       tooltip.classList.add("visible");
