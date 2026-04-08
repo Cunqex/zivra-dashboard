@@ -150,101 +150,101 @@
 
         <!-- =====================================================
              LINKER ARM
-             Schouder zit aan LINKERKANT van torso: x=294, y=120 → schouderpunt = (260, 120)
-             De arm hangt LINKS van het lichaam, dus arm-rects beginnen verder naar links.
-             Rotatie: negatief = arm draait OMHOOG NAAR LINKS (naar buiten).
-             transform-origin = bovenkant schouder: (260, 120)
+             Torso linkerrand = x=294. Arm hangt LINKS van torso.
+             Pivot = (294, 128) = exact waar arm vastit aan torso.
+             Arm-rects getekend relatief: schouder van x=230 tot x=294,
+             zodat de RECHTERKANT van schouder op x=294 aansluit.
+             Negatieve rotatie = arm draait linksom = omhoog naar links (buiten).
         ====================================================== -->
-        <g id="arm-links-group" transform="rotate(-15, 284, 120)"
-           style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+        <g id="arm-links-group" transform="rotate(-15, 294, 128)">
 
-          <!-- SCHOUDER LINKS sensor -->
+          <!-- BOVENARM body: x=230..294, midden=262 -->
+          <rect x="230" y="112" width="64" height="100" rx="18" fill="var(--body-fill)" stroke="#A29BFE" stroke-width="2.5"/>
+
+          <!-- SCHOUDER sensor (bovenkant arm, bij pivot) -->
           <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
-            <circle cx="260" cy="128" r="25" fill="#A29BFE" fill-opacity="0.12" class="sensor-pulse-bg"/>
-            <circle cx="260" cy="128" r="17" fill="#A29BFE" class="sensor-dot-main"/>
-            <text x="260" y="123" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">B1</text>
-            <text x="260" y="132" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-schl-acc">—</text>
-            <text x="260" y="140" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-schl-gyr">—</text>
+            <circle cx="262" cy="130" r="24" fill="#A29BFE" fill-opacity="0.12" class="sensor-pulse-bg"/>
+            <circle cx="262" cy="130" r="16" fill="#A29BFE" class="sensor-dot-main"/>
+            <text x="262" y="125" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">B1</text>
+            <text x="262" y="134" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-schl-acc">—</text>
+            <text x="262" y="142" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-schl-gyr">—</text>
           </g>
 
-          <!-- BOVENARM body -->
-          <rect x="236" y="140" width="48" height="96" rx="17" fill="var(--body-fill)" stroke="#A29BFE" stroke-width="2.5"/>
-
-          <!-- BOVENARM sensor -->
+          <!-- BOVENARM sensor (midden bovenarm) -->
           <g class="sensor-dot-group" data-sensor="Bovenarm Links" style="cursor:pointer">
-            <circle cx="260" cy="188" r="25" fill="#FD79A8" fill-opacity="0.12" class="sensor-pulse-bg"/>
-            <circle cx="260" cy="188" r="17" fill="#FD79A8" class="sensor-dot-main"/>
-            <text x="260" y="183" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A3</text>
-            <text x="260" y="192" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-bovl-acc">—</text>
-            <text x="260" y="200" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-bovl-gyr">—</text>
+            <circle cx="262" cy="175" r="24" fill="#FD79A8" fill-opacity="0.12" class="sensor-pulse-bg"/>
+            <circle cx="262" cy="175" r="16" fill="#FD79A8" class="sensor-dot-main"/>
+            <text x="262" y="170" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A3</text>
+            <text x="262" y="179" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-bovl-acc">—</text>
+            <text x="262" y="187" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-bovl-gyr">—</text>
           </g>
 
           <!-- ELLEBOOG -->
-          <rect x="240" y="234" width="40" height="16" rx="6" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+          <rect x="234" y="210" width="56" height="16" rx="7" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
 
           <!-- ONDERARM body -->
-          <rect x="238" y="248" width="44" height="90" rx="16" fill="var(--body-fill)" stroke="#6C5CE7" stroke-width="2.5"/>
+          <rect x="234" y="224" width="56" height="92" rx="18" fill="var(--body-fill)" stroke="#6C5CE7" stroke-width="2.5"/>
 
           <!-- ONDERARM sensor -->
           <g class="sensor-dot-group" data-sensor="Onderarm Links" style="cursor:pointer">
-            <circle cx="260" cy="292" r="25" fill="#6C5CE7" fill-opacity="0.12" class="sensor-pulse-bg"/>
-            <circle cx="260" cy="292" r="17" fill="#6C5CE7" class="sensor-dot-main"/>
-            <text x="260" y="287" text-anchor="middle" class="sdl-id"   fill="#fff">A5</text>
-            <text x="260" y="296" text-anchor="middle" class="sdl-acc"  fill="#fff" id="lbl-ondl-acc">—</text>
-            <text x="260" y="304" text-anchor="middle" class="sdl-gyro" fill="#ccc" id="lbl-ondl-gyr">—</text>
+            <circle cx="262" cy="270" r="24" fill="#6C5CE7" fill-opacity="0.12" class="sensor-pulse-bg"/>
+            <circle cx="262" cy="270" r="16" fill="#6C5CE7" class="sensor-dot-main"/>
+            <text x="262" y="265" text-anchor="middle" class="sdl-id"   fill="#fff">A5</text>
+            <text x="262" y="274" text-anchor="middle" class="sdl-acc"  fill="#fff" id="lbl-ondl-acc">—</text>
+            <text x="262" y="282" text-anchor="middle" class="sdl-gyro" fill="#ccc" id="lbl-ondl-gyr">—</text>
           </g>
 
           <!-- HAND -->
-          <ellipse cx="260" cy="345" rx="22" ry="13" fill="var(--body-fill)" stroke="#6C5CE7" stroke-width="2"/>
+          <ellipse cx="262" cy="322" rx="24" ry="13" fill="var(--body-fill)" stroke="#6C5CE7" stroke-width="2"/>
         </g>
 
         <!-- =====================================================
              RECHTER ARM
-             Schouderpunt = (520, 120) — rechts van torso
-             Rotatie: positief = arm draait OMHOOG NAAR RECHTS (naar buiten).
-             transform-origin = (520, 120)
+             Torso rechterrand = x=486 (294+192). Arm hangt RECHTS van torso.
+             Pivot = (486, 128) = exact waar arm vastzit aan torso.
+             Arm-rects: LINKERKANT op x=486, loopt naar x=550.
+             Positieve rotatie = arm draait rechtsom = omhoog naar rechts (buiten).
         ====================================================== -->
-        <g id="arm-rechts-group" transform="rotate(15, 496, 120)"
-           style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+        <g id="arm-rechts-group" transform="rotate(15, 486, 128)">
 
-          <!-- SCHOUDER RECHTS sensor -->
+          <!-- BOVENARM body: x=486..550, midden=518 -->
+          <rect x="486" y="112" width="64" height="100" rx="18" fill="var(--body-fill)" stroke="#45B7D1" stroke-width="2.5"/>
+
+          <!-- SCHOUDER sensor -->
           <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
-            <circle cx="520" cy="128" r="25" fill="#45B7D1" fill-opacity="0.12" class="sensor-pulse-bg"/>
-            <circle cx="520" cy="128" r="17" fill="#45B7D1" class="sensor-dot-main"/>
-            <text x="520" y="123" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">B2</text>
-            <text x="520" y="132" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-schr-acc">—</text>
-            <text x="520" y="140" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-schr-gyr">—</text>
+            <circle cx="518" cy="130" r="24" fill="#45B7D1" fill-opacity="0.12" class="sensor-pulse-bg"/>
+            <circle cx="518" cy="130" r="16" fill="#45B7D1" class="sensor-dot-main"/>
+            <text x="518" y="125" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">B2</text>
+            <text x="518" y="134" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-schr-acc">—</text>
+            <text x="518" y="142" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-schr-gyr">—</text>
           </g>
-
-          <!-- BOVENARM body -->
-          <rect x="496" y="140" width="48" height="96" rx="17" fill="var(--body-fill)" stroke="#45B7D1" stroke-width="2.5"/>
 
           <!-- BOVENARM sensor -->
           <g class="sensor-dot-group" data-sensor="Bovenarm Rechts" style="cursor:pointer">
-            <circle cx="520" cy="188" r="25" fill="#FDCB6E" fill-opacity="0.12" class="sensor-pulse-bg"/>
-            <circle cx="520" cy="188" r="17" fill="#FDCB6E" class="sensor-dot-main"/>
-            <text x="520" y="183" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A2</text>
-            <text x="520" y="192" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-bovr-acc">—</text>
-            <text x="520" y="200" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-bovr-gyr">—</text>
+            <circle cx="518" cy="175" r="24" fill="#FDCB6E" fill-opacity="0.12" class="sensor-pulse-bg"/>
+            <circle cx="518" cy="175" r="16" fill="#FDCB6E" class="sensor-dot-main"/>
+            <text x="518" y="170" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A2</text>
+            <text x="518" y="179" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-bovr-acc">—</text>
+            <text x="518" y="187" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-bovr-gyr">—</text>
           </g>
 
           <!-- ELLEBOOG -->
-          <rect x="500" y="234" width="40" height="16" rx="6" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+          <rect x="490" y="210" width="56" height="16" rx="7" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
 
           <!-- ONDERARM body -->
-          <rect x="498" y="248" width="44" height="90" rx="16" fill="var(--body-fill)" stroke="#00B894" stroke-width="2.5"/>
+          <rect x="490" y="224" width="56" height="92" rx="18" fill="var(--body-fill)" stroke="#00B894" stroke-width="2.5"/>
 
           <!-- ONDERARM sensor -->
           <g class="sensor-dot-group" data-sensor="Onderarm Rechts" style="cursor:pointer">
-            <circle cx="520" cy="292" r="25" fill="#00B894" fill-opacity="0.12" class="sensor-pulse-bg"/>
-            <circle cx="520" cy="292" r="17" fill="#00B894" class="sensor-dot-main"/>
-            <text x="520" y="287" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A4</text>
-            <text x="520" y="296" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-ondr-acc">—</text>
-            <text x="520" y="304" text-anchor="middle" class="sdl-gyro" fill="#083530" id="lbl-ondr-gyr">—</text>
+            <circle cx="518" cy="270" r="24" fill="#00B894" fill-opacity="0.12" class="sensor-pulse-bg"/>
+            <circle cx="518" cy="270" r="16" fill="#00B894" class="sensor-dot-main"/>
+            <text x="518" y="265" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A4</text>
+            <text x="518" y="274" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-ondr-acc">—</text>
+            <text x="518" y="282" text-anchor="middle" class="sdl-gyro" fill="#083530" id="lbl-ondr-gyr">—</text>
           </g>
 
           <!-- HAND -->
-          <ellipse cx="520" cy="345" rx="22" ry="13" fill="var(--body-fill)" stroke="#00B894" stroke-width="2"/>
+          <ellipse cx="518" cy="322" rx="24" ry="13" fill="var(--body-fill)" stroke="#00B894" stroke-width="2"/>
         </g>
 
       </svg>
@@ -1103,18 +1103,19 @@ function buildBodyHero(p, ss, sd) {
   const ratioL = gyrL / maxGyr;
   const ratioR = gyrR / maxGyr;
 
-  // Draaipunt = binnenkant schouder (bij torso)
-  // Linker arm: pivot x=284 (rechterkant arm), negatief = arm draait naar links/buiten
-  // Rechter arm: pivot x=496 (linkerkant arm), positief = arm draait naar rechts/buiten
-  const angleL = -(15 + ratioL * 55);
-  const angleR =  (15 + ratioR * 55);
+  // Pivot = torsorand. Met arm LINKS van pivot:
+  //   positief (kloksgewijs) = arm gaat omhoog naar links (buiten) ✓
+  // Met arm RECHTS van pivot:
+  //   negatief (tegenkloks) = arm gaat omhoog naar rechts (buiten) ✓
+  const angleL =  (10 + ratioL * 50);   // linkerarm omhoog naar links
+  const angleR = -(10 + ratioR * 50);   // rechterarm omhoog naar rechts
 
   // Animeer via requestAnimationFrame: eerst op rust, dan naar doel
   const armL = document.getElementById("arm-links-group");
   const armR = document.getElementById("arm-rechts-group");
 
-  if (armL) armL.setAttribute("transform", "rotate(0, 284, 120)");
-  if (armR) armR.setAttribute("transform", "rotate(0, 496, 120)");
+  if (armL) armL.setAttribute("transform", "rotate(0, 294, 128)");
+  if (armR) armR.setAttribute("transform", "rotate(0, 486, 128)");
 
   // Animeer naar doelpositie
   const steps = 40;
@@ -1127,10 +1128,8 @@ function buildBodyHero(p, ss, sd) {
     const ease = 1 - Math.pow(1 - t, 3);
     const curL = angleL * ease;
     const curR = angleR * ease;
-    // Linkerarm: draaipunt rechterschouder (x=284), negatief = tegen klok = arm naar links/buiten
-    // Rechterarm: draaipunt linkerschouder (x=496), positief = met klok = arm naar rechts/buiten
-    if (armL) armL.setAttribute("transform", `rotate(${curL.toFixed(2)}, 284, 120)`);
-    if (armR) armR.setAttribute("transform", `rotate(${curR.toFixed(2)}, 496, 120)`);
+    if (armL) armL.setAttribute("transform", `rotate(${curL.toFixed(2)}, 294, 128)`);
+    if (armR) armR.setAttribute("transform", `rotate(${curR.toFixed(2)}, 486, 128)`);
     if (step >= steps) clearInterval(animInterval);
   }, interval);
 
