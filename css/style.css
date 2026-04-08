@@ -1739,3 +1739,58 @@ table.sessies-table {
 @media (max-width: 640px) {
   .main-body-svg { max-width: 340px; }
 }
+
+/* L vs R vergelijkingsgrid in rechter paneel */
+.bh-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.bh-compare-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bh-compare-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-family: 'DM Mono', monospace;
+}
+
+.bh-compare-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.bh-compare-row:last-child { border-bottom: none; }
+
+.bh-compare-key {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.bh-compare-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.bh-compare-divider {
+  width: 1px;
+  background: var(--border2);
+  margin: 0 12px;
+  align-self: stretch;
+}
