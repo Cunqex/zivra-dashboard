@@ -1127,42 +1127,121 @@ function buildBodyHero(p, ss, sd) {
 }
 
 // ============================================================
-// BODY HERO SENSOR KLIK
 // ============================================================
+// BODY HERO — tooltip met klinische context per sensor
+// ============================================================
+
+// Klinische context per sensor
+const SENSOR_CONTEXT = {
+  "Sternum (Borst)": {
+    locatie: "Midden borstbeen",
+    functie: "Meet romp- en houdingsstabiliteit",
+    klinisch: "Stabiele acceleratie (~9.8 m/s²) duidt op gecontroleerde zithouding. Afwijkingen wijzen op rompinstabiliteit.",
+  },
+  "Schouder Links": {
+    locatie: "Linker schoudergewricht",
+    functie: "Meet schoudermobiliteit en -rotatie",
+    klinisch: "Verhoogde gyroscoopwaarden duiden op compensatiegedrag voor de aangetaste rechterzijde.",
+  },
+  "Schouder Rechts": {
+    locatie: "Rechter schoudergewricht",
+    functie: "Meet schoudermobiliteit en -rotatie",
+    klinisch: "Lagere waarden t.o.v. links wijzen op verminderde mobiliteit door hemiparese.",
+  },
+  "Bovenarm Links": {
+    locatie: "Linker bovenarm (biceps/triceps zone)",
+    functie: "Meet bewegingsamplitude bovenarm",
+    klinisch: "Hoge activiteit kan duiden op overcompensatie. Vergelijk altijd met rechts.",
+  },
+  "Bovenarm Rechts": {
+    locatie: "Rechter bovenarm (biceps/triceps zone)",
+    functie: "Meet bewegingsamplitude bovenarm",
+    klinisch: "Doelwaarde: activiteit vergelijkbaar met linkerzijde. Toename over sessies = vooruitgang.",
+  },
+  "Onderarm Links": {
+    locatie: "Linker onderarm (pols/hand zone)",
+    functie: "Meet fijne arm- en polsbewegingen",
+    klinisch: "Piekwaarden tot 45 m/s² duiden op compensatoire snelle bewegingen.",
+  },
+  "Onderarm Rechts": {
+    locatie: "Rechter onderarm (pols/hand zone)",
+    functie: "Meet fijne arm- en polsbewegingen",
+    klinisch: "Toename in activiteit over sessies is een directe indicator van motorisch herstel.",
+  },
+};
+
 function initBodyHero() {
   const tooltip = document.getElementById("sensorTooltip");
+  const svgEl   = document.getElementById("mainBodySvg");
 
-  document.querySelectorAll(".sensor-dot-group").forEach(group => {
+  // Event delegation op de SVG — werkt ook voor dynamisch getekende arm-sensors
+  svgEl.addEventListener("mousemove", e => {
+    // Zoek dichtstbijzijnde sensor-dot-group
+    const group = e.target.closest(".sensor-dot-group");
+    if (!group) {
+      tooltip.classList.remove("visible");
+      return;
+    }
     const name = group.dataset.sensor;
+    if (!name) { tooltip.classList.remove("visible"); return; }
 
-    group.addEventListener("click", () => {
-      document.getElementById("sec-sensoren").scrollIntoView({ behavior: "smooth", block: "start" });
-      setTimeout(() => { activeSensor = name; buildSensorSection(getSensorStats(currentPatientNr)); }, 380);
-    });
+    const sd  = getSensorStats(currentPatientNr);
+    const d   = sd?.[name];
+    const ctx = SENSOR_CONTEXT[name];
+    if (!d) return;
 
-    group.addEventListener("mouseenter", e => {
-      const sd = getSensorStats(currentPatientNr);
-      if (!sd || !sd[name]) return;
-      const d = sd[name];
-      tooltip.innerHTML = `
-        <div class="tt-name" style="color:${COLORS[name]}">${name}</div>
-        <div class="tt-divider"></div>
-        <div class="tt-row"><span class="tt-key">Gem. acceleratie</span><b>${d.acc_mean.toFixed(1)} m/s²</b></div>
-        <div class="tt-row"><span class="tt-key">Max acceleratie</span><b>${d.acc_max.toFixed(1)} m/s²</b></div>
-        <div class="tt-row"><span class="tt-key">Gem. gyroscoop</span><b>${d.gyr_mean.toFixed(1)} °/s</b></div>
-        <div class="tt-row"><span class="tt-key">Max gyroscoop</span><b>${d.gyr_max.toFixed(0)} °/s</b></div>
-        <div class="tt-cta">↓ Klik voor tijdreeks</div>
-      `;
-      tooltip.classList.add("visible");
-    });
+    const p = ALL_PATIENTS_META.find(x => x.nr === currentPatientNr);
+    const aangedaan = p?.zijde || "Onbekend";
+    const isAangedaan = name.includes(aangedaan) || (aangedaan === "Rechts" && name.includes("Rechts")) || (aangedaan === "Links" && name.includes("Links"));
+    const statusColor = isAangedaan ? "var(--danger)" : "var(--ok)";
+    const statusLabel = isAangedaan ? "⚠ Aangedane zijde" : "✓ Gezonde zijde";
 
-    group.addEventListener("mousemove", e => {
-      const rect = document.getElementById("mainBodySvg").getBoundingClientRect();
-      tooltip.style.left = (e.clientX - rect.left + 18) + "px";
-      tooltip.style.top  = (e.clientY - rect.top  - 8)  + "px";
-    });
+    tooltip.innerHTML = `
+      <div class="tt-name" style="color:${COLORS[name]}">${name}</div>
+      ${isAangedaan !== undefined && !name.includes("Sternum") ? `<div class="tt-status" style="color:${statusColor}">${statusLabel}</div>` : ''}
+      <div class="tt-divider"></div>
 
-    group.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
+      <div class="tt-section-label">Meetwaarden</div>
+      <div class="tt-row"><span class="tt-key">Gem. acceleratie</span><b>${d.acc_mean.toFixed(1)} m/s²</b></div>
+      <div class="tt-row"><span class="tt-key">Max acceleratie</span><b>${d.acc_max.toFixed(1)} m/s²</b></div>
+      <div class="tt-row"><span class="tt-key">Gem. gyroscoop</span><b>${d.gyr_mean.toFixed(1)} °/s</b></div>
+      <div class="tt-row"><span class="tt-key">Max gyroscoop</span><b>${d.gyr_max.toFixed(0)} °/s</b></div>
+
+      ${ctx ? `
+      <div class="tt-divider"></div>
+      <div class="tt-section-label">Klinische context</div>
+      <div class="tt-context-row"><span class="tt-key">Locatie</span>${ctx.locatie}</div>
+      <div class="tt-context-row"><span class="tt-key">Functie</span>${ctx.functie}</div>
+      <div class="tt-context-row tt-clinical">${ctx.klinisch}</div>
+      ` : ''}
+
+      <div class="tt-divider"></div>
+      <div class="tt-cta">↓ Klik voor gedetailleerde tijdreeks</div>
+    `;
+    tooltip.classList.add("visible");
+
+    // Positioneer tooltip naast de cursor, binnen SVG container
+    const rect = svgEl.getBoundingClientRect();
+    let tx = e.clientX - rect.left + 22;
+    let ty = e.clientY - rect.top  - 20;
+    // Voorkom dat tooltip buiten rechts gaat
+    const ttW = 260;
+    if (tx + ttW > rect.width) tx = e.clientX - rect.left - ttW - 10;
+    tooltip.style.left = tx + "px";
+    tooltip.style.top  = ty + "px";
+  });
+
+  svgEl.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
+
+  // Klik event
+  svgEl.addEventListener("click", e => {
+    const group = e.target.closest(".sensor-dot-group");
+    if (!group?.dataset.sensor) return;
+    document.getElementById("sec-sensoren").scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => {
+      activeSensor = group.dataset.sensor;
+      buildSensorSection(getSensorStats(currentPatientNr));
+    }, 380);
   });
 }
 
