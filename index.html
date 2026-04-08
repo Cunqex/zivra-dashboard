@@ -1220,13 +1220,15 @@ function initBodyHero() {
     `;
     tooltip.classList.add("visible");
 
-    // Positioneer tooltip naast de cursor, binnen SVG container
-    const rect = svgEl.getBoundingClientRect();
-    let tx = e.clientX - rect.left + 22;
-    let ty = e.clientY - rect.top  - 20;
-    // Voorkom dat tooltip buiten rechts gaat
-    const ttW = 260;
-    if (tx + ttW > rect.width) tx = e.clientX - rect.left - ttW - 10;
+    // Positioneer tooltip naast cursor (fixed positioning)
+    const ttW = 290;
+    const ttH = 300;
+    let tx = e.clientX + 18;
+    let ty = e.clientY - 20;
+    // Voorkom buiten scherm rechts
+    if (tx + ttW > window.innerWidth)  tx = e.clientX - ttW - 10;
+    // Voorkom buiten scherm onder
+    if (ty + ttH > window.innerHeight) ty = e.clientY - ttH + 10;
     tooltip.style.left = tx + "px";
     tooltip.style.top  = ty + "px";
   });

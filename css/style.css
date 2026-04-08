@@ -295,21 +295,9 @@ body {
 }
 
 /* Tooltip */
-.sensor-tooltip {
-  position: absolute;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  padding: 12px 14px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s;
-  z-index: 50;
-  min-width: 150px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
 
-.sensor-tooltip.visible { opacity: 1; }
+
+
 
 .tt-name {
   font-weight: 700;
@@ -1688,21 +1676,9 @@ table.sessies-table {
 .sdl-id, .sdl-acc, .sdl-gyro { pointer-events: none; }
 
 /* Tooltip */
-.sensor-tooltip {
-  position: absolute;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  padding: 12px 14px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s;
-  z-index: 50;
-  min-width: 200px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
 
-.sensor-tooltip.visible { opacity: 1; }
+
+
 .tt-name    { font-weight: 700; font-size: 14px; margin-bottom: 8px; font-family:'Syne',sans-serif; }
 .tt-divider { height: 1px; background: var(--border2); margin-bottom: 8px; }
 .tt-row     { display:flex; justify-content:space-between; gap:16px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text-muted); margin-bottom:4px; }
@@ -1832,7 +1808,26 @@ table.sessies-table {
 }
 
 /* Tooltip groter voor meer inhoud */
-.sensor-tooltip {
-  min-width: 240px !important;
-  max-width: 280px !important;
+
+
+/* ============================================================
+   SENSOR TOOLTIP — fixed positioning, always visible
+   ============================================================ */
+#sensorTooltip {
+  position: fixed;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s;
+  z-index: 9999;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  min-width: 240px;
+  max-width: 285px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.65);
+}
+
+#sensorTooltip.visible {
+  opacity: 1;
 }
