@@ -1490,3 +1490,252 @@ table.sessies-table {
   .ps-name { display: none; }
   .ps-dropdown { width: calc(100vw - 40px); right: -20px; }
 }
+
+/* ============================================================
+   BODY HERO — hoofdvisualisatie
+   ============================================================ */
+.body-hero {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  /* Subtle radial glow behind the figure */
+  background-image: radial-gradient(ellipse 60% 70% at 50% 40%, rgba(78,205,196,0.04) 0%, transparent 70%);
+}
+
+.body-hero-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 240px 1fr 240px;
+  gap: 0;
+  align-items: start;
+  padding: 24px 24px 32px;
+  min-height: calc(100vh - 64px);
+}
+
+/* Side panels */
+.body-hero-panel {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: sticky;
+  top: 72px;
+}
+
+.bh-patient-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.bh-patient-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.bh-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+.bh-stat-block { display: flex; flex-direction: column; gap: 3px; }
+
+.bh-stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.bh-stat-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.bh-stat-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+}
+
+.bh-side-block { display: flex; flex-direction: column; gap: 6px; }
+
+.bh-side-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.bh-side-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  padding: 3px 0;
+}
+
+.bh-side-row span:last-child { color: var(--text); font-weight: 600; }
+
+.bh-legend { display: flex; flex-direction: column; gap: 6px; }
+
+.bh-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.bh-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Arm vergelijkingsbalkjes */
+.bh-arm-compare { display: flex; flex-direction: column; gap: 10px; }
+
+.bh-arm-bar-wrap { display: flex; align-items: center; gap: 8px; }
+
+.bh-arm-bar-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 34px;
+  flex-shrink: 0;
+}
+
+.bh-arm-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bh-arm-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.bh-arm-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text);
+  white-space: nowrap;
+  width: 52px;
+  text-align: right;
+}
+
+/* CENTER SVG */
+.body-hero-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.bh-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}
+
+.main-body-svg {
+  width: 100%;
+  max-width: 760px;
+  filter: drop-shadow(0 0 60px rgba(78,205,196,0.07));
+  overflow: visible;
+}
+
+/* Sensor dot groups */
+.sensor-dot-group { transition: opacity 0.2s; cursor: pointer; }
+.sensor-dot-group:hover .sensor-dot-main { filter: brightness(1.25) drop-shadow(0 0 8px currentColor); }
+.sensor-dot-group:hover .sensor-pulse-bg { opacity: 0.4; }
+
+.sensor-pulse-bg {
+  opacity: 0.14;
+  transition: opacity 0.2s;
+  animation: pulseRing 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseRing {
+  0%, 100% { opacity: 0.14; }
+  50%       { opacity: 0.32; }
+}
+
+.sensor-dot-main { transition: filter 0.2s; }
+
+/* Labels inside dots — 3 lines: ID / acc / gyro */
+.sdl-id {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.sdl-acc {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.sdl-gyro {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  font-weight: 400;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Tooltip */
+.sensor-tooltip {
+  position: absolute;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 50;
+  min-width: 160px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.sensor-tooltip.visible { opacity: 1; }
+.tt-name { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+.tt-row  { font-family:'DM Mono',monospace; font-size:11px; color:var(--text-muted); margin-bottom:2px; }
+.tt-row b { color: var(--text); }
+.tt-cta  { margin-top:8px; font-family:'DM Mono',monospace; font-size:10px; color:var(--accent); }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .body-hero-inner { grid-template-columns: 1fr; }
+  .body-hero-panel { position: static; flex-direction: row; flex-wrap: wrap; gap: 20px; }
+  .bh-divider { display: none; }
+  .main-body-svg { max-width: 500px; }
+}
+
+@media (max-width: 640px) {
+  .main-body-svg { max-width: 340px; }
+}

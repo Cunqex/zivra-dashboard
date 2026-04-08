@@ -53,65 +53,195 @@
 </header>
 
 <!-- ========================================================
-     HERO + LICHAAMSDIAGRAM
+     MAIN VISUALISATIE — LICHAAMSFIGUUR
 ======================================================== -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-label">Sessie rapport — 2026</div>
-    <h1 class="hero-title">Bewegings<br><em>analyse</em></h1>
-    <p class="hero-desc">
-      7 IMU-sensoren meten beweging op schouders, armen en sternum.
-      Het dashboard detecteert compensatiegedrag, brengt revalidatievoortgang
-      en welzijnsscores per oefening in kaart.
-    </p>
-    <div class="sensor-legend" id="sensorLegend"></div>
-  </div>
+<section class="body-hero">
+  <div class="body-hero-inner">
 
-  <div class="body-diagram-wrap">
-    <div class="body-diagram-hint">↓ Klik op een sensor voor detail</div>
-    <div class="body-diagram-container">
-      <svg class="body-svg" viewBox="0 0 260 460" fill="none" xmlns="http://www.w3.org/2000/svg" id="bodySvg">
-        <ellipse cx="130" cy="44" rx="30" ry="36" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="118" y="76" width="24" height="16" rx="4" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="84" y="90" width="92" height="108" rx="12" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="46" y="94" width="34" height="66" rx="13" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="42" y="163" width="30" height="64" rx="13" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <ellipse cx="57" cy="237" rx="14" ry="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="180" y="94" width="34" height="66" rx="13" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="188" y="163" width="30" height="64" rx="13" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <ellipse cx="203" cy="237" rx="14" ry="10" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="88" y="198" width="34" height="90" rx="13" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="138" y="198" width="34" height="90" rx="13" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="90" y="291" width="30" height="88" rx="13" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <rect x="140" y="291" width="30" height="88" rx="13" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <ellipse cx="105" cy="388" rx="18" ry="9" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <ellipse cx="155" cy="388" rx="18" ry="9" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <!-- rings -->
-        <circle id="ring-Sternum"  cx="130" cy="130" r="18" class="sensor-ring" style="stroke:#4ECDC4"/>
-        <circle id="ring-SchL"     cx="71"  cy="100" r="16" class="sensor-ring" style="stroke:#A29BFE"/>
-        <circle id="ring-SchR"     cx="189" cy="100" r="16" class="sensor-ring" style="stroke:#45B7D1"/>
-        <circle id="ring-BovL"     cx="63"  cy="127" r="15" class="sensor-ring" style="stroke:#FD79A8"/>
-        <circle id="ring-BovR"     cx="197" cy="127" r="15" class="sensor-ring" style="stroke:#FDCB6E"/>
-        <circle id="ring-OndL"     cx="57"  cy="188" r="15" class="sensor-ring" style="stroke:#6C5CE7"/>
-        <circle id="ring-OndR"     cx="203" cy="188" r="15" class="sensor-ring" style="stroke:#00B894"/>
-        <!-- dots -->
-        <circle cx="130" cy="130" r="12" class="sensor-dot" id="dot-Sternum" data-sensor="Sternum (Borst)"  style="fill:#4ECDC4"/>
-        <circle cx="71"  cy="100" r="11" class="sensor-dot" id="dot-SchL"    data-sensor="Schouder Links"   style="fill:#A29BFE"/>
-        <circle cx="189" cy="100" r="11" class="sensor-dot" id="dot-SchR"    data-sensor="Schouder Rechts"  style="fill:#45B7D1"/>
-        <circle cx="63"  cy="127" r="10" class="sensor-dot" id="dot-BovL"    data-sensor="Bovenarm Links"   style="fill:#FD79A8"/>
-        <circle cx="197" cy="127" r="10" class="sensor-dot" id="dot-BovR"    data-sensor="Bovenarm Rechts"  style="fill:#FDCB6E"/>
-        <circle cx="57"  cy="188" r="10" class="sensor-dot" id="dot-OndL"    data-sensor="Onderarm Links"   style="fill:#6C5CE7"/>
-        <circle cx="203" cy="188" r="10" class="sensor-dot" id="dot-OndR"    data-sensor="Onderarm Rechts"  style="fill:#00B894"/>
-        <text x="148" y="134" class="sdot-label">A1 Sternum</text>
-        <text x="6"   y="96"  class="sdot-label">B1 Sch.L</text>
-        <text x="203" y="96"  class="sdot-label">B2 Sch.R</text>
-        <text x="4"   y="123" class="sdot-label">A3 Bov.L</text>
-        <text x="211" y="123" class="sdot-label">A2 Bov.R</text>
-        <text x="2"   y="184" class="sdot-label">A5 Ond.L</text>
-        <text x="217" y="184" class="sdot-label">A4 Ond.R</text>
+    <!-- LEFT PANEL -->
+    <div class="body-hero-panel body-hero-panel--left">
+      <div class="bh-patient-name" id="bhPatientName">—</div>
+      <div class="bh-patient-meta" id="bhPatientMeta">—</div>
+      <div class="bh-divider"></div>
+      <div class="bh-stat-block">
+        <div class="bh-stat-label">Symmetrie-index</div>
+        <div class="bh-stat-value" id="bhSymIndex">—</div>
+        <div class="bh-stat-sub" id="bhSymStatus">—</div>
+      </div>
+      <div class="bh-divider"></div>
+      <div class="bh-side-block">
+        <div class="bh-side-title" style="color:#A29BFE">Linkerzijde</div>
+        <div class="bh-side-row"><span>Schouder</span><span id="bh-gyr-schouder-l">—</span></div>
+        <div class="bh-side-row"><span>Bovenarm</span><span id="bh-gyr-boven-l">—</span></div>
+        <div class="bh-side-row"><span>Onderarm</span><span id="bh-gyr-onder-l">—</span></div>
+      </div>
+      <div class="bh-divider"></div>
+      <div class="bh-legend">
+        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#A29BFE"></span>Linkerzijde</div>
+        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#45B7D1"></span>Rechterzijde</div>
+        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#4ECDC4"></span>Sternum</div>
+      </div>
+    </div>
+
+    <!-- CENTER: grote body SVG -->
+    <div class="body-hero-center">
+      <div class="bh-hint">Klik op een sensor voor detail ↓</div>
+
+      <svg id="mainBodySvg" class="main-body-svg" viewBox="0 0 640 660" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gradL" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#A29BFE" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#A29BFE" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="gradR" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#45B7D1" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#45B7D1" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- HOOFD -->
+        <ellipse cx="320" cy="56" rx="42" ry="50" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2.5"/>
+        <!-- NEK -->
+        <rect x="306" y="102" width="28" height="20" rx="5" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <!-- TORSO -->
+        <rect x="220" y="120" width="200" height="148" rx="20" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2.5"/>
+
+        <!-- BENEN -->
+        <rect x="224" y="266" width="74" height="128" rx="22" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2.5"/>
+        <rect x="342" y="266" width="74" height="128" rx="22" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2.5"/>
+        <rect x="226" y="392" width="70" height="118" rx="20" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2.5"/>
+        <rect x="344" y="392" width="70" height="118" rx="20" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2.5"/>
+        <ellipse cx="261" cy="518" rx="34" ry="14" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <ellipse cx="379" cy="518" rx="34" ry="14" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+
+        <!-- ARM BEREIK BOGEN -->
+        <path id="arc-links"  d="" fill="url(#gradL)" opacity="0.2"/>
+        <path id="arc-rechts" d="" fill="url(#gradR)" opacity="0.2"/>
+
+        <!-- LINKER ARM (draaibaar om schouder) -->
+        <g id="arm-links-group" style="transform-origin:168px 130px; transform:rotate(-10deg); transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+          <rect x="142" y="130" width="52" height="100" rx="20" fill="var(--body-fill)" stroke="#A29BFE" stroke-width="2.5"/>
+          <rect x="146" y="228" width="44" height="22" rx="7" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+          <rect x="140" y="248" width="52" height="96" rx="20" fill="var(--body-fill)" stroke="#6C5CE7" stroke-width="2.5"/>
+          <ellipse cx="166" cy="352" rx="26" ry="16" fill="var(--body-fill)" stroke="#6C5CE7" stroke-width="2"/>
+        </g>
+
+        <!-- RECHTER ARM (draaibaar om schouder) -->
+        <g id="arm-rechts-group" style="transform-origin:472px 130px; transform:rotate(10deg); transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+          <rect x="446" y="130" width="52" height="100" rx="20" fill="var(--body-fill)" stroke="#45B7D1" stroke-width="2.5"/>
+          <rect x="450" y="228" width="44" height="22" rx="7" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+          <rect x="448" y="248" width="52" height="96" rx="20" fill="var(--body-fill)" stroke="#00B894" stroke-width="2.5"/>
+          <ellipse cx="474" cy="352" rx="26" ry="16" fill="var(--body-fill)" stroke="#00B894" stroke-width="2"/>
+        </g>
+
+        <!-- ===== SENSOR DOTS — groot, met 2-regel tekst ===== -->
+
+        <!-- Sternum A1 — torso midden -->
+        <g class="sensor-dot-group" data-sensor="Sternum (Borst)" style="cursor:pointer">
+          <circle cx="320" cy="186" r="30" fill="#4ECDC4" fill-opacity="0.12" class="sensor-pulse-bg"/>
+          <circle cx="320" cy="186" r="22" fill="#4ECDC4" class="sensor-dot-main"/>
+          <text x="320" y="180" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A1</text>
+          <text x="320" y="190" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-sternum-acc">—</text>
+          <text x="320" y="200" text-anchor="middle" class="sdl-gyro" fill="#083530" id="lbl-sternum-gyr">—</text>
+        </g>
+
+        <!-- Schouder Links B1 -->
+        <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
+          <circle cx="178" cy="134" r="28" fill="#A29BFE" fill-opacity="0.12" class="sensor-pulse-bg"/>
+          <circle cx="178" cy="134" r="20" fill="#A29BFE" class="sensor-dot-main"/>
+          <text x="178" y="128" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">B1</text>
+          <text x="178" y="138" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-schl-acc">—</text>
+          <text x="178" y="148" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-schl-gyr">—</text>
+        </g>
+
+        <!-- Schouder Rechts B2 -->
+        <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
+          <circle cx="462" cy="134" r="28" fill="#45B7D1" fill-opacity="0.12" class="sensor-pulse-bg"/>
+          <circle cx="462" cy="134" r="20" fill="#45B7D1" class="sensor-dot-main"/>
+          <text x="462" y="128" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">B2</text>
+          <text x="462" y="138" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-schr-acc">—</text>
+          <text x="462" y="148" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-schr-gyr">—</text>
+        </g>
+
+        <!-- Bovenarm Links A3 -->
+        <g class="sensor-dot-group" data-sensor="Bovenarm Links" style="cursor:pointer">
+          <circle cx="168" cy="178" r="26" fill="#FD79A8" fill-opacity="0.12" class="sensor-pulse-bg"/>
+          <circle cx="168" cy="178" r="19" fill="#FD79A8" class="sensor-dot-main"/>
+          <text x="168" y="172" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A3</text>
+          <text x="168" y="182" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-bovl-acc">—</text>
+          <text x="168" y="191" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-bovl-gyr">—</text>
+        </g>
+
+        <!-- Bovenarm Rechts A2 -->
+        <g class="sensor-dot-group" data-sensor="Bovenarm Rechts" style="cursor:pointer">
+          <circle cx="472" cy="178" r="26" fill="#FDCB6E" fill-opacity="0.12" class="sensor-pulse-bg"/>
+          <circle cx="472" cy="178" r="19" fill="#FDCB6E" class="sensor-dot-main"/>
+          <text x="472" y="172" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A2</text>
+          <text x="472" y="182" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-bovr-acc">—</text>
+          <text x="472" y="191" text-anchor="middle" class="sdl-gyro" fill="#0a0b0f" id="lbl-bovr-gyr">—</text>
+        </g>
+
+        <!-- Onderarm Links A5 -->
+        <g class="sensor-dot-group" data-sensor="Onderarm Links" style="cursor:pointer">
+          <circle cx="164" cy="292" r="26" fill="#6C5CE7" fill-opacity="0.12" class="sensor-pulse-bg"/>
+          <circle cx="164" cy="292" r="19" fill="#6C5CE7" class="sensor-dot-main"/>
+          <text x="164" y="286" text-anchor="middle" class="sdl-id"   fill="#fff">A5</text>
+          <text x="164" y="296" text-anchor="middle" class="sdl-acc"  fill="#fff" id="lbl-ondl-acc">—</text>
+          <text x="164" y="305" text-anchor="middle" class="sdl-gyro" fill="#ccc" id="lbl-ondl-gyr">—</text>
+        </g>
+
+        <!-- Onderarm Rechts A4 -->
+        <g class="sensor-dot-group" data-sensor="Onderarm Rechts" style="cursor:pointer">
+          <circle cx="476" cy="292" r="26" fill="#00B894" fill-opacity="0.12" class="sensor-pulse-bg"/>
+          <circle cx="476" cy="292" r="19" fill="#00B894" class="sensor-dot-main"/>
+          <text x="476" y="286" text-anchor="middle" class="sdl-id"   fill="#0a0b0f">A4</text>
+          <text x="476" y="296" text-anchor="middle" class="sdl-acc"  fill="#0a0b0f" id="lbl-ondr-acc">—</text>
+          <text x="476" y="305" text-anchor="middle" class="sdl-gyro" fill="#083530" id="lbl-ondr-gyr">—</text>
+        </g>
+
       </svg>
+
       <div class="sensor-tooltip" id="sensorTooltip"></div>
     </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="body-hero-panel body-hero-panel--right">
+      <div class="bh-side-block">
+        <div class="bh-side-title" style="color:#45B7D1">Rechterzijde</div>
+        <div class="bh-side-row"><span>Schouder</span><span id="bh-gyr-schouder-r">—</span></div>
+        <div class="bh-side-row"><span>Bovenarm</span><span id="bh-gyr-boven-r">—</span></div>
+        <div class="bh-side-row"><span>Onderarm</span><span id="bh-gyr-onder-r">—</span></div>
+      </div>
+      <div class="bh-divider"></div>
+      <div class="bh-stat-block">
+        <div class="bh-stat-label">Sessies voltooid</div>
+        <div class="bh-stat-value" id="bhSessies">—</div>
+        <div class="bh-stat-sub">van 10 gepland</div>
+      </div>
+      <div class="bh-divider"></div>
+      <div class="bh-stat-block">
+        <div class="bh-stat-label">Pijnscore</div>
+        <div class="bh-stat-value" id="bhPijn">—</div>
+        <div class="bh-stat-sub">laatste sessie</div>
+      </div>
+      <div class="bh-divider"></div>
+      <div class="bh-stat-block">
+        <div class="bh-stat-label">Armbeweging L vs R</div>
+        <div class="bh-arm-compare">
+          <div class="bh-arm-bar-wrap">
+            <div class="bh-arm-bar-label">Links</div>
+            <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-l-fill" style="background:#A29BFE"></div></div>
+            <span class="bh-arm-val" id="bh-arm-l-val">—</span>
+          </div>
+          <div class="bh-arm-bar-wrap">
+            <div class="bh-arm-bar-label">Rechts</div>
+            <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-r-fill" style="background:#45B7D1"></div></div>
+            <span class="bh-arm-val" id="bh-arm-r-val">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -476,6 +606,7 @@ function rebuildDashboard() {
 
   document.getElementById("footerNote").textContent = `IMU data — ${p.naam} — ${ss.length} sessies — 2026`;
 
+  buildBodyHero(p, ss, sd);
   buildKPIs(p, ss, last);
   buildCompensatie(sd, last);
   buildSensorSection(sd);
@@ -852,15 +983,109 @@ function buildInsight(p, ss, first, last) {
 }
 
 // ============================================================
-// SENSOR LEGEND
+// BODY HERO — hoofdvisualisatie
 // ============================================================
-function buildLegend() {
-  const el = document.getElementById("sensorLegend");
-  SENSORS.forEach(s => {
-    const chip = document.createElement("div");
-    chip.className = "legend-chip";
-    chip.innerHTML = `<span class="legend-dot" style="background:${COLORS[s]}"></span>${s}`;
-    el.appendChild(chip);
+function buildBodyHero(p, ss, sd) {
+  if (!sd || !ss.length) return;
+  const last  = ss[ss.length - 1] || {};
+  const sym   = last.sym_index ?? 0;
+
+  // Patiëntinfo links panel
+  document.getElementById("bhPatientName").textContent = p.naam;
+  document.getElementById("bhPatientMeta").textContent = `${p.geslacht} · ${p.leeftijd}j · ${p.zijde} aangedaan · ${p.caras}`;
+  document.getElementById("bhSymIndex").textContent    = sym + "%";
+  document.getElementById("bhSymIndex").style.color    = sym >= 80 ? "#00B894" : sym >= 60 ? "#FDCB6E" : "#ff7675";
+  document.getElementById("bhSymStatus").textContent   = sym >= 80 ? "✓ Doel bereikt" : sym >= 60 ? "Matig — in behandeling" : "Zorgelijk — aandacht nodig";
+
+  // Rechts panel
+  document.getElementById("bhSessies").textContent = ss.length;
+  document.getElementById("bhPijn").textContent    = (last.pijn ?? "—") + "/10";
+  document.getElementById("bhPijn").style.color    = (last.pijn ?? 0) <= 3 ? "#00B894" : (last.pijn ?? 0) <= 6 ? "#FDCB6E" : "#ff7675";
+
+  // Gyro zij-panelen
+  document.getElementById("bh-gyr-schouder-l").textContent = sd["Schouder Links"].gyr_mean.toFixed(1)   + " °/s";
+  document.getElementById("bh-gyr-boven-l").textContent    = sd["Bovenarm Links"].gyr_mean.toFixed(1)   + " °/s";
+  document.getElementById("bh-gyr-onder-l").textContent    = sd["Onderarm Links"].gyr_mean.toFixed(1)   + " °/s";
+  document.getElementById("bh-gyr-schouder-r").textContent = sd["Schouder Rechts"].gyr_mean.toFixed(1)  + " °/s";
+  document.getElementById("bh-gyr-boven-r").textContent    = sd["Bovenarm Rechts"].gyr_mean.toFixed(1)  + " °/s";
+  document.getElementById("bh-gyr-onder-r").textContent    = sd["Onderarm Rechts"].gyr_mean.toFixed(1)  + " °/s";
+
+  // Dot labels: bovenste regel = acc, onderste = gyro
+  const setDot = (accId, gyrId, sensorName) => {
+    const d = sd[sensorName];
+    if (!d) return;
+    const accEl = document.getElementById(accId);
+    const gyrEl = document.getElementById(gyrId);
+    if (accEl) accEl.textContent = d.acc_mean.toFixed(1) + " m/s²";
+    if (gyrEl) gyrEl.textContent = d.gyr_mean.toFixed(1) + "°/s";
+  };
+  setDot("lbl-sternum-acc", "lbl-sternum-gyr", "Sternum (Borst)");
+  setDot("lbl-schl-acc",    "lbl-schl-gyr",    "Schouder Links");
+  setDot("lbl-schr-acc",    "lbl-schr-gyr",    "Schouder Rechts");
+  setDot("lbl-bovl-acc",    "lbl-bovl-gyr",    "Bovenarm Links");
+  setDot("lbl-bovr-acc",    "lbl-bovr-gyr",    "Bovenarm Rechts");
+  setDot("lbl-ondl-acc",    "lbl-ondl-gyr",    "Onderarm Links");
+  setDot("lbl-ondr-acc",    "lbl-ondr-gyr",    "Onderarm Rechts");
+
+  // ARM BEWEGING
+  // gyrL/gyrR bepalen hoe hoog de arm kan komen
+  // Meer gyro = arm hogere rotatie = negatiever (omhoog) voor links, positiever voor rechts
+  const gyrL = sd["Bovenarm Links"].gyr_mean;
+  const gyrR = sd["Bovenarm Rechts"].gyr_mean;
+  const maxGyr = Math.max(gyrL, gyrR, 1);
+
+  // Schaal: 0 gyro = +8° (arm iets naar buiten/omlaag), max gyro = -70° (arm hoog omhoog)
+  const angleL = 8 - (gyrL / maxGyr) * 78;    // links: negatief = omhoog
+  const angleR = -(8 - (gyrR / maxGyr) * 78);  // rechts: gespiegeld
+
+  const armL = document.getElementById("arm-links-group");
+  const armR = document.getElementById("arm-rechts-group");
+  if (armL) armL.style.transform = `rotate(${angleL}deg)`;
+  if (armR) armR.style.transform = `rotate(${angleR}deg)`;
+
+  // Arm balkjes rechts panel
+  const pctL = Math.round(gyrL / maxGyr * 100);
+  const pctR = Math.round(gyrR / maxGyr * 100);
+  document.getElementById("bh-arm-l-fill").style.width = pctL + "%";
+  document.getElementById("bh-arm-r-fill").style.width = pctR + "%";
+  document.getElementById("bh-arm-l-val").textContent  = gyrL.toFixed(1) + " °/s";
+  document.getElementById("bh-arm-r-val").textContent  = gyrR.toFixed(1) + " °/s";
+}
+
+// ============================================================
+// BODY HERO SENSOR KLIK
+// ============================================================
+function initBodyHero() {
+  const tooltip = document.getElementById("sensorTooltip");
+
+  document.querySelectorAll(".sensor-dot-group").forEach(group => {
+    const name = group.dataset.sensor;
+
+    group.addEventListener("click", () => {
+      document.getElementById("sec-sensoren").scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => { activeSensor = name; buildSensorSection(getSensorStats(currentPatientNr)); }, 380);
+    });
+
+    group.addEventListener("mouseenter", e => {
+      const sd = getSensorStats(currentPatientNr);
+      if (!sd || !sd[name]) return;
+      const d = sd[name];
+      tooltip.innerHTML = `
+        <div class="tt-name" style="color:${COLORS[name]}">${name}</div>
+        <div class="tt-row">Gem. acc: <b>${d.acc_mean.toFixed(1)} m/s²</b></div>
+        <div class="tt-row">Gem. gyro: <b>${d.gyr_mean.toFixed(1)} °/s</b></div>
+        <div class="tt-cta">↓ Klik voor tijdreeks</div>
+      `;
+      tooltip.classList.add("visible");
+    });
+
+    group.addEventListener("mousemove", e => {
+      const rect = document.getElementById("mainBodySvg").getBoundingClientRect();
+      tooltip.style.left = (e.clientX - rect.left + 18) + "px";
+      tooltip.style.top  = (e.clientY - rect.top  - 8)  + "px";
+    });
+
+    group.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
   });
 }
 
@@ -868,10 +1093,9 @@ function buildLegend() {
 // INIT
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
-  buildLegend();
   buildPatientList();
   selectPatient(ALL_PATIENTS_META[0].nr);
-  initBodyDiagram();
+  initBodyHero();
   initGameTabs();
 });
 </script>
