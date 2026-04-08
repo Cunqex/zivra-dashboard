@@ -1794,3 +1794,11 @@ table.sessies-table {
   margin: 0 12px;
   align-self: stretch;
 }
+
+/* SVG arm groepen — transform-box:fill-box zorgt dat transform-origin
+   relatief aan het element zelf werkt in SVG, niet aan de viewport */
+#arm-links-group,
+#arm-rechts-group {
+  transform-box: fill-box;
+  transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

@@ -155,8 +155,8 @@
              Rotatie: negatief = arm draait OMHOOG NAAR LINKS (naar buiten).
              transform-origin = bovenkant schouder: (260, 120)
         ====================================================== -->
-        <g id="arm-links-group"
-           style="transform-origin:260px 120px; transform:rotate(-15deg); transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+        <g id="arm-links-group" transform="rotate(-15, 260, 120)"
+           style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
 
           <!-- SCHOUDER LINKS sensor -->
           <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
@@ -204,8 +204,8 @@
              Rotatie: positief = arm draait OMHOOG NAAR RECHTS (naar buiten).
              transform-origin = (520, 120)
         ====================================================== -->
-        <g id="arm-rechts-group"
-           style="transform-origin:520px 120px; transform:rotate(15deg); transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+        <g id="arm-rechts-group" transform="rotate(15, 520, 120)"
+           style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
 
           <!-- SCHOUDER RECHTS sensor -->
           <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
@@ -1093,33 +1093,47 @@ function buildBodyHero(p, ss, sd) {
   setDot("lbl-ondl-acc",    "lbl-ondl-gyr",    "Onderarm Links");
   setDot("lbl-ondr-acc",    "lbl-ondr-gyr",    "Onderarm Rechts");
 
-  // ARM BEWEGING
-  // Links:  rotatie negatief → arm draait omhoog naar links (naar buiten)
-  // Rechts: rotatie positief → arm draait omhoog naar rechts (naar buiten)
-  // transform-origin zit al in de SVG style; JS overschrijft alleen de rotate hoek
+  // ARM BEWEGING via SVG transform attribuut (werkt altijd correct, ook bij scaling)
+  // Links:  negatief = arm draait omhoog naar links (naar buiten)
+  // Rechts: positief = arm draait omhoog naar rechts (naar buiten)
   const gyrL   = sd["Bovenarm Links"].gyr_mean;
   const gyrR   = sd["Bovenarm Rechts"].gyr_mean;
   const maxGyr = Math.max(gyrL, gyrR, 1);
 
-  const ratioL = gyrL / maxGyr;  // 0 = aangetast, 1 = actief
+  const ratioL = gyrL / maxGyr;
   const ratioR = gyrR / maxGyr;
 
-  // Rust = -15° (links), +15° (rechts). Max = -70° (links), +70° (rechts)
+  // -15° rust, max -70° (arm hoog links naar buiten)
+  // +15° rust, max +70° (arm hoog rechts naar buiten)
   const angleL = -(15 + ratioL * 55);
   const angleR =  (15 + ratioR * 55);
 
+  // Animeer via requestAnimationFrame: eerst op rust, dan naar doel
   const armL = document.getElementById("arm-links-group");
   const armR = document.getElementById("arm-rechts-group");
-  if (armL) {
-    armL.style.transformOrigin = "260px 120px";
-    armL.style.transform = `rotate(${angleL}deg)`;
-  }
-  if (armR) {
-    armR.style.transformOrigin = "520px 120px";
-    armR.style.transform = `rotate(${angleR}deg)`;
-  }
 
-  // Arm balkjes rechts panel
+  // Zet eerst op rustpositie (armen recht naar beneden)
+  if (armL) armL.setAttribute("transform", "rotate(0, 260, 120)");
+  if (armR) armR.setAttribute("transform", "rotate(0, 520, 120)");
+
+  // Animeer naar doelpositie via kleine stapjes
+  const steps = 40;
+  const duration = 1200; // ms
+  const interval = duration / steps;
+  let step = 0;
+  const animInterval = setInterval(() => {
+    step++;
+    const t = step / steps;
+    // Ease out cubic
+    const ease = 1 - Math.pow(1 - t, 3);
+    const curL = angleL * ease;
+    const curR = angleR * ease;
+    if (armL) armL.setAttribute("transform", `rotate(${curL.toFixed(2)}, 260, 120)`);
+    if (armR) armR.setAttribute("transform", `rotate(${curR.toFixed(2)}, 520, 120)`);
+    if (step >= steps) clearInterval(animInterval);
+  }, interval);
+
+  // Arm balkjes
   const pctL = Math.round(ratioL * 100);
   const pctR = Math.round(ratioR * 100);
   document.getElementById("bh-arm-l-fill").style.width = pctL + "%";
