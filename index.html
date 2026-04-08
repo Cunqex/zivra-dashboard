@@ -155,7 +155,7 @@
              Rotatie: negatief = arm draait OMHOOG NAAR LINKS (naar buiten).
              transform-origin = bovenkant schouder: (260, 120)
         ====================================================== -->
-        <g id="arm-links-group" transform="rotate(-15, 260, 120)"
+        <g id="arm-links-group" transform="rotate(-15, 284, 120)"
            style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
 
           <!-- SCHOUDER LINKS sensor -->
@@ -204,7 +204,7 @@
              Rotatie: positief = arm draait OMHOOG NAAR RECHTS (naar buiten).
              transform-origin = (520, 120)
         ====================================================== -->
-        <g id="arm-rechts-group" transform="rotate(15, 520, 120)"
+        <g id="arm-rechts-group" transform="rotate(15, 496, 120)"
            style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
 
           <!-- SCHOUDER RECHTS sensor -->
@@ -1103,8 +1103,9 @@ function buildBodyHero(p, ss, sd) {
   const ratioL = gyrL / maxGyr;
   const ratioR = gyrR / maxGyr;
 
-  // -15° rust, max -70° (arm hoog links naar buiten)
-  // +15° rust, max +70° (arm hoog rechts naar buiten)
+  // Draaipunt = binnenkant schouder (bij torso)
+  // Linker arm: pivot x=284 (rechterkant arm), negatief = arm draait naar links/buiten
+  // Rechter arm: pivot x=496 (linkerkant arm), positief = arm draait naar rechts/buiten
   const angleL = -(15 + ratioL * 55);
   const angleR =  (15 + ratioR * 55);
 
@@ -1112,24 +1113,24 @@ function buildBodyHero(p, ss, sd) {
   const armL = document.getElementById("arm-links-group");
   const armR = document.getElementById("arm-rechts-group");
 
-  // Zet eerst op rustpositie (armen recht naar beneden)
-  if (armL) armL.setAttribute("transform", "rotate(0, 260, 120)");
-  if (armR) armR.setAttribute("transform", "rotate(0, 520, 120)");
+  if (armL) armL.setAttribute("transform", "rotate(0, 284, 120)");
+  if (armR) armR.setAttribute("transform", "rotate(0, 496, 120)");
 
-  // Animeer naar doelpositie via kleine stapjes
+  // Animeer naar doelpositie
   const steps = 40;
-  const duration = 1200; // ms
+  const duration = 1200;
   const interval = duration / steps;
   let step = 0;
   const animInterval = setInterval(() => {
     step++;
     const t = step / steps;
-    // Ease out cubic
     const ease = 1 - Math.pow(1 - t, 3);
     const curL = angleL * ease;
     const curR = angleR * ease;
-    if (armL) armL.setAttribute("transform", `rotate(${curL.toFixed(2)}, 260, 120)`);
-    if (armR) armR.setAttribute("transform", `rotate(${curR.toFixed(2)}, 520, 120)`);
+    // Linkerarm: draaipunt rechterschouder (x=284), negatief = tegen klok = arm naar links/buiten
+    // Rechterarm: draaipunt linkerschouder (x=496), positief = met klok = arm naar rechts/buiten
+    if (armL) armL.setAttribute("transform", `rotate(${curL.toFixed(2)}, 284, 120)`);
+    if (armR) armR.setAttribute("transform", `rotate(${curR.toFixed(2)}, 496, 120)`);
     if (step >= steps) clearInterval(animInterval);
   }, interval);
 
