@@ -196,7 +196,7 @@
 
       </svg>
 
-      <div class="sensor-tooltip" id="sensorTooltip"></div>
+      <div id="sensorTooltip"></div>
     </div>
 
     <!-- RIGHT PANEL: L vs R vergelijking op zelfde hoogte -->
@@ -596,13 +596,13 @@ function getSensorStats(patientNr) {
   const last = sessions[sessions.length - 1];
   // Build sensor stats based on last session IMU-like values
   return {
-    "Sternum (Borst)":  { acc_mean: 9.78,  acc_max: 21.84, gyr_mean: 11.45 },
-    "Schouder Links":   { acc_mean: 9.88,  acc_max: 16.94, gyr_mean: last.gyr_links * 0.72 },
-    "Schouder Rechts":  { acc_mean: 10.07, acc_max: 19.27, gyr_mean: last.gyr_rechts * 0.85 },
-    "Bovenarm Links":   { acc_mean: 9.99,  acc_max: last.acc_max_links, gyr_mean: last.gyr_links },
-    "Bovenarm Rechts":  { acc_mean: 9.93,  acc_max: 15.71, gyr_mean: last.gyr_rechts },
-    "Onderarm Links":   { acc_mean: 9.95,  acc_max: last.acc_max_links * 1.1, gyr_mean: last.gyr_links * 1.22 },
-    "Onderarm Rechts":  { acc_mean: 10.03, acc_max: 26.71, gyr_mean: last.gyr_rechts * 1.34 },
+    "Sternum (Borst)":  { acc_mean: 9.78,  acc_max: 21.84, gyr_mean: 11.45, gyr_max: 283 },
+    "Schouder Links":   { acc_mean: 9.88,  acc_max: 16.94, gyr_mean: +(last.gyr_links * 0.72).toFixed(1),   gyr_max: +(last.gyr_links * 14).toFixed(0) },
+    "Schouder Rechts":  { acc_mean: 10.07, acc_max: 19.27, gyr_mean: +(last.gyr_rechts * 0.85).toFixed(1),  gyr_max: +(last.gyr_rechts * 13).toFixed(0) },
+    "Bovenarm Links":   { acc_mean: 9.99,  acc_max: last.acc_max_links,       gyr_mean: +(last.gyr_links).toFixed(1),        gyr_max: +(last.gyr_links * 22).toFixed(0) },
+    "Bovenarm Rechts":  { acc_mean: 9.93,  acc_max: 15.71,                    gyr_mean: +(last.gyr_rechts).toFixed(1),       gyr_max: +(last.gyr_rechts * 19).toFixed(0) },
+    "Onderarm Links":   { acc_mean: 9.95,  acc_max: +(last.acc_max_links * 1.1).toFixed(1), gyr_mean: +(last.gyr_links * 1.22).toFixed(1), gyr_max: +(last.gyr_links * 24).toFixed(0) },
+    "Onderarm Rechts":  { acc_mean: 10.03, acc_max: 26.71,                    gyr_mean: +(last.gyr_rechts * 1.34).toFixed(1),gyr_max: +(last.gyr_rechts * 21).toFixed(0) },
   };
 }
 
@@ -768,33 +768,7 @@ function genTS(mean, max, n=160) {
   return arr;
 }
 
-// ============================================================
-// BODY DIAGRAM
-// ============================================================
-function initBodyDiagram() {
-  const tooltip = document.getElementById("sensorTooltip");
-  const svgEl   = document.getElementById("bodySvg");
-  document.querySelectorAll(".sensor-dot").forEach(dot => {
-    const name = dot.dataset.sensor;
-    dot.addEventListener("click", () => {
-      document.getElementById("sec-sensoren").scrollIntoView({behavior:"smooth",block:"start"});
-      setTimeout(() => { activeSensor = name; buildSensorSection(getSensorStats(currentPatientNr)); }, 380);
-    });
-    dot.addEventListener("mouseenter", e => {
-      const sd = getSensorStats(currentPatientNr);
-      if (!sd) return;
-      const d = sd[name];
-      tooltip.innerHTML=`<div class="tt-name" style="color:${COLORS[name]}">${name}</div><div class="tt-row">Gem. acc: <b>${d.acc_mean.toFixed(1)} m/s²</b></div><div class="tt-row">Gem. gyro: <b>${d.gyr_mean.toFixed(1)} °/s</b></div><div class="tt-cta">↓ Klik voor detail</div>`;
-      tooltip.classList.add("visible");
-    });
-    dot.addEventListener("mousemove", e => {
-      const rect = svgEl.getBoundingClientRect();
-      tooltip.style.left=(e.clientX-rect.left+18)+"px";
-      tooltip.style.top=(e.clientY-rect.top-8)+"px";
-    });
-    dot.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
-  });
-}
+
 
 // ============================================================
 // WELZIJN CHARTS

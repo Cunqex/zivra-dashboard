@@ -1807,27 +1807,116 @@ table.sessies-table {
   margin-top: 4px;
 }
 
-/* Tooltip groter voor meer inhoud */
+
+
+
+
+
+
 
 
 /* ============================================================
-   SENSOR TOOLTIP — fixed positioning, always visible
+   TOOLTIP — definitief, fixed positioning
    ============================================================ */
 #sensorTooltip {
   position: fixed;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.12s;
-  z-index: 9999;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
+  transition: opacity 0.15s ease;
+  z-index: 99999;
+  background: #181b22;
+  border: 1px solid rgba(255,255,255,0.13);
   border-radius: 12px;
   padding: 14px 16px;
-  min-width: 240px;
-  max-width: 285px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.65);
+  width: 260px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.7);
+  font-family: 'Syne', sans-serif;
+  color: #e8eaf0;
 }
 
 #sensorTooltip.visible {
   opacity: 1;
+}
+
+.tt-name {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.tt-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.tt-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 8px 0;
+}
+
+.tt-section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #4a4f60;
+  margin-bottom: 6px;
+}
+
+.tt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: #7a7f8e;
+  margin-bottom: 4px;
+}
+
+.tt-row b {
+  color: #e8eaf0;
+  font-weight: 600;
+}
+
+.tt-key {
+  flex-shrink: 0;
+  color: #7a7f8e;
+}
+
+.tt-context-row {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #7a7f8e;
+  margin-bottom: 4px;
+  line-height: 1.45;
+  display: flex;
+  gap: 8px;
+}
+
+.tt-context-row .tt-key {
+  min-width: 54px;
+  flex-shrink: 0;
+}
+
+.tt-clinical {
+  display: block;
+  font-size: 11px;
+  color: #7a7f8e;
+  line-height: 1.55;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+  border-left: 2px solid rgba(255,255,255,0.1);
+  margin-top: 6px;
+}
+
+.tt-cta {
+  margin-top: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #4ECDC4;
+  letter-spacing: 0.04em;
 }
