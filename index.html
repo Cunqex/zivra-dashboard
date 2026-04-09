@@ -202,35 +202,43 @@
 
         <!-- =====================================================
              POPPETJE ANNOTATIES — dokter ziet direct de status
-             zonder de zijpanelen te lezen
         ====================================================== -->
 
-        <!-- SYM% BADGE — bovenop torso, rechts van nek -->
+        <!-- WELZIJN DOT — klein bolletje RECHTSONDER op het hoofd, symmetrisch -->
+        <!-- Hoofd: cx=450, cy=62, rx=46 → rechtsonder = ca (482, 88) -->
+        <circle id="body-welzijn-dot" cx="484" cy="85" r="11"
+          fill="#FDCB6E" stroke="var(--body-fill)" stroke-width="3"/>
+        <!-- Kleine tekst welzijn -->
+        <text id="body-welzijn-txt" x="484" y="89" text-anchor="middle"
+          font-family="'DM Mono',monospace" font-size="9" font-weight="700" fill="#0a0b0f">😐</text>
+
+        <!-- SYM% BADGE — gecentreerd BOVEN de torso, onder de nek -->
+        <!-- Torso top: y=128, nek bottom: y=130. Badge net BINNEN torso bovenkant -->
         <g id="body-sym-badge">
-          <!-- achtergrond pill -->
-          <rect id="body-sym-bg" x="468" y="128" width="74" height="28" rx="14"
+          <rect id="body-sym-bg" x="404" y="132" width="92" height="26" rx="13"
             fill="#1e2230" stroke="#2a2f3e" stroke-width="1.5"/>
-          <!-- sym waarde -->
-          <text id="body-sym-val" x="505" y="147" text-anchor="middle"
+          <text id="body-sym-val" x="450" y="150" text-anchor="middle"
             font-family="'DM Mono',monospace" font-size="13" font-weight="700" fill="#fff">—%</text>
         </g>
 
-        <!-- WELZIJN DOT — op het hoofd, kleine gekleurde dot -->
-        <circle id="body-welzijn-dot" cx="478" cy="42" r="10"
-          fill="#FDCB6E" stroke="var(--bg2)" stroke-width="2"/>
-
-        <!-- AANGEDANE KANT LABEL — pijl + tekst naast het lichaam -->
-        <!-- Links label (verschijnt links van torso) -->
+        <!-- AANGEDANE KANT LABEL — naast de schouder, BUITEN armbereik -->
+        <!-- Linker schouder: cx=358. Label ver links buiten arm-zone -->
         <g id="body-label-links" opacity="0">
-          <line x1="350" y1="214" x2="360" y2="214" stroke="#ff7675" stroke-width="1.5" stroke-dasharray="3,3"/>
-          <rect x="264" y="200" width="84" height="28" rx="8" fill="#ff767520" stroke="#ff767540" stroke-width="1"/>
-          <text x="306" y="218" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" font-weight="700" fill="#ff7675">⚠ Aangedaan</text>
+          <line x1="300" y1="168" x2="324" y2="168"
+            stroke="#ff7675" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <rect x="210" y="154" width="88" height="28" rx="8"
+            fill="#1a0d0d" stroke="#ff767550" stroke-width="1"/>
+          <text x="254" y="172" text-anchor="middle"
+            font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#ff7675">⚠ Aangedaan</text>
         </g>
-        <!-- Rechts label -->
+        <!-- Rechter schouder: cx=542. Label ver rechts -->
         <g id="body-label-rechts" opacity="0">
-          <line x1="550" y1="214" x2="540" y2="214" stroke="#ff7675" stroke-width="1.5" stroke-dasharray="3,3"/>
-          <rect x="552" y="200" width="84" height="28" rx="8" fill="#ff767520" stroke="#ff767540" stroke-width="1"/>
-          <text x="594" y="218" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" font-weight="700" fill="#ff7675">⚠ Aangedaan</text>
+          <line x1="566" y1="168" x2="590" y2="168"
+            stroke="#ff7675" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <rect x="592" y="154" width="88" height="28" rx="8"
+            fill="#1a0d0d" stroke="#ff767550" stroke-width="1"/>
+          <text x="636" y="172" text-anchor="middle"
+            font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#ff7675">⚠ Aangedaan</text>
         </g>
 
         <!-- ARMEN — getekend door JS | schouder L=(358,168) R=(542,168) -->
@@ -1221,32 +1229,35 @@ function buildBodyHero(p, ss, sd) {
   document.getElementById("bh-arm-r-val").textContent = gyrR.toFixed(1) + " °/s";
 
   // ---- POPPETJE ANNOTATIES ----
-  // Sym% badge op torso
+  // Sym% badge gecentreerd op torso bovenkant
   const symBadgeBg  = document.getElementById("body-sym-bg");
   const symBadgeVal = document.getElementById("body-sym-val");
-  if (symBadgeBg)  symBadgeBg.setAttribute("fill", statusColor + "22");
-  if (symBadgeBg)  symBadgeBg.setAttribute("stroke", statusColor + "66");
+  if (symBadgeBg)  { symBadgeBg.setAttribute("fill", statusColor + "22"); symBadgeBg.setAttribute("stroke", statusColor + "66"); }
   if (symBadgeVal) { symBadgeVal.textContent = sym + "%"; symBadgeVal.setAttribute("fill", statusColor); }
 
-  // Welzijn dot op hoofd — kleur op gemiddeld welzijn
+  // Welzijn dot op hoofd — emoji + kleur
   const welzijnScore = ((10 - (cur.pijn ?? 5)) + (10 - (cur.frustratie ?? 5)) + (cur.energie ?? 5)) / 3;
   const welzijnKleur = welzijnScore >= 7 ? '#00B894' : welzijnScore >= 5 ? '#FDCB6E' : '#ff7675';
+  const welzijnEmoji = welzijnScore >= 7 ? '😊' : welzijnScore >= 5 ? '😐' : '😟';
   const welzijnDot = document.getElementById("body-welzijn-dot");
+  const welzijnTxt = document.getElementById("body-welzijn-txt");
   if (welzijnDot) welzijnDot.setAttribute("fill", welzijnKleur);
+  if (welzijnTxt) welzijnTxt.textContent = welzijnEmoji;
 
-  // Aangedane kant label naast het poppetje
+  // Aangedane kant label zichtbaar maken
   const labelL = document.getElementById("body-label-links");
   const labelR = document.getElementById("body-label-rechts");
   if (labelL) labelL.setAttribute("opacity", aangedaan === "Links" ? "1" : "0");
   if (labelR) labelR.setAttribute("opacity", aangedaan === "Rechts" ? "1" : "0");
 
-  // Update label kleur op basis van sym (rood/oranje/geel)
-  const aangedaanLabels = document.querySelectorAll("#body-label-links text, #body-label-rechts text");
-  const aangedaanRects  = document.querySelectorAll("#body-label-links rect, #body-label-rechts rect");
-  const aangedaanLines  = document.querySelectorAll("#body-label-links line, #body-label-rechts line");
-  aangedaanLabels.forEach(el => el.setAttribute("fill", statusColor));
-  aangedaanRects.forEach(el  => { el.setAttribute("fill", statusColor + "20"); el.setAttribute("stroke", statusColor + "50"); });
-  aangedaanLines.forEach(el  => el.setAttribute("stroke", statusColor));
+  // Label kleur aanpassen op basis van status
+  ["body-label-links", "body-label-rechts"].forEach(id => {
+    const g = document.getElementById(id);
+    if (!g) return;
+    g.querySelectorAll("text").forEach(el => el.setAttribute("fill", statusColor));
+    g.querySelectorAll("rect").forEach(el => { el.setAttribute("fill", statusColor + "18"); el.setAttribute("stroke", statusColor + "55"); });
+    g.querySelectorAll("line").forEach(el => el.setAttribute("stroke", statusColor));
+  });
 
 
   const spreadL = 10 + ratioL * 55;
