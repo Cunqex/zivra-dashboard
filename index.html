@@ -48,6 +48,21 @@
       </div>
     </div>
 
+    <!-- SESSIE SELECTOR -->
+    <div class="session-selector" id="sessionSelector">
+      <div class="ss-trigger" id="ssTrigger">
+        <span class="ss-icon">📋</span>
+        <div class="ss-info">
+          <div class="ss-label">Sessie</div>
+          <div class="ss-value" id="ssValue">Laatste</div>
+        </div>
+        <svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div class="ss-dropdown" id="ssDropdown">
+        <div class="ss-list" id="ssList"></div>
+      </div>
+    </div>
+
     <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
   </div>
 </header>
@@ -58,50 +73,86 @@
 <section class="body-hero">
   <div class="body-hero-inner">
 
-    <!-- LEFT PANEL: patiëntinfo + klinische stats -->
+    <!-- LEFT PANEL -->
     <div class="body-hero-panel body-hero-panel--left">
-      <div class="bh-patient-name" id="bhPatientName">—</div>
-      <div class="bh-patient-meta" id="bhPatientMeta">—</div>
 
-      <div class="bh-divider"></div>
+      <!-- STATUS BANNER — eerste ding wat je ziet -->
+      <div class="bh-status-banner" id="bhStatusBanner">
+        <div class="bh-status-icon" id="bhStatusIcon">—</div>
+        <div class="bh-status-text">
+          <div class="bh-status-label" id="bhStatusLabel">—</div>
+          <div class="bh-status-sub"   id="bhStatusSub">—</div>
+        </div>
+      </div>
 
-      <div class="bh-stat-block">
-        <div class="bh-stat-label">Symmetrie-index</div>
-        <div class="bh-stat-value" id="bhSymIndex">—</div>
-        <div class="bh-stat-sub" id="bhSymStatus">—</div>
+      <!-- VOORTGANG NAAR DOEL -->
+      <div class="bh-progress-block">
+        <div class="bh-progress-header">
+          <span class="bh-stat-label">Voortgang richting doel (80%)</span>
+          <span class="bh-progress-pct" id="bhSymIndex">—</span>
+        </div>
+        <div class="bh-progress-track">
+          <div class="bh-progress-fill" id="bhProgressFill"></div>
+          <div class="bh-progress-goal"></div>
+        </div>
+        <div class="bh-progress-foot">
+          <span id="bhProgressStart">Start: —</span>
+          <span id="bhProgressNow">Nu: —</span>
+        </div>
       </div>
 
       <div class="bh-divider"></div>
 
-      <div class="bh-stat-block">
-        <div class="bh-stat-label">Sessies voltooid</div>
-        <div class="bh-stat-value" id="bhSessies">—</div>
-        <div class="bh-stat-sub">van 10 gepland</div>
+      <!-- HOE VOELT DE PATIËNT ZICH -->
+      <div class="bh-stat-label" style="margin-bottom:10px">Hoe voelt de patiënt zich?</div>
+      <div class="bh-wellbeing-row">
+        <div class="bh-wb-item">
+          <div class="bh-wb-emoji" id="bhWbPijnEmoji">😐</div>
+          <div class="bh-wb-label">Pijn</div>
+          <div class="bh-wb-val" id="bhWbPijn">—</div>
+        </div>
+        <div class="bh-wb-item">
+          <div class="bh-wb-emoji" id="bhWbFrusEmoji">😐</div>
+          <div class="bh-wb-label">Frustratie</div>
+          <div class="bh-wb-val" id="bhWbFrus">—</div>
+        </div>
+        <div class="bh-wb-item">
+          <div class="bh-wb-emoji" id="bhWbEnerEmoji">😐</div>
+          <div class="bh-wb-label">Energie</div>
+          <div class="bh-wb-val" id="bhWbEner">—</div>
+        </div>
       </div>
 
       <div class="bh-divider"></div>
 
-      <div class="bh-stat-block">
-        <div class="bh-stat-label">Pijnscore laatste sessie</div>
-        <div class="bh-stat-value" id="bhPijn">—</div>
-        <div class="bh-stat-sub" id="bhPijnStatus">—</div>
+      <!-- SESSIE INFO -->
+      <div class="bh-two-col">
+        <div class="bh-stat-block">
+          <div class="bh-stat-label">Sessies</div>
+          <div class="bh-stat-value" id="bhSessies">—</div>
+          <div class="bh-stat-sub">van 10 gepland</div>
+        </div>
+        <div class="bh-stat-block">
+          <div class="bh-stat-label">Aangedane zijde</div>
+          <div class="bh-stat-value" id="bhZijde" style="font-size:16px">—</div>
+          <div class="bh-stat-sub" id="bhZijdeSub">—</div>
+        </div>
       </div>
 
       <div class="bh-divider"></div>
 
-      <div class="bh-stat-block">
-        <div class="bh-stat-label">Armbeweging (gyroscoop)</div>
-        <div class="bh-arm-compare">
-          <div class="bh-arm-bar-wrap">
-            <div class="bh-arm-bar-label" style="color:#A29BFE">Links</div>
-            <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-l-fill" style="background:#A29BFE"></div></div>
-            <span class="bh-arm-val" id="bh-arm-l-val">—</span>
-          </div>
-          <div class="bh-arm-bar-wrap">
-            <div class="bh-arm-bar-label" style="color:#45B7D1">Rechts</div>
-            <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-r-fill" style="background:#45B7D1"></div></div>
-            <span class="bh-arm-val" id="bh-arm-r-val">—</span>
-          </div>
+      <!-- ARMBEWEGING VERGELIJKING -->
+      <div class="bh-stat-label" style="margin-bottom:8px">Armbeweging (gyroscoop)</div>
+      <div class="bh-arm-compare">
+        <div class="bh-arm-bar-wrap">
+          <div class="bh-arm-bar-label" id="bh-arm-l-label">Links</div>
+          <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-l-fill"></div></div>
+          <span class="bh-arm-val" id="bh-arm-l-val">—</span>
+        </div>
+        <div class="bh-arm-bar-wrap">
+          <div class="bh-arm-bar-label" id="bh-arm-r-label">Rechts</div>
+          <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-r-fill"></div></div>
+          <span class="bh-arm-val" id="bh-arm-r-val">—</span>
         </div>
       </div>
     </div>
@@ -199,17 +250,42 @@
       <div id="sensorTooltip"></div>
     </div>
 
-    <!-- RIGHT PANEL: L vs R vergelijking op zelfde hoogte -->
+    <!-- RIGHT PANEL -->
     <div class="body-hero-panel body-hero-panel--right">
 
-      <div class="bh-stat-block">
-        <div class="bh-stat-label">Gyroscoop per zijde (°/s)</div>
+      <!-- SENSOR LEGENDA — kleurcode uitleg -->
+      <div class="bh-stat-label" style="margin-bottom:10px">Sensorkleur legenda</div>
+      <div class="bh-legend-cards">
+        <div class="bh-legend-card bh-legend-card--green">
+          <div class="bh-legend-card-dot"></div>
+          <div>
+            <div class="bh-legend-card-title">Groen</div>
+            <div class="bh-legend-card-sub">Gezonde zijde — goed functionerend</div>
+          </div>
+        </div>
+        <div class="bh-legend-card bh-legend-card--red">
+          <div class="bh-legend-card-dot"></div>
+          <div>
+            <div class="bh-legend-card-title">Rood / Oranje / Geel</div>
+            <div class="bh-legend-card-sub">Aangedane zijde — kleur op basis van prestatie</div>
+          </div>
+        </div>
+        <div class="bh-legend-card bh-legend-card--teal">
+          <div class="bh-legend-card-dot"></div>
+          <div>
+            <div class="bh-legend-card-title">Teal</div>
+            <div class="bh-legend-card-sub">Sternum — rompstabiliteit</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Linkerzijde + Rechterzijde naast elkaar zodat arts snel vergelijkt -->
+      <div class="bh-divider"></div>
+
+      <!-- L vs R GYRO VERGELIJKING -->
+      <div class="bh-stat-label" style="margin-bottom:8px">Gyroscoop activiteit (°/s)</div>
       <div class="bh-compare-grid">
         <div class="bh-compare-col">
-          <div class="bh-compare-title" style="color:#A29BFE">● Linkerzijde</div>
+          <div class="bh-compare-title" id="bh-title-l">● Links</div>
           <div class="bh-compare-row">
             <span class="bh-compare-key">Schouder</span>
             <span class="bh-compare-val" id="bh-gyr-schouder-l">—</span>
@@ -225,7 +301,7 @@
         </div>
         <div class="bh-compare-divider"></div>
         <div class="bh-compare-col">
-          <div class="bh-compare-title" style="color:#45B7D1">● Rechterzijde</div>
+          <div class="bh-compare-title" id="bh-title-r">● Rechts</div>
           <div class="bh-compare-row">
             <span class="bh-compare-key">Schouder</span>
             <span class="bh-compare-val" id="bh-gyr-schouder-r">—</span>
@@ -243,15 +319,9 @@
 
       <div class="bh-divider"></div>
 
-      <div class="bh-legend">
-        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#A29BFE"></span>Schouder Links (B1)</div>
-        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#FD79A8"></span>Bovenarm Links (A3)</div>
-        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#6C5CE7"></span>Onderarm Links (A5)</div>
-        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#45B7D1"></span>Schouder Rechts (B2)</div>
-        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#FDCB6E"></span>Bovenarm Rechts (A2)</div>
-        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#00B894"></span>Onderarm Rechts (A4)</div>
-        <div class="bh-legend-row"><span class="bh-legend-dot" style="background:#4ECDC4"></span>Sternum (A1)</div>
-      </div>
+      <!-- TREND INDICATOR -->
+      <div class="bh-stat-label" style="margin-bottom:8px">Trend t.o.v. vorige sessie</div>
+      <div id="bhTrendBlock" class="bh-trend-block">—</div>
     </div>
 
   </div>
@@ -576,6 +646,9 @@ function filterPatientList(q) {
 
 function selectPatient(nr) {
   currentPatientNr = nr;
+  window.selectedSessieIdx = undefined;
+  const ssVal = document.getElementById("ssValue");
+  if (ssVal) ssVal.textContent = "Laatste";
   const p = ALL_PATIENTS_META.find(x => x.nr === nr);
   document.getElementById("psAvatar").textContent = p.naam[0];
   document.getElementById("psName").textContent   = p.naam;
@@ -584,6 +657,7 @@ function selectPatient(nr) {
   document.querySelectorAll(".ps-item").forEach(el => {
     el.classList.toggle("active", el.dataset.nr === nr);
   });
+  buildSessionSelector(nr);
   rebuildDashboard();
 }
 
@@ -973,103 +1047,192 @@ function buildInsight(p, ss, first, last) {
 // ============================================================
 function buildBodyHero(p, ss, sd) {
   if (!sd || !ss.length) return;
-  const last  = ss[ss.length - 1] || {};
-  const sym   = last.sym_index ?? 0;
 
-  // Patiëntinfo links panel
-  document.getElementById("bhPatientName").textContent = p.naam;
-  document.getElementById("bhPatientMeta").textContent = `${p.geslacht} · ${p.leeftijd}j · ${p.zijde} aangedaan · ${p.caras}`;
-  document.getElementById("bhSymIndex").textContent    = sym + "%";
-  document.getElementById("bhSymIndex").style.color    = sym >= 80 ? "#00B894" : sym >= 60 ? "#FDCB6E" : "#ff7675";
-  document.getElementById("bhSymStatus").textContent   = sym >= 80 ? "✓ Doel bereikt" : sym >= 60 ? "Matig — in behandeling" : "Zorgelijk — aandacht nodig";
+  // Gebruik geselecteerde sessie (of laatste)
+  const sessieIdx = window.selectedSessieIdx ?? (ss.length - 1);
+  const cur   = ss[Math.min(sessieIdx, ss.length - 1)] || {};
+  const prev  = ss[Math.max(sessieIdx - 1, 0)] || {};
+  const first = ss[0] || {};
+  const sym   = cur.sym_index ?? 0;
+  const aangedaan = p.zijde; // "Links" of "Rechts"
 
-  // Rechts panel
-  document.getElementById("bhSessies").textContent = ss.length;
-  document.getElementById("bhPijn").textContent    = (last.pijn ?? "—") + "/10";
-  document.getElementById("bhPijn").style.color    = (last.pijn ?? 0) <= 3 ? "#00B894" : (last.pijn ?? 0) <= 6 ? "#FDCB6E" : "#ff7675";
-  document.getElementById("bhPijnStatus").textContent = (last.pijn ?? 0) <= 3 ? "✓ Laag — goed" : (last.pijn ?? 0) <= 6 ? "Matig" : "⚠ Hoog — aandacht";
+  // ---- STATUS BANNER ----
+  let statusIcon, statusLabel, statusSub, statusColor;
+  if (sym >= 80) {
+    statusIcon = '✅'; statusLabel = 'Doel bereikt'; statusColor = '#00B894';
+    statusSub = `Symmetrie-index ${sym}% — boven streefwaarde van 80%`;
+  } else if (sym >= 60) {
+    statusIcon = '🟡'; statusLabel = 'In behandeling — vorderingen zichtbaar'; statusColor = '#FDCB6E';
+    statusSub = `Symmetrie-index ${sym}% — nog ${80 - sym}% te gaan`;
+  } else {
+    statusIcon = '🔴'; statusLabel = 'Aandacht vereist'; statusColor = '#ff7675';
+    statusSub = `Symmetrie-index ${sym}% — significant onder doelwaarde`;
+  }
+  const banner = document.getElementById("bhStatusBanner");
+  if (banner) {
+    banner.style.borderColor = statusColor + '55';
+    banner.style.background  = statusColor + '12';
+  }
+  document.getElementById("bhStatusIcon").textContent  = statusIcon;
+  document.getElementById("bhStatusLabel").textContent = statusLabel;
+  document.getElementById("bhStatusLabel").style.color = statusColor;
+  document.getElementById("bhStatusSub").textContent   = statusSub;
 
-  // Gyro zij-panelen
-  document.getElementById("bh-gyr-schouder-l").textContent = sd["Schouder Links"].gyr_mean.toFixed(1)   + " °/s";
-  document.getElementById("bh-gyr-boven-l").textContent    = sd["Bovenarm Links"].gyr_mean.toFixed(1)   + " °/s";
-  document.getElementById("bh-gyr-onder-l").textContent    = sd["Onderarm Links"].gyr_mean.toFixed(1)   + " °/s";
-  document.getElementById("bh-gyr-schouder-r").textContent = sd["Schouder Rechts"].gyr_mean.toFixed(1)  + " °/s";
-  document.getElementById("bh-gyr-boven-r").textContent    = sd["Bovenarm Rechts"].gyr_mean.toFixed(1)  + " °/s";
-  document.getElementById("bh-gyr-onder-r").textContent    = sd["Onderarm Rechts"].gyr_mean.toFixed(1)  + " °/s";
+  // ---- VOORTGANGSBALK ----
+  const pct = Math.min(Math.round(sym / 80 * 100), 100);
+  document.getElementById("bhSymIndex").textContent    = sym + '%';
+  document.getElementById("bhSymIndex").style.color    = statusColor;
+  const fill = document.getElementById("bhProgressFill");
+  if (fill) { fill.style.width = pct + '%'; fill.style.background = statusColor; }
+  document.getElementById("bhProgressStart").textContent = `Start: ${first.sym_index ?? '—'}%`;
+  document.getElementById("bhProgressNow").textContent   = `Nu: ${sym}%`;
 
-  // ARM BEWEGING — volledig nieuwe aanpak zonder SVG rotatie
-  // Bereken arm-segmentposities via trigonometrie vanuit vaste schouderpunten op de torso.
-  //
-  // Schouder Links vastzittend op torso: sx=294, sy=132
-  // Schouder Rechts vastzittend op torso: sx=486, sy=132
-  //
-  // Hoek = 0 = arm recht omlaag (90° in SVG = positief Y richting)
-  // Arm naar buiten links  = arm gaat naar links  = hoek > 90° (meer dan 90° vanaf positief X-as)
-  // Arm naar buiten rechts = arm gaat naar rechts = hoek < 90°
-  //
-  // Gyro ratio bepaalt hoe ver de arm omhoog gaat:
-  //   ratio 0 (aangetast) → arm bijna recht omlaag (±10° van verticaal)
-  //   ratio 1 (gezond)    → arm ver omhoog (±65° van verticaal)
+  // ---- WELZIJN — emoji schaal ----
+  const emojiPijn = (v) => v <= 2 ? '😊' : v <= 4 ? '🙂' : v <= 6 ? '😐' : v <= 8 ? '😟' : '😣';
+  const emojiFrus = (v) => v <= 2 ? '😊' : v <= 4 ? '🙂' : v <= 6 ? '😐' : v <= 8 ? '😤' : '😡';
+  const emojiEner = (v) => v <= 2 ? '😴' : v <= 4 ? '😑' : v <= 6 ? '🙂' : v <= 8 ? '😀' : '⚡';
+  const colPijn = (v) => v <= 3 ? '#00B894' : v <= 6 ? '#FDCB6E' : '#ff7675';
+  const colEner = (v) => v >= 7 ? '#00B894' : v >= 4 ? '#FDCB6E' : '#ff7675';
 
+  document.getElementById("bhWbPijnEmoji").textContent = emojiPijn(cur.pijn ?? 5);
+  document.getElementById("bhWbPijn").textContent      = (cur.pijn ?? '—') + '/10';
+  document.getElementById("bhWbPijn").style.color      = colPijn(cur.pijn ?? 5);
+
+  document.getElementById("bhWbFrusEmoji").textContent = emojiFrus(cur.frustratie ?? 5);
+  document.getElementById("bhWbFrus").textContent      = (cur.frustratie ?? '—') + '/10';
+  document.getElementById("bhWbFrus").style.color      = colPijn(cur.frustratie ?? 5);
+
+  document.getElementById("bhWbEnerEmoji").textContent = emojiEner(cur.energie ?? 5);
+  document.getElementById("bhWbEner").textContent      = (cur.energie ?? '—') + '/10';
+  document.getElementById("bhWbEner").style.color      = colEner(cur.energie ?? 5);
+
+  // ---- SESSIE + ZIJDE ----
+  document.getElementById("bhSessies").textContent   = `S${cur.sessie ?? ss.length}`;
+  document.getElementById("bhZijde").textContent     = aangedaan;
+  document.getElementById("bhZijde").style.color     = '#ff7675';
+  document.getElementById("bhZijdeSub").textContent  = `Aangedane zijde — verlamd / beperkt`;
+
+  // ---- GYRO VERGELIJKING ----
+  // Bepaal welke kant aangedaan is
+  const lIsAangedaan = aangedaan === "Links";
+  document.getElementById("bh-title-l").textContent  = lIsAangedaan ? "● Links (aangedaan)" : "● Links (gezond)";
+  document.getElementById("bh-title-l").style.color  = lIsAangedaan ? "#ff7675" : "#00B894";
+  document.getElementById("bh-title-r").textContent  = !lIsAangedaan ? "● Rechts (aangedaan)" : "● Rechts (gezond)";
+  document.getElementById("bh-title-r").style.color  = !lIsAangedaan ? "#ff7675" : "#00B894";
+
+  document.getElementById("bh-gyr-schouder-l").textContent = sd["Schouder Links"].gyr_mean.toFixed(1)  + " °/s";
+  document.getElementById("bh-gyr-boven-l").textContent    = sd["Bovenarm Links"].gyr_mean.toFixed(1)  + " °/s";
+  document.getElementById("bh-gyr-onder-l").textContent    = sd["Onderarm Links"].gyr_mean.toFixed(1)  + " °/s";
+  document.getElementById("bh-gyr-schouder-r").textContent = sd["Schouder Rechts"].gyr_mean.toFixed(1) + " °/s";
+  document.getElementById("bh-gyr-boven-r").textContent    = sd["Bovenarm Rechts"].gyr_mean.toFixed(1) + " °/s";
+  document.getElementById("bh-gyr-onder-r").textContent    = sd["Onderarm Rechts"].gyr_mean.toFixed(1) + " °/s";
+
+  // ---- TREND T.O.V. VORIGE SESSIE ----
+  const trendBlock = document.getElementById("bhTrendBlock");
+  if (trendBlock && sessieIdx > 0) {
+    const symDiff  = cur.sym_index  - prev.sym_index;
+    const pijnDiff = cur.pijn       - prev.pijn;
+    const rows = [
+      { label: "Symmetrie", diff: symDiff,   unit: "pp", invert: false },
+      { label: "Pijnscore", diff: pijnDiff,  unit: "/10", invert: true  },
+      { label: "Energie",   diff: cur.energie - prev.energie, unit: "/10", invert: false },
+    ];
+    trendBlock.innerHTML = rows.map(r => {
+      const good = r.invert ? r.diff < 0 : r.diff > 0;
+      const neutral = r.diff === 0;
+      const color = neutral ? '#7a7f8e' : good ? '#00B894' : '#ff7675';
+      const arrow = neutral ? '→' : r.diff > 0 ? '↑' : '↓';
+      const sign  = r.diff > 0 ? '+' : '';
+      return `<div class="bh-trend-row">
+        <span class="bh-trend-label">${r.label}</span>
+        <span class="bh-trend-val" style="color:${color}">${arrow} ${sign}${r.diff}${r.unit}</span>
+      </div>`;
+    }).join('');
+  } else if (trendBlock) {
+    trendBlock.innerHTML = '<span style="color:var(--text-muted);font-size:12px">Sessie 1 — geen vorige sessie</span>';
+  }
+
+  // ---- ARM KLEUREN op basis van aangedane zijde ----
+  // Gezonde zijde = groen, aangedane zijde = kleur op basis van prestatie
   const gyrL   = sd["Bovenarm Links"].gyr_mean;
   const gyrR   = sd["Bovenarm Rechts"].gyr_mean;
   const maxGyr = Math.max(gyrL, gyrR, 1);
   const ratioL = gyrL / maxGyr;
   const ratioR = gyrR / maxGyr;
 
+  // Gezonde arm = groen. Aangedane arm = rood/oranje/geel op basis van ratio
+  function aangedaanKleur(ratio) {
+    if (ratio >= 0.75) return '#FDCB6E';  // geel  — goed herstel
+    if (ratio >= 0.45) return '#FF9F43';  // oranje — matig
+    return '#ff7675';                      // rood   — slecht
+  }
+
+  const kleurL = lIsAangedaan ? aangedaanKleur(ratioL) : '#00B894';
+  const kleurR = !lIsAangedaan ? aangedaanKleur(ratioR) : '#00B894';
+
+  // Arm balkjes
+  const armLLabel = document.getElementById("bh-arm-l-label");
+  const armRLabel = document.getElementById("bh-arm-r-label");
+  const armLFill  = document.getElementById("bh-arm-l-fill");
+  const armRFill  = document.getElementById("bh-arm-r-fill");
+  if (armLLabel) { armLLabel.textContent = lIsAangedaan ? "Links (aangedaan)" : "Links (gezond)"; armLLabel.style.color = kleurL; }
+  if (armRLabel) { armRLabel.textContent = !lIsAangedaan ? "Rechts (aangedaan)" : "Rechts (gezond)"; armRLabel.style.color = kleurR; }
+  if (armLFill)  { armLFill.style.width = Math.round(ratioL * 100) + "%"; armLFill.style.background = kleurL; }
+  if (armRFill)  { armRFill.style.width = Math.round(ratioR * 100) + "%"; armRFill.style.background = kleurR; }
+  document.getElementById("bh-arm-l-val").textContent = gyrL.toFixed(1) + " °/s";
+  document.getElementById("bh-arm-r-val").textContent = gyrR.toFixed(1) + " °/s";
+
+  // ---- ARM TEKENEN MET CORRECTE KLEUREN ----
   const spreadL = 10 + ratioL * 55;
   const spreadR = 10 + ratioR * 55;
-
-  // Schouderankerpunten passend bij nieuwe SVG (torso x=358..542, y=168)
-  const SL = { x: 358, y: 168 };
-  const SR = { x: 542, y: 168 };
-  const upperLen = 168;
-  const lowerLen = 148;
+  const SL = { x: 375, y: 168 };
+  const SR = { x: 525, y: 168 };
+  const upperLen = 155, lowerLen = 135;
 
   function armPoints(sx, sy, angle, side) {
     const rad = (angle * Math.PI) / 180;
-    const dx = (side === 'L' ? -1 : 1) * Math.sin(rad);
-    const dy = Math.cos(rad);
-    const elbow  = { x: sx + dx * upperLen,            y: sy + dy * upperLen };
-    const hand   = { x: elbow.x + dx * lowerLen,        y: elbow.y + dy * lowerLen };
-    const bovAcc = { x: sx + dx * upperLen * 0.5,        y: sy + dy * upperLen * 0.5 };
-    const ondAcc = { x: elbow.x + dx * lowerLen * 0.5,   y: elbow.y + dy * lowerLen * 0.5 };
+    const dx  = (side === 'L' ? -1 : 1) * Math.sin(rad);
+    const dy  = Math.cos(rad);
+    const elbow  = { x: sx + dx * upperLen,           y: sy + dy * upperLen };
+    const hand   = { x: elbow.x + dx * lowerLen,      y: elbow.y + dy * lowerLen };
+    const bovAcc = { x: sx + dx * upperLen * 0.5,      y: sy + dy * upperLen * 0.5 };
+    const ondAcc = { x: elbow.x + dx * lowerLen * 0.5, y: elbow.y + dy * lowerLen * 0.5 };
     return { elbow, hand, bovAcc, ondAcc };
   }
 
-  function drawArm(groupId, sx, sy, pts, strokeUpper, strokeLower) {
+  function drawArm(groupId, sx, sy, pts, col) {
     const g = document.getElementById(groupId);
     if (!g) return;
     g.innerHTML = '';
-    const ns = 'http://www.w3.org/2000/svg';
-    const make = (tag, attrs) => {
-      const el = document.createElementNS(ns, tag);
-      Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
-      return el;
-    };
-    // Bovenarm
-    g.appendChild(make('line', { x1:sx, y1:sy, x2:pts.elbow.x, y2:pts.elbow.y, stroke:strokeUpper, 'stroke-width':'38', 'stroke-linecap':'round' }));
+    const ns   = 'http://www.w3.org/2000/svg';
+    const make = (tag, attrs) => { const el = document.createElementNS(ns, tag); Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v)); return el; };
+    g.appendChild(make('line', { x1:sx, y1:sy, x2:pts.elbow.x, y2:pts.elbow.y, stroke:col, 'stroke-width':'38', 'stroke-linecap':'round' }));
     g.appendChild(make('line', { x1:sx, y1:sy, x2:pts.elbow.x, y2:pts.elbow.y, stroke:'var(--body-fill)', 'stroke-width':'28', 'stroke-linecap':'round' }));
-    // Onderarm
-    g.appendChild(make('line', { x1:pts.elbow.x, y1:pts.elbow.y, x2:pts.hand.x, y2:pts.hand.y, stroke:strokeLower, 'stroke-width':'34', 'stroke-linecap':'round' }));
+    g.appendChild(make('line', { x1:pts.elbow.x, y1:pts.elbow.y, x2:pts.hand.x, y2:pts.hand.y, stroke:col, 'stroke-width':'34', 'stroke-linecap':'round' }));
     g.appendChild(make('line', { x1:pts.elbow.x, y1:pts.elbow.y, x2:pts.hand.x, y2:pts.hand.y, stroke:'var(--body-fill)', 'stroke-width':'24', 'stroke-linecap':'round' }));
-    // Elleboog
-    g.appendChild(make('circle', { cx:pts.elbow.x, cy:pts.elbow.y, r:'17', fill:'var(--body-fill)', stroke:'var(--body-stroke)', 'stroke-width':'2' }));
-    // Hand
-    g.appendChild(make('ellipse', { cx:pts.hand.x, cy:pts.hand.y, rx:'17', ry:'12', fill:'var(--body-fill)', stroke:strokeLower, 'stroke-width':'2' }));
+    g.appendChild(make('circle', { cx:pts.elbow.x, cy:pts.elbow.y, r:'17', fill:'var(--body-fill)', stroke:col, 'stroke-width':'2' }));
+    g.appendChild(make('ellipse', { cx:pts.hand.x, cy:pts.hand.y, rx:'17', ry:'12', fill:'var(--body-fill)', stroke:col, 'stroke-width':'2' }));
   }
 
-  function positionSensor(bgId, dotId, idId, subId, x, y) {
+  function positionSensor(bgId, dotId, idId, subId, x, y, col) {
     const cx = Math.round(x), cy = Math.round(y);
     document.getElementById(bgId)?.setAttribute('cx', cx);
     document.getElementById(bgId)?.setAttribute('cy', cy);
-    document.getElementById(dotId)?.setAttribute('cx', cx);
-    document.getElementById(dotId)?.setAttribute('cy', cy);
-    const idEl = document.getElementById(idId);
-    if (idEl) { idEl.setAttribute('x', cx); idEl.setAttribute('y', cy - 4); }
+    const dotEl = document.getElementById(dotId);
+    if (dotEl) { dotEl.setAttribute('cx', cx); dotEl.setAttribute('cy', cy); dotEl.setAttribute('fill', col); }
+    const idEl  = document.getElementById(idId);
+    if (idEl)  { idEl.setAttribute('x', cx);  idEl.setAttribute('y', cy - 4); }
     const subEl = document.getElementById(subId);
     if (subEl) { subEl.setAttribute('x', cx); subEl.setAttribute('y', cy + 13); }
+    const bgEl = document.getElementById(bgId);
+    if (bgEl)  { bgEl.setAttribute('fill', col); }
   }
+
+  // Schouder sensor kleuren ook updaten
+  const schLDot = document.querySelector('[data-sensor="Schouder Links"] circle.sensor-dot-main');
+  const schRDot = document.querySelector('[data-sensor="Schouder Rechts"] circle.sensor-dot-main');
+  if (schLDot) schLDot.setAttribute('fill', kleurL);
+  if (schRDot) schRDot.setAttribute('fill', kleurR);
 
   let step = 0;
   const steps = 35;
@@ -1080,27 +1243,18 @@ function buildBodyHero(p, ss, sd) {
     const ptsL = armPoints(SL.x, SL.y, spreadL * ease, 'L');
     const ptsR = armPoints(SR.x, SR.y, spreadR * ease, 'R');
 
-    drawArm('arm-links-drawn',  SL.x, SL.y, ptsL, '#A29BFE', '#6C5CE7');
-    drawArm('arm-rechts-drawn', SR.x, SR.y, ptsR, '#45B7D1', '#00B894');
+    drawArm('arm-links-drawn',  SL.x, SL.y, ptsL, kleurL);
+    drawArm('arm-rechts-drawn', SR.x, SR.y, ptsR, kleurR);
 
-    positionSensor('bg-bovl','dot-bovl','lbl-bovl-id','lbl-bovl-sub', ptsL.bovAcc.x, ptsL.bovAcc.y);
-    positionSensor('bg-ondl','dot-ondl','lbl-ondl-id','lbl-ondl-sub', ptsL.ondAcc.x, ptsL.ondAcc.y);
-    positionSensor('bg-bovr','dot-bovr','lbl-bovr-id','lbl-bovr-sub', ptsR.bovAcc.x, ptsR.bovAcc.y);
-    positionSensor('bg-ondr','dot-ondr','lbl-ondr-id','lbl-ondr-sub', ptsR.ondAcc.x, ptsR.ondAcc.y);
+    positionSensor('bg-bovl','dot-bovl','lbl-bovl-id','lbl-bovl-sub', ptsL.bovAcc.x, ptsL.bovAcc.y, kleurL);
+    positionSensor('bg-ondl','dot-ondl','lbl-ondl-id','lbl-ondl-sub', ptsL.ondAcc.x, ptsL.ondAcc.y, kleurL);
+    positionSensor('bg-bovr','dot-bovr','lbl-bovr-id','lbl-bovr-sub', ptsR.bovAcc.x, ptsR.bovAcc.y, kleurR);
+    positionSensor('bg-ondr','dot-ondr','lbl-ondr-id','lbl-ondr-sub', ptsR.ondAcc.x, ptsR.ondAcc.y, kleurR);
 
     if (step >= steps) clearInterval(window._armAnim);
   }, 1200 / steps);
-
-  // Arm balkjes
-  const pctL = Math.round(ratioL * 100);
-  const pctR = Math.round(ratioR * 100);
-  document.getElementById("bh-arm-l-fill").style.width = pctL + "%";
-  document.getElementById("bh-arm-r-fill").style.width = pctR + "%";
-  document.getElementById("bh-arm-l-val").textContent  = gyrL.toFixed(1) + " °/s";
-  document.getElementById("bh-arm-r-val").textContent  = gyrR.toFixed(1) + " °/s";
 }
 
-// ============================================================
 // ============================================================
 // BODY HERO — tooltip met klinische context per sensor
 // ============================================================
@@ -1224,8 +1378,63 @@ function initBodyHero() {
 // ============================================================
 // INIT
 // ============================================================
+// ============================================================
+// SESSIE SELECTOR
+// ============================================================
+function buildSessionSelector(nr) {
+  const ss   = ALL_SESSIONS[nr] || [];
+  const list = document.getElementById("ssList");
+  const val  = document.getElementById("ssValue");
+  if (!list) return;
+  list.innerHTML = '';
+
+  // Optie: "Laatste sessie"
+  const latest = document.createElement("div");
+  latest.className = "ss-item" + (window.selectedSessieIdx === undefined ? " active" : "");
+  latest.textContent = "Laatste sessie (S" + ss.length + ")";
+  latest.addEventListener("click", () => {
+    window.selectedSessieIdx = ss.length - 1;
+    val.textContent = "S" + ss.length;
+    document.querySelectorAll(".ss-item").forEach(x => x.classList.remove("active"));
+    latest.classList.add("active");
+    closeSsDropdown();
+    rebuildDashboard();
+  });
+  list.appendChild(latest);
+
+  // Alle individuele sessies
+  ss.forEach((s, i) => {
+    const item = document.createElement("div");
+    item.className = "ss-item" + (window.selectedSessieIdx === i ? " active" : "");
+    const sym = s.sym_index;
+    const col = sym >= 80 ? '#00B894' : sym >= 60 ? '#FDCB6E' : '#ff7675';
+    item.innerHTML = `S${s.sessie} <span style="color:${col};font-size:11px">${sym}%</span>`;
+    item.addEventListener("click", () => {
+      window.selectedSessieIdx = i;
+      val.textContent = "S" + s.sessie;
+      document.querySelectorAll(".ss-item").forEach(x => x.classList.remove("active"));
+      item.classList.add("active");
+      closeSsDropdown();
+      rebuildDashboard();
+    });
+    list.appendChild(item);
+  });
+}
+
+function openSsDropdown()  { document.getElementById("ssDropdown")?.classList.add("open"); }
+function closeSsDropdown() { document.getElementById("ssDropdown")?.classList.remove("open"); }
+
+document.getElementById("ssTrigger")?.addEventListener("click", e => {
+  e.stopPropagation();
+  document.getElementById("ssDropdown")?.classList.contains("open") ? closeSsDropdown() : openSsDropdown();
+});
+document.addEventListener("click", e => {
+  if (!document.getElementById("sessionSelector")?.contains(e.target)) closeSsDropdown();
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   buildPatientList();
+  window.selectedSessieIdx = undefined; // start op laatste sessie
   selectPatient(ALL_PATIENTS_META[0].nr);
   initBodyHero();
   initGameTabs();
