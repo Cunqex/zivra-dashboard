@@ -167,12 +167,11 @@
 
       <svg id="mainBodySvg" class="main-body-svg" viewBox="0 0 900 800" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-        <!-- HOOFD — emoji die de toestand weergeeft -->
-        <!-- Emoji als SVG foreignObject werkt niet goed cross-browser,
-             dus we gebruiken een grote text emoji gecentreerd op het hoofd -->
-        <text id="body-hoofd-emoji" x="450" y="88"
-          text-anchor="middle" dominant-baseline="middle"
-          font-size="80" style="user-select:none">😐</text>
+        <!-- HOOFD — ellips als achtergrond, emoji gecentreerd erin -->
+        <ellipse cx="450" cy="62" rx="46" ry="54" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <text id="body-hoofd-emoji" x="450" y="62"
+          text-anchor="middle" dominant-baseline="central"
+          font-size="64" style="user-select:none; font-family: 'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;">😐</text>
 
         <!-- NEK -->
         <rect x="439" y="112" width="22" height="18" rx="5" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
