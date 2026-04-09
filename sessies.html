@@ -386,7 +386,7 @@
     <div class="progress-charts">
       <div class="chart-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px">
         <div class="chart-card-title">Gyroscoop activiteit — aangedane vs gezonde arm</div>
-        <div class="chart-card-sub">Stippellijn = verwacht niveau voor volledige herstel. Hoe dichter bij de lijn, hoe beter.</div>
+        <div class="chart-card-sub">Stippellijn = activiteit gezonde arm (= het doel). Aangedane arm moet naar gezonde arm toe groeien.</div>
         <div class="chart-wrap"><canvas id="gyroProgressChart"></canvas></div>
       </div>
       <div class="chart-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px">
@@ -454,16 +454,24 @@ function pijnEmoji(v) { return v<=2?'😊':v<=4?'🙂':v<=6?'😐':v<=8?'😟':'
 function enerEmoji(v) { return v<=2?'😴':v<=4?'😑':v<=6?'🙂':v<=8?'😀':'⚡'; }
 function frusEmoji(v) { return v<=2?'😊':v<=4?'🙂':v<=6?'😐':v<=8?'😤':'😡'; }
 
-function getSensorData(ss, sessIdx) {
+function getSensorData(ss, sessIdx, aangedaan) {
   const s = ss[sessIdx] || ss[ss.length-1] || {};
+  // Referentie = de GEZONDE kant van deze patiënt
+  // Aangedane = Links → gezond = Rechts → ref is gyr_rechts
+  // Aangedane = Rechts → gezond = Links → ref is gyr_links
+  const gyrGezond = aangedaan === "Links" ? s.gyr_rechts : s.gyr_links;
+  const gyrAangedaan = aangedaan === "Links" ? s.gyr_links : s.gyr_rechts;
+  const refL = gyrGezond; // gezonde arm is de norm voor aangedane arm
+  const refR = gyrGezond;
+
   return {
-    "Sternum (Borst)":  { gyr: 11.45, acc: 21.84, gyr_ref: GYR_REF["Sternum (Borst)"], acc_ref: ACC_REF["Sternum (Borst)"] },
-    "Schouder Links":   { gyr: +(s.gyr_links*0.72).toFixed(1), acc: 16.94, gyr_ref: GYR_REF["Schouder Links"], acc_ref: ACC_REF["Schouder Links"] },
-    "Schouder Rechts":  { gyr: +(s.gyr_rechts*0.85).toFixed(1), acc: 19.27, gyr_ref: GYR_REF["Schouder Rechts"], acc_ref: ACC_REF["Schouder Rechts"] },
-    "Bovenarm Links":   { gyr: +s.gyr_links.toFixed(1), acc: +(s.acc_max_links||20).toFixed(1), gyr_ref: GYR_REF["Bovenarm Links"], acc_ref: ACC_REF["Bovenarm Links"] },
-    "Bovenarm Rechts":  { gyr: +s.gyr_rechts.toFixed(1), acc: 15.71, gyr_ref: GYR_REF["Bovenarm Rechts"], acc_ref: ACC_REF["Bovenarm Rechts"] },
-    "Onderarm Links":   { gyr: +(s.gyr_links*1.22).toFixed(1), acc: +((s.acc_max_links||20)*1.1).toFixed(1), gyr_ref: GYR_REF["Onderarm Links"], acc_ref: ACC_REF["Onderarm Links"] },
-    "Onderarm Rechts":  { gyr: +(s.gyr_rechts*1.34).toFixed(1), acc: 26.71, gyr_ref: GYR_REF["Onderarm Rechts"], acc_ref: ACC_REF["Onderarm Rechts"] },
+    "Sternum (Borst)":  { gyr: +((s.gyr_links+s.gyr_rechts)/2).toFixed(1), acc: +(s.acc_max_links*0.8||20).toFixed(1), gyr_ref: null, acc_ref: null, isNeutraal: true },
+    "Schouder Links":   { gyr: +(s.gyr_links*0.72).toFixed(1), acc: 16.94, gyr_ref: +(gyrGezond*0.72).toFixed(1), isAangedaan: aangedaan==="Links" },
+    "Schouder Rechts":  { gyr: +(s.gyr_rechts*0.85).toFixed(1), acc: 19.27, gyr_ref: +(gyrGezond*0.85).toFixed(1), isAangedaan: aangedaan==="Rechts" },
+    "Bovenarm Links":   { gyr: +s.gyr_links.toFixed(1), acc: +(s.acc_max_links||20).toFixed(1), gyr_ref: +gyrGezond.toFixed(1), isAangedaan: aangedaan==="Links" },
+    "Bovenarm Rechts":  { gyr: +s.gyr_rechts.toFixed(1), acc: 15.71, gyr_ref: +gyrGezond.toFixed(1), isAangedaan: aangedaan==="Rechts" },
+    "Onderarm Links":   { gyr: +(s.gyr_links*1.22).toFixed(1), acc: +((s.acc_max_links||20)*1.1).toFixed(1), gyr_ref: +(gyrGezond*1.22).toFixed(1), isAangedaan: aangedaan==="Links" },
+    "Onderarm Rechts":  { gyr: +(s.gyr_rechts*1.34).toFixed(1), acc: 26.71, gyr_ref: +(gyrGezond*1.34).toFixed(1), isAangedaan: aangedaan==="Rechts" },
   };
 }
 
@@ -532,7 +540,7 @@ function buildSessionStrip(ss) {
 function buildSessionDetail(ss, idx, p) {
   const s    = ss[idx];
   const prev = idx > 0 ? ss[idx-1] : null;
-  const sd   = getSensorData(ss, idx);
+  const sd   = getSensorData(ss, idx, aangedaan);
   const aangedaan = p.zijde; // "Links" of "Rechts"
 
   const trend = (cur, prv, lowerBetter=false) => {
@@ -613,9 +621,9 @@ function buildSessionDetail(ss, idx, p) {
     <!-- SENSOR DATA MET REFERENTIE -->
     <div class="sess-section-title">Bewegingsintensiteit per sensor <span class="tag">vergeleken met gezonde norm</span></div>
     <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">
-      De <strong style="color:rgba(255,255,255,0.4)">witte stippellijn</strong> toont de verwachte waarde bij volledig herstel (gezonde populatie).
-      Hoe dichter de balk bij de lijn, hoe beter de arm functioneert.
-      <span style="color:#ff7675">Rood</span> = ver onder norm · <span style="color:#FF9F43">Oranje</span> = matig · <span style="color:#00B894">Groen</span> = bij of boven norm.
+      De <strong style="color:rgba(255,255,255,0.4)">witte stippellijn</strong> toont de activiteit van de <strong style="color:#00B894">gezonde arm</strong> van deze patiënt als referentie.
+      Hoe dichter de aangedane kant bij de lijn, hoe symmetrischer de beweging.
+      <span style="color:#ff7675">Rood</span> = ver onder gezonde kant · <span style="color:#FF9F43">Oranje</span> = matig · <span style="color:#00B894">Groen</span> = vergelijkbaar met gezonde kant.
     </div>
     <table class="sensor-compare-table">
       <thead>
@@ -660,11 +668,24 @@ function buildSessionDetail(ss, idx, p) {
   const sensors = Object.keys(SENSOR_COLORS);
   sensors.forEach(name => {
     const d = sd[name];
-    const pct = Math.min(100, Math.round(d.gyr / d.gyr_ref * 100));
+    // Als gyr_ref null is (sternum/neutraal), geen vergelijking tonen
+    if (d.isNeutraal) {
+      const tr2 = document.createElement("tr");
+      tr2.innerHTML = `
+        <td><span class="sensor-dot-sm" style="background:${SENSOR_COLORS[name]}"></span><span style="color:var(--text)">${name}</span></td>
+        <td colspan="3"><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">Rompstabiliteit — referentiepunt, geen armvergelijking</span></td>
+        <td><span class="status-chip chip-neutral">Neutraal</span></td>
+      `;
+      tbody.appendChild(tr2);
+      return; // skip rest
+    }
+    const pct = d.gyr_ref > 0 ? Math.min(100, Math.round(d.gyr / d.gyr_ref * 100)) : 100;
     const refPct = 100; // reference is always 100% of its own value
     const col = pct >= 90 ? '#00B894' : pct >= 65 ? '#FDCB6E' : pct >= 45 ? '#FF9F43' : '#ff7675';
-    const statusLabel = pct >= 90 ? 'Bij norm' : pct >= 65 ? 'Matig' : pct >= 45 ? 'Onder norm' : 'Ver onder';
-    const statusClass = pct >= 90 ? 'chip-ok' : pct >= 65 ? 'chip-warn' : 'chip-bad';
+    const statusLabel = d.isAangedaan
+      ? (pct >= 90 ? '✓ Symmetrisch' : pct >= 65 ? 'Bijna symmetrisch' : pct >= 45 ? 'Asymmetrie' : 'Grote asymmetrie')
+      : (pct >= 95 ? '✓ Referentie' : '~Gezonde zijde');
+    const statusClass = d.isAangedaan ? (pct >= 90 ? 'chip-ok' : pct >= 65 ? 'chip-warn' : 'chip-bad') : 'chip-neutral';
     const isAangedaan = name.includes(aangedaan);
 
     const tr = document.createElement("tr");
@@ -678,7 +699,7 @@ function buildSessionDetail(ss, idx, p) {
         <div class="perf-bar-wrap">
           <div class="perf-bar-track">
             <div class="perf-bar-fill" style="width:${Math.min(pct,100)}%;background:${col}"></div>
-            <div class="perf-bar-ref" style="left:${Math.min(refPct,100)}%" data-label="norm ${d.gyr_ref}°/s"></div>
+            <div class="perf-bar-ref" style="left:${Math.min(refPct,100)}%" data-label="gezonde kant: ${d.gyr_ref}°/s"></div>
           </div>
           <span class="perf-val" style="color:${col}">${d.gyr} °/s</span>
         </div>
@@ -753,7 +774,6 @@ function buildProgressCharts(ss, p) {
   // Gyro chart — aangedane vs gezonde arm + referentielijn
   const gyrAangedaan = ss.map(s => aangedaan==="Links" ? +s.gyr_links.toFixed(1) : +s.gyr_rechts.toFixed(1));
   const gyrGezond    = ss.map(s => aangedaan==="Links" ? +s.gyr_rechts.toFixed(1) : +s.gyr_links.toFixed(1));
-  const refVal = GYR_REF["Bovenarm Links"]; // 35 °/s als norm
 
   if (charts.gyro) charts.gyro.destroy();
   charts.gyro = new Chart(document.getElementById("gyroProgressChart"), {

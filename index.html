@@ -881,33 +881,32 @@ function buildSensorSection(sd) {
     <span class="sai-stat">Max acc: <b>${d.acc_max.toFixed(1)} m/s²</b></span>
   `;
 
-  // Tijdserie chart — VASTE y-as op basis van acc_max van de sensor
-  // Dit voorkomt dat de as steeds verschuift bij herhaald klikken
+  // Tijdserie chart — gesimuleerde meetdata van 1 sessie (~160 samples = ~2.7 min bij 1/sec)
+  // X-as = tijdstip in seconden binnen de sessie
   const ts = genTS(d.acc_mean, d.acc_max);
-  const yMax = Math.ceil(d.acc_max * 1.2 / 5) * 5; // afronden op 5, 20% marge
+  const tsLabels = ts.map((_, i) => i % 20 === 0 ? `${i}s` : ''); // label elke 20 sec
+  const yMax = Math.ceil(d.acc_max * 1.2 / 5) * 5;
   const yMin = Math.max(0, Math.floor((d.acc_mean - (d.acc_max - d.acc_mean)) / 5) * 5);
-
-  // Referentielijn voor acceleratie (verwacht bij gezonde oefening)
-  const accRef = d.acc_max * 0.85; // 85% van max als "goed niveau"
+  const accRef = d.acc_max * 0.85;
 
   if (charts.line) charts.line.destroy();
   charts.line = new Chart(document.getElementById("sensorChart"), {
     type: "line",
     data: {
-      labels: ts.map((_,i) => i),
+      labels: tsLabels,
       datasets: [
         {
           label: `${activeSensor} — Acceleratie (m/s²)`,
           data: ts,
           borderColor: color,
           backgroundColor: color + "22",
-          borderWidth: 2.5,
+          borderWidth: 2,
           pointRadius: 0,
           fill: true,
-          tension: 0.4
+          tension: 0.3
         },
         {
-          label: `Referentie norm (${accRef.toFixed(1)} m/s²)`,
+          label: `Verwacht actief niveau (${accRef.toFixed(1)} m/s²)`,
           data: Array(ts.length).fill(accRef),
           borderColor: "rgba(255,255,255,0.35)",
           borderDash: [6, 4],
@@ -920,18 +919,31 @@ function buildSensorSection(sd) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      animation: { duration: 0 }, // geen animatie bij klikken = geen y-as shift
+      animation: { duration: 0 },
       plugins: {
         legend: { labels: { color: "#ccc", font: { family: "'Syne'" }, boxWidth: 12 } },
-        tooltip: { mode: "index", intersect: false }
+        tooltip: {
+          mode: "index", intersect: false,
+          callbacks: { title: items => `t = ${items[0].dataIndex}s` }
+        }
       },
       scales: {
-        x: { display: false },
+        x: {
+          ticks: {
+            color: "#555",
+            font: { family: "'DM Mono'", size: 10 },
+            maxRotation: 0,
+            callback: (val, idx) => tsLabels[idx] || ''
+          },
+          grid: { display: false },
+          title: { display: true, text: 'Tijd binnen sessie (seconden)', color: '#555', font: { family: "'DM Mono'", size: 10 } }
+        },
         y: {
           min: yMin,
           max: yMax,
           ticks: { color: "#777", font: { family: "'DM Mono'" }, callback: v => v + ' m/s²' },
-          grid: { color: "rgba(255,255,255,0.04)" }
+          grid: { color: "rgba(255,255,255,0.04)" },
+          title: { display: true, text: 'Acceleratie (m/s²)', color: '#555', font: { family: "'DM Mono'", size: 10 } }
         }
       }
     }
