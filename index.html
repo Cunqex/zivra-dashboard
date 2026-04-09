@@ -174,15 +174,18 @@
         <!-- Gezicht elementen — worden door JS bijgewerkt -->
         <g id="face-group">
           <!-- Oog links -->
-          <ellipse id="face-eye-l" cx="432" cy="52" rx="5" ry="6" fill="var(--text)"/>
+          <ellipse id="face-eye-l" cx="432" cy="52" rx="5" ry="6" fill="#c8cfe0"/>
           <!-- Oog rechts -->
-          <ellipse id="face-eye-r" cx="468" cy="52" rx="5" ry="6" fill="var(--text)"/>
-          <!-- Wenkbrauw links (neutraal = recht) -->
-          <path id="face-brow-l" d="M424 40 Q432 38 440 40" stroke="var(--text)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <ellipse id="face-eye-r" cx="468" cy="52" rx="5" ry="6" fill="#c8cfe0"/>
+          <!-- Wenkbrauw links -->
+          <path id="face-brow-l" d="M424 40 Q432 38 440 40" stroke="#c8cfe0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
           <!-- Wenkbrauw rechts -->
-          <path id="face-brow-r" d="M460 40 Q468 38 476 40" stroke="var(--text)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <!-- Mond (neutraal = rechte lijn) -->
-          <path id="face-mouth" d="M436 78 Q450 78 464 78" stroke="var(--text)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path id="face-brow-r" d="M460 40 Q468 38 476 40" stroke="#c8cfe0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Mond -->
+          <path id="face-mouth" d="M436 78 Q450 78 464 78" stroke="#c8cfe0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Wangen bloos (bij great) -->
+          <ellipse id="face-cheek-l" cx="428" cy="66" rx="8" ry="5" fill="#ff9999" opacity="0"/>
+          <ellipse id="face-cheek-r" cx="472" cy="66" rx="8" ry="5" fill="#ff9999" opacity="0"/>
         </g>
 
         <!-- NEK -->
@@ -320,7 +323,7 @@
           <div class="bh-legend-card-dot"></div>
           <div>
             <div class="bh-legend-card-title">Rood / Oranje / Geel</div>
-            <div class="bh-legend-card-sub">Aangedane zijde — kleur op basis van prestatie</div>
+            <div class="bh-legend-card-sub">Aangedane zijde: rood &lt;55% · oranje 55-69% · geel 70-79% · mintgroen ≥90%</div>
           </div>
         </div>
         <div class="bh-legend-card bh-legend-card--sternum">
@@ -1214,11 +1217,13 @@ function buildBodyHero(p, ss, sd) {
   const ratioR = gyrR / maxGyr;
 
   // Gezonde arm = groen. Aangedane arm = rood/oranje/geel op basis van ratio
-  // Aangedane arm kleur op basis van sym_index (direct leesbaar voor dokter)
+  // Aangedane arm kleur op basis van sym_index
+  // <55  = rood, 55-74 = oranje, 75-89 = geel, 90+ = lichtgroen (anders tint dan gezond)
   function aangedaanKleur(sym) {
-    if (sym >= 75) return '#FDCB6E';   // geel   — goed herstel, bijna bij doel
-    if (sym >= 55) return '#FF9F43';   // oranje — matige voortgang
-    return '#ff7675';                   // rood   — weinig voortgang, aandacht nodig
+    if (sym >= 90) return '#34d399';   // mintgroen — bijna volledig herstel
+    if (sym >= 70) return '#FDCB6E';   // geel      — 70–89%
+    if (sym >= 55) return '#FF9F43';   // oranje    — 55–69%
+    return '#ff7675';                   // rood      — <55%
   }
 
   const kleurL = lIsAangedaan ? aangedaanKleur(sym) : '#00B894';
@@ -1229,8 +1234,8 @@ function buildBodyHero(p, ss, sd) {
   const armRLabel = document.getElementById("bh-arm-r-label");
   const armLFill  = document.getElementById("bh-arm-l-fill");
   const armRFill  = document.getElementById("bh-arm-r-fill");
-  if (armLLabel) { armLLabel.textContent = lIsAangedaan ? "Links (aangedaan)" : "Links (gezond)"; armLLabel.style.color = kleurL; }
-  if (armRLabel) { armRLabel.textContent = !lIsAangedaan ? "Rechts (aangedaan)" : "Rechts (gezond)"; armRLabel.style.color = kleurR; }
+  if (armLLabel) { armLLabel.textContent = "Links"; armLLabel.style.color = kleurL; }
+  if (armRLabel) { armRLabel.textContent = "Rechts"; armRLabel.style.color = kleurR; }
   if (armLFill)  { armLFill.style.width = Math.round(ratioL * 100) + "%"; armLFill.style.background = kleurL; }
   if (armRFill)  { armRFill.style.width = Math.round(ratioR * 100) + "%"; armRFill.style.background = kleurR; }
   document.getElementById("bh-arm-l-val").textContent = gyrL.toFixed(1) + " °/s";
@@ -1315,30 +1320,28 @@ function buildBodyHero(p, ss, sd) {
   const eyeR   = document.getElementById("face-eye-r");
   const headEl = document.querySelector("#face-group")?.closest("g")?.previousElementSibling;
 
-  if (browL)  browL.setAttribute("d", face.browL);
-  if (browR)  browR.setAttribute("d", face.browR);
-  if (mouth)  mouth.setAttribute("d", face.mouth);
-  if (eyeL)   { eyeL.setAttribute("rx", face.eyeRx); eyeL.setAttribute("ry", face.eyeRy); }
-  if (eyeR)   { eyeR.setAttribute("rx", face.eyeRx); eyeR.setAttribute("ry", face.eyeRy); }
+  const browL   = document.getElementById("face-brow-l");
+  const browR   = document.getElementById("face-brow-r");
+  const mouth   = document.getElementById("face-mouth");
+  const eyeL    = document.getElementById("face-eye-l");
+  const eyeR    = document.getElementById("face-eye-r");
+  const cheekL  = document.getElementById("face-cheek-l");
+  const cheekR  = document.getElementById("face-cheek-r");
+  const faceColor = "#c8cfe0";
 
-  // Hoofd rand kleur verandert ook mee
+  if (browL)  { browL.setAttribute("d", face.browL); browL.setAttribute("stroke", faceColor); }
+  if (browR)  { browR.setAttribute("d", face.browR); browR.setAttribute("stroke", faceColor); }
+  if (mouth)  { mouth.setAttribute("d", face.mouth); mouth.setAttribute("stroke", faceColor); }
+  if (eyeL)   { eyeL.setAttribute("rx", face.eyeRx); eyeL.setAttribute("ry", face.eyeRy); eyeL.setAttribute("fill", faceColor); }
+  if (eyeR)   { eyeR.setAttribute("rx", face.eyeRx); eyeR.setAttribute("ry", face.eyeRy); eyeR.setAttribute("fill", faceColor); }
+  if (cheekL) cheekL.setAttribute("opacity", faceKey === 'great' ? "0.5" : "0");
+  if (cheekR) cheekR.setAttribute("opacity", faceKey === 'great' ? "0.5" : "0");
+
+  // Hoofd rand kleur verandert mee
   const headEllipse = document.querySelector('#mainBodySvg ellipse');
   if (headEllipse) headEllipse.setAttribute("stroke", face.accentColor);
 
-  // Aangedane kant label zichtbaar maken
-  const labelL = document.getElementById("body-label-links");
-  const labelR = document.getElementById("body-label-rechts");
-  if (labelL) labelL.setAttribute("opacity", aangedaan === "Links" ? "1" : "0");
-  if (labelR) labelR.setAttribute("opacity", aangedaan === "Rechts" ? "1" : "0");
 
-  // Label kleur aanpassen op basis van status
-  ["body-label-links", "body-label-rechts"].forEach(id => {
-    const g = document.getElementById(id);
-    if (!g) return;
-    g.querySelectorAll("text").forEach(el => el.setAttribute("fill", statusColor));
-    g.querySelectorAll("rect").forEach(el => { el.setAttribute("fill", statusColor + "18"); el.setAttribute("stroke", statusColor + "55"); });
-    g.querySelectorAll("line").forEach(el => el.setAttribute("stroke", statusColor));
-  });
 
 
   const spreadL = 10 + ratioL * 55;
