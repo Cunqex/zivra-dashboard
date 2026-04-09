@@ -22,11 +22,9 @@
       <div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div>
     </a>
     <nav class="main-nav">
-      <a href="index.html"     class="nav-link active">Dashboard</a>
-      <a href="patient.html"   class="nav-link">Patiënt</a>
-      <a href="sessies.html"   class="nav-link">Sessies</a>
-      <a href="voortgang.html" class="nav-link">Voortgang</a>
-      <a href="sensoren.html"  class="nav-link">Sensoren</a>
+      <a href="index.html"   class="nav-link active">Dashboard</a>
+      <a href="patient.html" class="nav-link">Patiënt</a>
+      <a href="sessies.html" class="nav-link">Sessies</a>
     </nav>
 
     <!-- PATIENT SELECTOR -->
@@ -858,37 +856,109 @@ function buildSensorSection(sd) {
     btn.onclick = () => { activeSensor = s; buildSensorSection(sd); };
     tabs.appendChild(btn);
   });
+
   const d = sd[activeSensor];
+  const color = COLORS[activeSensor];
+
+  // Klinische referentiewaarden (gezonde populatie, revalidatieoefeningen)
+  const GYR_REF_VALS = {
+    "Sternum (Borst)":12,"Schouder Links":22,"Schouder Rechts":22,
+    "Bovenarm Links":35,"Bovenarm Rechts":35,"Onderarm Links":45,"Onderarm Rechts":45
+  };
+  const ref = GYR_REF_VALS[activeSensor] || 20;
+  const pctVanNorm = Math.round(d.gyr_mean / ref * 100);
+  const normKleur = pctVanNorm >= 90 ? '#00B894' : pctVanNorm >= 65 ? '#FDCB6E' : pctVanNorm >= 45 ? '#FF9F43' : '#ff7675';
+  const normLabel = pctVanNorm >= 90 ? '✓ Bij norm — goed' : pctVanNorm >= 65 ? 'Matig — verbetering zichtbaar' : pctVanNorm >= 45 ? 'Onder norm — aandacht nodig' : '⚠ Ver onder norm';
+
   document.getElementById("sensorActiveInfo").innerHTML = `
-    <div class="sai-dot" style="background:${COLORS[activeSensor]}"></div>
-    <strong style="color:${COLORS[activeSensor]}">${activeSensor}</strong>
+    <div class="sai-dot" style="background:${color}"></div>
+    <strong style="color:${color}">${activeSensor}</strong>
     <span class="sai-divider"></span>
+    <span class="sai-stat">Gem. gyro: <b>${d.gyr_mean.toFixed(1)} °/s</b></span>
+    <span class="sai-stat">Norm: <b>${ref} °/s</b></span>
+    <span class="sai-stat" style="color:${normKleur}"><b>${pctVanNorm}% van norm — ${normLabel}</b></span>
     <span class="sai-stat">Gem. acc: <b>${d.acc_mean.toFixed(1)} m/s²</b></span>
     <span class="sai-stat">Max acc: <b>${d.acc_max.toFixed(1)} m/s²</b></span>
-    <span class="sai-stat">Gem. gyro: <b>${d.gyr_mean.toFixed(1)} °/s</b></span>
   `;
-  // Line chart
+
+  // Tijdserie chart — VASTE y-as op basis van acc_max van de sensor
+  // Dit voorkomt dat de as steeds verschuift bij herhaald klikken
   const ts = genTS(d.acc_mean, d.acc_max);
-  const color = COLORS[activeSensor];
+  const yMax = Math.ceil(d.acc_max * 1.2 / 5) * 5; // afronden op 5, 20% marge
+  const yMin = Math.max(0, Math.floor((d.acc_mean - (d.acc_max - d.acc_mean)) / 5) * 5);
+
+  // Referentielijn voor acceleratie (verwacht bij gezonde oefening)
+  const accRef = d.acc_max * 0.85; // 85% van max als "goed niveau"
+
   if (charts.line) charts.line.destroy();
   charts.line = new Chart(document.getElementById("sensorChart"), {
-    type:"line",
-    data:{labels:ts.map((_,i)=>i),datasets:[{label:activeSensor+" — Acc. (m/s²)",data:ts,borderColor:color,backgroundColor:color+"22",borderWidth:2.5,pointRadius:0,fill:true,tension:0.4}]},
-    options:{responsive:true,maintainAspectRatio:false,animation:{duration:300},plugins:{legend:{labels:{color:"#ccc",font:{family:"'Syne'"}}},tooltip:{mode:"index",intersect:false}},scales:{x:{display:false},y:{ticks:{color:"#777",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}}}}
+    type: "line",
+    data: {
+      labels: ts.map((_,i) => i),
+      datasets: [
+        {
+          label: `${activeSensor} — Acceleratie (m/s²)`,
+          data: ts,
+          borderColor: color,
+          backgroundColor: color + "22",
+          borderWidth: 2.5,
+          pointRadius: 0,
+          fill: true,
+          tension: 0.4
+        },
+        {
+          label: `Referentie norm (${accRef.toFixed(1)} m/s²)`,
+          data: Array(ts.length).fill(accRef),
+          borderColor: "rgba(255,255,255,0.35)",
+          borderDash: [6, 4],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 0 }, // geen animatie bij klikken = geen y-as shift
+      plugins: {
+        legend: { labels: { color: "#ccc", font: { family: "'Syne'" }, boxWidth: 12 } },
+        tooltip: { mode: "index", intersect: false }
+      },
+      scales: {
+        x: { display: false },
+        y: {
+          min: yMin,
+          max: yMax,
+          ticks: { color: "#777", font: { family: "'DM Mono'" }, callback: v => v + ' m/s²' },
+          grid: { color: "rgba(255,255,255,0.04)" }
+        }
+      }
+    }
   });
+
   // Radar
   if (charts.radar) charts.radar.destroy();
   charts.radar = new Chart(document.getElementById("radarChart"), {
-    type:"radar",
-    data:{labels:SENSORS,datasets:[{label:"Gyroscoop",data:SENSORS.map(s=>+sd[s].gyr_mean.toFixed(1)),backgroundColor:"rgba(78,205,196,0.1)",borderColor:"#4ECDC4",borderWidth:2,pointBackgroundColor:SENSORS.map(s=>COLORS[s]),pointBorderColor:"#fff",pointRadius:5}]},
-    options:{responsive:true,maintainAspectRatio:true,scales:{r:{grid:{color:"rgba(255,255,255,0.06)"},ticks:{color:"#555",backdropColor:"transparent",font:{family:"'DM Mono'",size:9}},pointLabels:{color:"#999",font:{family:"'Syne'",size:11}}}},plugins:{legend:{display:false}}}
+    type: "radar",
+    data: { labels: SENSORS, datasets: [
+      { label: "Gem. gyro patiënt", data: SENSORS.map(s => +sd[s].gyr_mean.toFixed(1)), backgroundColor: "rgba(78,205,196,0.1)", borderColor: "#4ECDC4", borderWidth: 2, pointBackgroundColor: SENSORS.map(s => COLORS[s]), pointBorderColor: "#fff", pointRadius: 5 },
+      { label: "Norm gezond", data: SENSORS.map(s => ({
+          "Sternum (Borst)":12,"Schouder Links":22,"Schouder Rechts":22,
+          "Bovenarm Links":35,"Bovenarm Rechts":35,"Onderarm Links":45,"Onderarm Rechts":45
+        }[s])), backgroundColor: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.2)", borderDash:[4,3], borderWidth: 1.5, pointRadius: 0 },
+    ]},
+    options: { responsive:true, maintainAspectRatio:true, scales:{r:{grid:{color:"rgba(255,255,255,0.06)"},ticks:{color:"#555",backdropColor:"transparent",font:{family:"'DM Mono'",size:9}},pointLabels:{color:"#999",font:{family:"'Syne'",size:11}}}}, plugins:{legend:{labels:{color:"#aaa",font:{family:"'Syne'"},boxWidth:10}}} }
   });
+
   // Bar
   if (charts.bar) charts.bar.destroy();
   charts.bar = new Chart(document.getElementById("barChart"), {
-    type:"bar",
-    data:{labels:SENSORS,datasets:[{label:"Max acc",data:SENSORS.map(s=>+sd[s].acc_max.toFixed(1)),backgroundColor:SENSORS.map(s=>COLORS[s]+"BB"),borderColor:SENSORS.map(s=>COLORS[s]),borderWidth:2,borderRadius:6}]},
-    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:"#666",font:{family:"'DM Mono'",size:9},maxRotation:40},grid:{display:false}},y:{ticks:{color:"#666",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}}}}
+    type: "bar",
+    data: { labels: SENSORS, datasets: [
+      { label: "Max acc patiënt", data: SENSORS.map(s => +sd[s].acc_max.toFixed(1)), backgroundColor: SENSORS.map(s => COLORS[s]+"BB"), borderColor: SENSORS.map(s => COLORS[s]), borderWidth: 2, borderRadius: 6 },
+    ]},
+    options: { responsive:true, maintainAspectRatio:true, plugins:{legend:{display:false}}, scales:{x:{ticks:{color:"#666",font:{family:"'DM Mono'",size:9},maxRotation:40},grid:{display:false}},y:{ticks:{color:"#666",font:{family:"'DM Mono'"}},grid:{color:"rgba(255,255,255,0.04)"}}}}
   });
 }
 
