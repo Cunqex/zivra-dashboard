@@ -1313,13 +1313,6 @@ function buildBodyHero(p, ss, sd) {
 
   const face = FACES[faceKey];
 
-  const browL  = document.getElementById("face-brow-l");
-  const browR  = document.getElementById("face-brow-r");
-  const mouth  = document.getElementById("face-mouth");
-  const eyeL   = document.getElementById("face-eye-l");
-  const eyeR   = document.getElementById("face-eye-r");
-  const headEl = document.querySelector("#face-group")?.closest("g")?.previousElementSibling;
-
   const browL   = document.getElementById("face-brow-l");
   const browR   = document.getElementById("face-brow-r");
   const mouth   = document.getElementById("face-mouth");
@@ -1337,9 +1330,9 @@ function buildBodyHero(p, ss, sd) {
   if (cheekL) cheekL.setAttribute("opacity", faceKey === 'great' ? "0.5" : "0");
   if (cheekR) cheekR.setAttribute("opacity", faceKey === 'great' ? "0.5" : "0");
 
-  // Hoofd rand kleur verandert mee
+  // Hoofd rand: groen als doel bereikt (≥80%), anders statuskleur
   const headEllipse = document.querySelector('#mainBodySvg ellipse');
-  if (headEllipse) headEllipse.setAttribute("stroke", face.accentColor);
+  if (headEllipse) headEllipse.setAttribute("stroke", sym >= 80 ? '#00B894' : statusColor);
 
 
 
