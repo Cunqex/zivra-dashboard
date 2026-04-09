@@ -167,8 +167,13 @@
 
       <svg id="mainBodySvg" class="main-body-svg" viewBox="0 0 900 800" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-        <!-- HOOFD -->
-        <ellipse cx="450" cy="62" rx="46" ry="54" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <!-- HOOFD — emoji die de toestand weergeeft -->
+        <!-- Emoji als SVG foreignObject werkt niet goed cross-browser,
+             dus we gebruiken een grote text emoji gecentreerd op het hoofd -->
+        <text id="body-hoofd-emoji" x="450" y="88"
+          text-anchor="middle" dominant-baseline="middle"
+          font-size="80" style="user-select:none">😐</text>
+
         <!-- NEK -->
         <rect x="439" y="112" width="22" height="18" rx="5" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
         <!-- TORSO -->
@@ -203,14 +208,6 @@
         <!-- =====================================================
              POPPETJE ANNOTATIES — dokter ziet direct de status
         ====================================================== -->
-
-        <!-- WELZIJN DOT — klein bolletje RECHTSONDER op het hoofd, symmetrisch -->
-        <!-- Hoofd: cx=450, cy=62, rx=46 → rechtsonder = ca (482, 88) -->
-        <circle id="body-welzijn-dot" cx="484" cy="85" r="11"
-          fill="#FDCB6E" stroke="var(--body-fill)" stroke-width="3"/>
-        <!-- Kleine tekst welzijn -->
-        <text id="body-welzijn-txt" x="484" y="89" text-anchor="middle"
-          font-family="'DM Mono',monospace" font-size="9" font-weight="700" fill="#0a0b0f">😐</text>
 
         <!-- SYM% BADGE — gecentreerd BOVEN de torso, onder de nek -->
         <!-- Torso top: y=128, nek bottom: y=130. Badge net BINNEN torso bovenkant -->
@@ -1235,14 +1232,38 @@ function buildBodyHero(p, ss, sd) {
   if (symBadgeBg)  { symBadgeBg.setAttribute("fill", statusColor + "22"); symBadgeBg.setAttribute("stroke", statusColor + "66"); }
   if (symBadgeVal) { symBadgeVal.textContent = sym + "%"; symBadgeVal.setAttribute("fill", statusColor); }
 
-  // Welzijn dot op hoofd — emoji + kleur
-  const welzijnScore = ((10 - (cur.pijn ?? 5)) + (10 - (cur.frustratie ?? 5)) + (cur.energie ?? 5)) / 3;
-  const welzijnKleur = welzijnScore >= 7 ? '#00B894' : welzijnScore >= 5 ? '#FDCB6E' : '#ff7675';
-  const welzijnEmoji = welzijnScore >= 7 ? '😊' : welzijnScore >= 5 ? '😐' : '😟';
-  const welzijnDot = document.getElementById("body-welzijn-dot");
-  const welzijnTxt = document.getElementById("body-welzijn-txt");
-  if (welzijnDot) welzijnDot.setAttribute("fill", welzijnKleur);
-  if (welzijnTxt) welzijnTxt.textContent = welzijnEmoji;
+  // ---- EMOJI HOOFD — combineert sym%, pijn, frustratie, energie ----
+  // Berekening: weeg sym het zwaarst (klinisch meest relevant),
+  // dan welzijn (pijn/frustratie/energie).
+  // Resultaat: 5 niveaus van 😄 (uitstekend) tot 😢 (zorgelijk)
+
+  const pijn      = cur.pijn      ?? 5;
+  const frustratie= cur.frustratie ?? 5;
+  const energie   = cur.energie   ?? 5;
+
+  // Normaliseer alles naar 0–10 schaal waar 10=perfect
+  const symScore    = sym;                         // 0–100 → deel door 10 voor vergelijking
+  const pijnScore   = 10 - pijn;                   // laag pijn = goed
+  const frusScore   = 10 - frustratie;             // lage frustratie = goed
+  const energieScore= energie;                     // hoog energie = goed
+
+  // Gewogen totaalscore 0–100
+  // sym telt 50%, welzijn samen 50% (elk 1/6)
+  const totaalScore = (symScore * 0.50)
+    + (pijnScore    * 10 * 0.20)
+    + (frusScore    * 10 * 0.15)
+    + (energieScore * 10 * 0.15);
+
+  // Emoji schaal — 5 levels
+  let hoofdEmoji;
+  if      (totaalScore >= 78) hoofdEmoji = '😄';  // uitstekend  — sym ≥80% + goed welzijn
+  else if (totaalScore >= 65) hoofdEmoji = '🙂';  // goed        — sym ~70%+, weinig klachten
+  else if (totaalScore >= 52) hoofdEmoji = '😐';  // matig       — vooruitgang maar nog klachten
+  else if (totaalScore >= 38) hoofdEmoji = '😟';  // zorgelijk   — lage sym of hoge klachten
+  else                        hoofdEmoji = '😢';  // slecht      — weinig herstel + veel klachten
+
+  const hoofdEl = document.getElementById("body-hoofd-emoji");
+  if (hoofdEl) hoofdEl.textContent = hoofdEmoji;
 
   // Aangedane kant label zichtbaar maken
   const labelL = document.getElementById("body-label-links");
