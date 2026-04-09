@@ -146,13 +146,17 @@
       <div class="bh-arm-compare">
         <div class="bh-arm-bar-wrap">
           <div class="bh-arm-bar-label" id="bh-arm-l-label">Links</div>
-          <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-l-fill"></div></div>
-          <span class="bh-arm-val" id="bh-arm-l-val">—</span>
+          <div class="bh-arm-bar-row">
+            <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-l-fill"></div></div>
+            <span class="bh-arm-val" id="bh-arm-l-val">—</span>
+          </div>
         </div>
         <div class="bh-arm-bar-wrap">
           <div class="bh-arm-bar-label" id="bh-arm-r-label">Rechts</div>
-          <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-r-fill"></div></div>
-          <span class="bh-arm-val" id="bh-arm-r-val">—</span>
+          <div class="bh-arm-bar-row">
+            <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-r-fill"></div></div>
+            <span class="bh-arm-val" id="bh-arm-r-val">—</span>
+          </div>
         </div>
       </div>
     </div>
@@ -190,8 +194,8 @@
 
         <!-- STERNUM -->
         <g class="sensor-dot-group" data-sensor="Sternum (Borst)" style="cursor:pointer">
-          <circle cx="450" cy="218" r="48" fill="#4ECDC4" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle cx="450" cy="218" r="34" fill="#4ECDC4" class="sensor-dot-main"/>
+          <circle cx="450" cy="218" r="48" fill="#8B5CF6" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle cx="450" cy="218" r="34" fill="#8B5CF6" class="sensor-dot-main"/>
           <text x="450" y="213" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">A1</text>
           <text x="450" y="230" text-anchor="middle" font-family="'Syne',sans-serif" font-size="12" font-weight="600" fill="#0a0b0f">Sternum</text>
         </g>
@@ -227,8 +231,8 @@
         <g id="sensor-ondl" class="sensor-dot-group" data-sensor="Onderarm Links" style="cursor:pointer">
           <circle id="bg-ondl"  r="46" fill="#6C5CE7" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle id="dot-ondl" r="32" fill="#6C5CE7" class="sensor-dot-main"/>
-          <text id="lbl-ondl-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">A5</text>
-          <text id="lbl-ondl-sub" font-family="'Syne',sans-serif" font-size="11" font-weight="600" fill="#ddd" text-anchor="middle">Ond. Links</text>
+          <text id="lbl-ondl-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">A5</text>
+          <text id="lbl-ondl-sub" font-family="'Syne',sans-serif" font-size="11" font-weight="600" fill="#0a0b0f" text-anchor="middle">Ond. Links</text>
         </g>
 
         <g id="sensor-bovr" class="sensor-dot-group" data-sensor="Bovenarm Rechts" style="cursor:pointer">
@@ -567,7 +571,7 @@
 // SENSOR CONFIG
 // ============================================================
 const COLORS = {
-  "Sternum (Borst)": "#4ECDC4","Schouder Links": "#A29BFE","Schouder Rechts": "#45B7D1",
+  "Sternum (Borst)": "#8B5CF6","Schouder Links": "#A29BFE","Schouder Rechts": "#45B7D1",
   "Bovenarm Links":  "#FD79A8","Bovenarm Rechts": "#FDCB6E","Onderarm Links": "#6C5CE7","Onderarm Rechts": "#00B894",
 };
 const SENSORS = Object.keys(COLORS);
@@ -1161,14 +1165,15 @@ function buildBodyHero(p, ss, sd) {
   const ratioR = gyrR / maxGyr;
 
   // Gezonde arm = groen. Aangedane arm = rood/oranje/geel op basis van ratio
-  function aangedaanKleur(ratio) {
-    if (ratio >= 0.75) return '#FDCB6E';  // geel  — goed herstel
-    if (ratio >= 0.45) return '#FF9F43';  // oranje — matig
-    return '#ff7675';                      // rood   — slecht
+  // Aangedane arm kleur op basis van sym_index (direct leesbaar voor dokter)
+  function aangedaanKleur(sym) {
+    if (sym >= 75) return '#FDCB6E';   // geel   — goed herstel, bijna bij doel
+    if (sym >= 55) return '#FF9F43';   // oranje — matige voortgang
+    return '#ff7675';                   // rood   — weinig voortgang, aandacht nodig
   }
 
-  const kleurL = lIsAangedaan ? aangedaanKleur(ratioL) : '#00B894';
-  const kleurR = !lIsAangedaan ? aangedaanKleur(ratioR) : '#00B894';
+  const kleurL = lIsAangedaan ? aangedaanKleur(sym) : '#00B894';
+  const kleurR = !lIsAangedaan ? aangedaanKleur(sym) : '#00B894';
 
   // Arm balkjes
   const armLLabel = document.getElementById("bh-arm-l-label");
@@ -1221,9 +1226,9 @@ function buildBodyHero(p, ss, sd) {
     const dotEl = document.getElementById(dotId);
     if (dotEl) { dotEl.setAttribute('cx', cx); dotEl.setAttribute('cy', cy); dotEl.setAttribute('fill', col); }
     const idEl  = document.getElementById(idId);
-    if (idEl)  { idEl.setAttribute('x', cx);  idEl.setAttribute('y', cy - 4); }
+    if (idEl)  { idEl.setAttribute('x', cx); idEl.setAttribute('y', cy - 4); idEl.setAttribute('fill', '#0a0b0f'); }
     const subEl = document.getElementById(subId);
-    if (subEl) { subEl.setAttribute('x', cx); subEl.setAttribute('y', cy + 13); }
+    if (subEl) { subEl.setAttribute('x', cx); subEl.setAttribute('y', cy + 13); subEl.setAttribute('fill', '#0a0b0f'); }
     const bgEl = document.getElementById(bgId);
     if (bgEl)  { bgEl.setAttribute('fill', col); }
   }
