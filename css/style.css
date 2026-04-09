@@ -2209,3 +2209,7 @@ table.sessies-table {
   font-size: 13px;
   font-weight: 700;
 }
+
+/* Sternum legenda kaart (grijs) */
+.bh-legend-card--sternum { border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.06); }
+.bh-legend-card--sternum .bh-legend-card-dot { background: #64748b; }
