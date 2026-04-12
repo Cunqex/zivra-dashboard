@@ -37,25 +37,44 @@
 
 <section>
   <div class="section-inner">
-    <div class="sessies-table-wrap"><table class="sessies-table" id="sessiesTable"></table></div>
 
+    <!-- SESSIE TABEL -->
+    <div class="sessies-table-wrap">
+      <table class="sessies-table" id="sessiesTable"></table>
+    </div>
+
+    <!-- SYMMETRIE -->
     <div class="section-header" style="margin-top:52px">
-      <div class="section-tag">Voortgang</div>
+      <div class="section-tag">Bewegingsvoortgang</div>
       <h2 class="section-title">Symmetrie-index verloop</h2>
+      <p class="section-desc">Gekleurde punten tonen verbetering (groen) of achteruitgang (rood) t.o.v. vorige sessie. Witte stippellijn = gezonde zijde als referentie (100% = volledig herstel).</p>
     </div>
     <div class="radar-row">
       <div class="radar-box">
         <h3 class="radar-title">Symmetrie per sessie</h3>
-        <p class="radar-sub">Punten gekleurd op delta t.o.v. vorige sessie</p>
-        <div id="d3sym" style="height:240px"></div>
+        <p class="radar-sub">Referentielijn = gezonde zijde (nulmeting sessie 1)</p>
+        <div id="d3sym" style="height:260px"></div>
       </div>
       <div class="radar-box">
-        <h3 class="radar-title">Welzijn — pijn, frustratie &amp; energie</h3>
-        <p class="radar-sub">Pijn/frustratie: lager is beter · Energie: hoger is beter</p>
-        <div id="d3wb" style="height:240px"></div>
+        <h3 class="radar-title">Gyroscoop — aangedane vs gezonde arm</h3>
+        <p class="radar-sub">Hoe dichter bij elkaar, hoe beter het herstel</p>
+        <div id="d3gyr" style="height:260px"></div>
       </div>
     </div>
 
+    <!-- WELZIJN -->
+    <div class="section-header" style="margin-top:52px">
+      <div class="section-tag">Welzijn</div>
+      <h2 class="section-title">Pijn, frustratie &amp; energie</h2>
+      <p class="section-desc">Pijn en frustratie: lager is beter. Energie: hoger is beter. Stippellijnen = gezonde norm als referentie.</p>
+    </div>
+    <div class="radar-row">
+      <div class="radar-box" style="grid-column: 1 / -1">
+        <div id="d3wb" style="height:260px"></div>
+      </div>
+    </div>
+
+    <!-- GAMES -->
     <div class="section-header" style="margin-top:52px">
       <div class="section-tag">Games</div>
       <h2 class="section-title">Spelresultaten per sessie</h2>
@@ -63,15 +82,33 @@
     <div class="radar-row">
       <div class="radar-box">
         <h3 class="radar-title">Holomoves — reikenscore %</h3>
-        <p class="radar-sub">Behaald als % van maximum</p>
-        <div id="d3reik" style="height:220px"></div>
+        <p class="radar-sub">Score als % van maximum per sessie</p>
+        <div id="d3reik" style="height:240px"></div>
       </div>
       <div class="radar-box">
         <h3 class="radar-title">Magische Ketel — correct vs overgeslagen</h3>
-        <p class="radar-sub">Gestapelde balk per sessie</p>
-        <div id="d3ketel" style="height:220px"></div>
+        <p class="radar-sub">Groen = correct, rood = overgeslagen</p>
+        <div id="d3ketel" style="height:240px"></div>
       </div>
     </div>
+
+    <!-- HOLOMOVES DETAIL TABEL -->
+    <div class="section-header" style="margin-top:52px">
+      <div class="section-tag">Detail</div>
+      <h2 class="section-title">Holomoves — oefenscores per categorie</h2>
+    </div>
+    <div class="sessies-table-wrap">
+      <table class="sessies-table" id="holomovesTable"></table>
+    </div>
+
+    <!-- BLOKKI TABEL -->
+    <div class="section-header" style="margin-top:40px">
+      <h2 class="section-title">InMotion Blokki — sessie status</h2>
+    </div>
+    <div class="sessies-table-wrap">
+      <table class="sessies-table" id="blokkiTable"></table>
+    </div>
+
   </div>
 </section>
 
@@ -84,234 +121,336 @@
 </footer>
 
 <script>
-let currentNr = ALL_PATIENTS_META[0].nr;
+var currentNr = ALL_PATIENTS_META[0].nr;
 
-// ── Patient selector ───────────────────────────────────────
+// ── Patient selector ─────────────────────────────────────────
 function buildPatientList() {
-  const list = document.getElementById("psList");
-  ALL_PATIENTS_META.forEach(p => {
-    const el = document.createElement("div");
+  var list = document.getElementById("psList");
+  ALL_PATIENTS_META.forEach(function(p) {
+    var el = document.createElement("div");
     el.className = "ps-item"; el.dataset.nr = p.nr;
-    el.innerHTML = `<span class="ps-item-avatar">${p.naam[0]}</span><div class="ps-item-info"><div class="ps-item-name">${p.naam}</div><div class="ps-item-meta">#${p.nr} · ${p.kliniek}</div></div><span class="ps-item-caras">${p.caras}</span>`;
-    el.addEventListener("click", () => { selectPatient(p.nr); closeDropdown(); });
+    el.innerHTML = '<span class="ps-item-avatar">' + p.naam[0] + '</span><div class="ps-item-info"><div class="ps-item-name">' + p.naam + '</div><div class="ps-item-meta">#' + p.nr + ' · ' + p.kliniek + '</div></div><span class="ps-item-caras">' + p.caras + '</span>';
+    el.addEventListener("click", function() { selectPatient(p.nr); closeDropdown(); });
     list.appendChild(el);
   });
 }
 function openDropdown()  { document.getElementById("psDropdown").classList.add("open"); document.getElementById("psSearch").focus(); }
-function closeDropdown() { document.getElementById("psDropdown").classList.remove("open"); document.getElementById("psSearch").value=""; filterList(""); }
-document.getElementById("psTrigger").addEventListener("click", e => { e.stopPropagation(); document.getElementById("psDropdown").classList.contains("open")?closeDropdown():openDropdown(); });
-document.addEventListener("click", e => { if(!document.getElementById("patientSelector").contains(e.target)) closeDropdown(); });
-document.getElementById("psSearch").addEventListener("input", e => filterList(e.target.value.toLowerCase()));
-function filterList(q) { document.querySelectorAll(".ps-item").forEach(el => el.style.display = el.textContent.toLowerCase().includes(q)?"":"none"); }
+function closeDropdown() { document.getElementById("psDropdown").classList.remove("open"); document.getElementById("psSearch").value = ""; filterList(""); }
+document.getElementById("psTrigger").addEventListener("click", function(e) { e.stopPropagation(); document.getElementById("psDropdown").classList.contains("open") ? closeDropdown() : openDropdown(); });
+document.addEventListener("click", function(e) { if (!document.getElementById("patientSelector").contains(e.target)) closeDropdown(); });
+document.getElementById("psSearch").addEventListener("input", function(e) { filterList(e.target.value.toLowerCase()); });
+function filterList(q) { document.querySelectorAll(".ps-item").forEach(function(el) { el.style.display = el.textContent.toLowerCase().includes(q) ? "" : "none"; }); }
 
-// ── Table ──────────────────────────────────────────────────
+// ── Table builders ───────────────────────────────────────────
 function buildTable(ss) {
-  const t = document.getElementById("sessiesTable");
-  t.innerHTML = `<thead><tr><th>Sessie</th><th>Sym. index</th><th>Pijnscore</th><th>Frustratie</th><th>Energie</th><th>Compensatie</th><th>Blokki</th><th>Ketel correct</th></tr></thead>`;
-  const tb = document.createElement("tbody");
-  ss.forEach(s => {
-    const sc = s.sym_index<60?"sym-low":s.sym_index<80?"sym-mid":"sym-high";
-    const pc = s.pijn>6?"sym-low":s.pijn>3?"sym-mid":"sym-high";
-    const ec = s.energie>=7?"#00B894":s.energie>=4?"#FDCB6E":"#ff7675";
-    const tr = document.createElement("tr");
+  var t = document.getElementById("sessiesTable");
+  t.innerHTML = "<thead><tr><th>Sessie</th><th>Sym. index</th><th>Pijnscore</th><th>Frustratie</th><th>Energie</th><th>Compensatie</th><th>Blokki</th><th>Ketel correct</th></tr></thead>";
+  var tb = document.createElement("tbody");
+  ss.forEach(function(s) {
+    var sc = s.sym_index < 60 ? "sym-low" : s.sym_index < 80 ? "sym-mid" : "sym-high";
+    var pc = s.pijn > 6 ? "sym-low" : s.pijn > 3 ? "sym-mid" : "sym-high";
+    var ec = s.energie >= 7 ? "#00B894" : s.energie >= 4 ? "#FDCB6E" : "#ff7675";
+    var tr = document.createElement("tr");
     if (s.sessie === ss.length) tr.className = "row-active";
-    tr.innerHTML = `
-      <td><strong>S${s.sessie}</strong></td>
-      <td><span class="sym-badge ${sc}">${s.sym_index}%</span></td>
-      <td><span class="sym-badge ${pc}">${s.pijn}/10</span></td>
-      <td>${s.frustratie}/10</td>
-      <td style="color:${ec}">${s.energie}/10</td>
-      <td><span class="sym-badge ${s.compensatie==='Nee'?'sym-high':'sym-low'}">${s.compensatie}</span></td>
-      <td style="font-size:12px;color:var(--text-muted)">${s.blokki_status||'—'}</td>
-      <td>${s.ketel_correct??'—'}/${s.ketel_aangeboden??'—'}</td>`;
+    tr.innerHTML =
+      "<td><strong>S" + s.sessie + "</strong></td>" +
+      "<td><span class='sym-badge " + sc + "'>" + s.sym_index + "%</span></td>" +
+      "<td><span class='sym-badge " + pc + "'>" + s.pijn + "/10</span></td>" +
+      "<td>" + s.frustratie + "/10</td>" +
+      "<td style='color:" + ec + "'>" + s.energie + "/10</td>" +
+      "<td><span class='sym-badge " + (s.compensatie === "Nee" ? "sym-high" : "sym-low") + "'>" + s.compensatie + "</span></td>" +
+      "<td style='font-size:12px;color:var(--text-muted)'>" + (s.blokki_status || "—") + "</td>" +
+      "<td>" + (s.ketel_correct != null ? s.ketel_correct : "—") + "/" + (s.ketel_aangeboden != null ? s.ketel_aangeboden : "—") + "</td>";
     tb.appendChild(tr);
   });
   t.appendChild(tb);
 }
 
-// ── D3 helpers ─────────────────────────────────────────────
+function buildHolomovesTable(ss) {
+  var t = document.getElementById("holomovesTable");
+  t.innerHTML = "<thead><tr><th>Sessie</th><th>Reiken</th><th>ROM</th><th>Hand los</th><th>Vrije ruimte</th><th>Palmaire greep</th><th>Compensatie</th></tr></thead>";
+  var tb = document.createElement("tbody");
+  ss.forEach(function(s) {
+    var tr = document.createElement("tr");
+    var cb = s.compensatie === "Nee" ? "<span class='sym-badge sym-high'>Nee</span>" : "<span class='sym-badge sym-low'>Ja</span>";
+    tr.innerHTML = "<td><b>S" + s.sessie + "</b></td><td>" + (s.reiken||"—") + "</td><td>" + (s.ROM||"—") + "</td><td>" + (s.hand_los||"—") + "</td><td>" + (s.vrije_ruimte||"—") + "</td><td>" + (s.palmaire_greep||"—") + "</td><td>" + cb + "</td>";
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+}
+
+function buildBlokkiTable(ss) {
+  var t = document.getElementById("blokkiTable");
+  t.innerHTML = "<thead><tr><th>Sessie</th><th>Status</th><th>Pijnscore tijdens spel</th></tr></thead>";
+  var tb = document.createElement("tbody");
+  ss.forEach(function(s) {
+    var tr = document.createElement("tr");
+    var cls = s.blokki_status && s.blokki_status.includes("uitgespeeld") ? "sym-high" : s.blokki_status && s.blokki_status.includes("afgebroken") ? "sym-low" : "sym-mid";
+    tr.innerHTML = "<td><b>S" + s.sessie + "</b></td><td><span class='sym-badge " + cls + "'>" + (s.blokki_status||"—") + "</span></td><td>" + (s.blokki_pijn != null ? s.blokki_pijn : "—") + "/10</td>";
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+}
+
+// ── D3 helpers ────────────────────────────────────────────────
 function makeSvg(id, h) {
-  const el = document.getElementById(id);
+  var el = document.getElementById(id);
   if (!el) return null;
-  el.innerHTML = '';
-  const m = {top:14,right:16,bottom:28,left:44};
-  const W = el.clientWidth || 400;
-  const H = h;
-  const w = W-m.left-m.right, ch = H-m.top-m.bottom;
-  const svg = d3.select(el).append('svg').attr('width',W).attr('height',H);
-  const g   = svg.append('g').attr('transform',`translate(${m.left},${m.top})`);
-  return {g,w,h:ch};
+  el.innerHTML = "";
+  var m = {top:16, right:18, bottom:30, left:46};
+  var W = el.clientWidth || 400;
+  var H = h;
+  var w = W - m.left - m.right;
+  var ch = H - m.top - m.bottom;
+  var svg = d3.select(el).append("svg").attr("width", W).attr("height", H);
+  var g = svg.append("g").attr("transform", "translate(" + m.left + "," + m.top + ")");
+  return {g:g, w:w, h:ch};
 }
-function addAxes(g, xSc, ySc, h, yFmt) {
-  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
-    .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
-  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickFormat(yFmt||String))
-    .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
-  g.selectAll('.domain,.tick line').style('stroke','rgba(255,255,255,0.08)');
-}
+
 function addGrid(g, ySc, w) {
-  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickSize(-w).tickFormat(''))
-    .selectAll('line').style('stroke','rgba(255,255,255,0.05)').style('stroke-dasharray','3,3');
-  g.select('.domain').remove();
-}
-function deltaCol(cur, prev, invert) {
-  if (prev == null) return '#64748b';
-  const d = invert ? prev - cur : cur - prev;
-  return d > 2 ? '#00B894' : d >= -2 ? '#FDCB6E' : '#ff7675';
+  g.append("g").call(d3.axisLeft(ySc).ticks(4).tickSize(-w).tickFormat(""))
+    .selectAll("line").style("stroke","rgba(255,255,255,0.05)").style("stroke-dasharray","3,3");
+  g.select(".domain").remove();
 }
 
-// ── Charts ──────────────────────────────────────────────────
-function buildCharts(ss) {
-  const labels = ss.map(s => `S${s.sessie}`);
+function addAxes(g, xSc, ySc, h, yFmt) {
+  g.append("g").attr("transform","translate(0,"+h+")")
+    .call(d3.axisBottom(xSc).tickSize(0))
+    .selectAll("text").style("fill","#555").style("font-family","'DM Mono',monospace").style("font-size","10px");
+  g.append("g").call(d3.axisLeft(ySc).ticks(4).tickFormat(yFmt || String))
+    .selectAll("text").style("fill","#555").style("font-family","'DM Mono',monospace").style("font-size","10px");
+  g.selectAll(".domain,.tick line").style("stroke","rgba(255,255,255,0.08)");
+}
 
-  // Symmetrie — met gezonde zijde als norm
+function deltaColor(cur, prev, invert) {
+  if (prev == null) return "#64748b";
+  var d = invert ? prev - cur : cur - prev;
+  return d > 2 ? "#00B894" : d >= -2 ? "#FDCB6E" : "#ff7675";
+}
+
+function parseScore(v) {
+  if (!v || String(v).indexOf("/") === -1) return 0;
+  var parts = String(v).split("/");
+  return parts[1] > 0 ? Math.round(parts[0] / parts[1] * 100) : 0;
+}
+
+// ── Charts ────────────────────────────────────────────────────
+function buildCharts(ss, p) {
+  var labels = ss.map(function(s) { return "S" + s.sessie; });
+  var lIsAan = p.zijde === "Links";
+
+  // Gezonde zijde sessie 1 als referentie
+  var sess1 = ss[0] || {};
+  var gyrGezond1 = lIsAan ? (sess1.gyr_rechts || 0) : (sess1.gyr_links || 0);
+  var gyrAan1    = lIsAan ? (sess1.gyr_links  || 0) : (sess1.gyr_rechts || 0);
+
+  // ── Symmetrie ────────────────────────────────────────────
   (function() {
-    const d = makeSvg('d3sym', 240); if (!d) return;
-    const {g,w,h} = d;
-    const vals = ss.map(s=>s.sym_index);
-    // Norm = gezonde arm gyro als % van totaal (sessie 1 als baseline)
-    // 100% symmetrie = beide armen gelijk. We tonen de "gezonde kant" benchmark.
-    // In de data: sym_index is al de verhouding aangedaan/gezond * 100
-    // Sessie 1 waarde van de gezonde zijde = onze referentielijn
-    const p = ALL_PATIENTS_META.find(x=>x.nr===currentNr);
-    const lIsAan = p && p.zijde === 'Links';
-    const sess1  = ss[0]||{};
-    // Norm = gemiddelde gezonde kant gyro als proxy voor "volledig herstel niveau"
-    // We gebruiken sessie 1 gezonde kant gyr als 100% norm
-    const gyrGezS1 = lIsAan ? (sess1.gyr_rechts||0) : (sess1.gyr_links||0);
-    const gyrAanS1 = lIsAan ? (sess1.gyr_links||0)  : (sess1.gyr_rechts||0);
-    // Verwacht niveau = als aangedane kant gelijk is aan gezonde kant = 100%
-    // Referentie lijn voor de grafiek = de waarde waarbij aangedaan == gezond
-    // Dat is per definitie 100 sym_index. Maar we tonen ook werkelijke gezonde kant gyr
-    const normLine = 100; // perfect symmetrie
+    var d = makeSvg("d3sym", 260); if (!d) return;
+    var g = d.g, w = d.w, h = d.h;
+    var vals = ss.map(function(s) { return s.sym_index; });
+    var yMin = Math.max(0, Math.min.apply(null, vals) - 5);
+    var yMax = Math.min(105, Math.max.apply(null, vals) + 8);
 
-    const yMin = Math.max(0, Math.min(...vals) - 5);
-    const yMax = Math.min(100, Math.max(Math.max(...vals) + 5, normLine + 2));
-
-    const xSc  = d3.scalePoint().domain(labels).range([0,w]);
-    const ySc  = d3.scaleLinear().domain([yMin, yMax]).range([h,0]);
-    addGrid(g,ySc,w);
+    var xSc = d3.scalePoint().domain(labels).range([0, w]);
+    var ySc = d3.scaleLinear().domain([yMin, yMax]).range([h, 0]);
+    addGrid(g, ySc, w);
 
     // Referentielijn = gezonde zijde (100% = volledig herstel)
-    const refY = ySc(normLine);
-    g.append('line').attr('x1',0).attr('y1',refY).attr('x2',w).attr('y2',refY)
-      .style('stroke','rgba(255,255,255,0.3)').style('stroke-dasharray','6,4').style('stroke-width',1.5);
-    g.append('text').attr('x',w-2).attr('y',refY-5).attr('text-anchor','end')
-      .text('Norm gezond (100%)').style('fill','rgba(255,255,255,0.35)').style('font-size','9px').style('font-family',"'DM Mono',monospace");
+    var refY = ySc(100);
+    if (refY >= 0 && refY <= h) {
+      g.append("line").attr("x1",0).attr("y1",refY).attr("x2",w).attr("y2",refY)
+        .style("stroke","rgba(255,255,255,0.3)").style("stroke-dasharray","6,4").style("stroke-width",1.5);
+      g.append("text").attr("x",w-4).attr("y",refY-5).attr("text-anchor","end")
+        .text("Referentie gezonde zijde (100%)")
+        .style("fill","rgba(255,255,255,0.35)").style("font-size","9px").style("font-family","'DM Mono',monospace");
+    }
 
-    g.append('path').datum(vals).attr('fill','#4ECDC422')
-      .attr('d', d3.area().x((_,i)=>xSc(labels[i])).y0(h).y1(v=>ySc(v)).curve(d3.curveCatmullRom));
-    g.append('path').datum(vals).attr('fill','none').attr('stroke','#4ECDC4').attr('stroke-width',2.5)
-      .attr('d', d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)).curve(d3.curveCatmullRom));
-    vals.forEach((v,i) => {
-      const col = deltaCol(v, i>0?vals[i-1]:null, false);
-      g.append('circle').attr('cx',xSc(labels[i])).attr('cy',ySc(v)).attr('r',6)
-        .attr('fill',col).attr('stroke','#0a0b0f').attr('stroke-width',2);
-      g.append('text').attr('x',xSc(labels[i])).attr('y',ySc(v)-10).attr('text-anchor','middle')
-        .text(v+'%').style('fill','#aaa').style('font-size','10px').style('font-family',"'DM Mono',monospace");
+    // Area + lijn
+    g.append("path").datum(vals)
+      .attr("fill","#4ECDC422")
+      .attr("d", d3.area().x(function(_,i){return xSc(labels[i]);}).y0(h).y1(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
+    g.append("path").datum(vals)
+      .attr("fill","none").attr("stroke","#4ECDC4").attr("stroke-width",2.5)
+      .attr("d", d3.line().x(function(_,i){return xSc(labels[i]);}).y(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
+
+    // Punten — delta kleur
+    vals.forEach(function(v, i) {
+      var col = deltaColor(v, i > 0 ? vals[i-1] : null, false);
+      g.append("circle").attr("cx", xSc(labels[i])).attr("cy", ySc(v)).attr("r", 6)
+        .attr("fill", col).attr("stroke","#0a0b0f").attr("stroke-width",2);
+      g.append("text").attr("x", xSc(labels[i])).attr("y", ySc(v) - 10).attr("text-anchor","middle")
+        .text(v + "%").style("fill","#aaa").style("font-size","10px").style("font-family","'DM Mono',monospace");
     });
-    addAxes(g,xSc,ySc,h,v=>v+'%');
+    addAxes(g, xSc, ySc, h, function(v){return v+"%";});
   })();
 
-  // Welzijn
+  // ── Gyroscoop aangedane vs gezonde arm ────────────────────
   (function() {
-    const d = makeSvg('d3wb', 240); if (!d) return;
-    const {g,w,h} = d;
-    const xSc = d3.scalePoint().domain(labels).range([0,w]);
-    const ySc = d3.scaleLinear().domain([0,10]).range([h,0]);
-    addGrid(g,ySc,w);
-    const series = [
-      {data:ss.map(s=>s.pijn),      color:'#ff7675', label:'Pijn'},
-      {data:ss.map(s=>s.frustratie), color:'#FDCB6E', label:'Frustratie'},
-      {data:ss.map(s=>s.energie),   color:'#00B894', label:'Energie'},
+    var d = makeSvg("d3gyr", 260); if (!d) return;
+    var g = d.g, w = d.w, h = d.h;
+
+    var gyrAan  = ss.map(function(s) { return lIsAan ? (s.gyr_links||0) : (s.gyr_rechts||0); });
+    var gyrGez  = ss.map(function(s) { return lIsAan ? (s.gyr_rechts||0) : (s.gyr_links||0); });
+    var allVals = gyrAan.concat(gyrGez);
+    var yMax    = Math.max.apply(null, allVals) * 1.15;
+
+    var xSc = d3.scalePoint().domain(labels).range([0, w]);
+    var ySc = d3.scaleLinear().domain([0, yMax]).range([h, 0]);
+    addGrid(g, ySc, w);
+
+    // Gezonde arm lijn
+    g.append("path").datum(gyrGez)
+      .attr("fill","none").attr("stroke","#64748b").attr("stroke-width",2).style("stroke-dasharray","5,3")
+      .attr("d", d3.line().x(function(_,i){return xSc(labels[i]);}).y(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
+    gyrGez.forEach(function(v,i){
+      g.append("circle").attr("cx",xSc(labels[i])).attr("cy",ySc(v)).attr("r",4)
+        .attr("fill","#64748b").attr("stroke","#0a0b0f").attr("stroke-width",1);
+    });
+
+    // Aangedane arm
+    g.append("path").datum(gyrAan)
+      .attr("fill","#ff767522")
+      .attr("d", d3.area().x(function(_,i){return xSc(labels[i]);}).y0(h).y1(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
+    g.append("path").datum(gyrAan)
+      .attr("fill","none").attr("stroke","#ff7675").attr("stroke-width",2.5)
+      .attr("d", d3.line().x(function(_,i){return xSc(labels[i]);}).y(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
+    gyrAan.forEach(function(v,i){
+      var col = deltaColor(v, i>0?gyrAan[i-1]:null, false);
+      g.append("circle").attr("cx",xSc(labels[i])).attr("cy",ySc(v)).attr("r",5)
+        .attr("fill",col).attr("stroke","#0a0b0f").attr("stroke-width",1.5);
+    });
+
+    // Legenda
+    var leg = g.append("g").attr("transform","translate(0,-2)");
+    leg.append("rect").attr("width",10).attr("height",3).attr("fill","#ff7675").attr("rx",1);
+    leg.append("text").attr("x",14).attr("y",4).text(p.zijde + " (aangedaan)").style("fill","#888").style("font-size","9px").style("font-family","'DM Mono',monospace");
+    leg.append("rect").attr("x",120).attr("width",10).attr("height",3).attr("fill","#64748b").attr("rx",1);
+    leg.append("text").attr("x",134).attr("y",4).text((lIsAan?"Rechts":"Links") + " (gezond)").style("fill","#888").style("font-size","9px").style("font-family","'DM Mono',monospace");
+
+    addAxes(g, xSc, ySc, h, function(v){return v+"°/s";});
+  })();
+
+  // ── Welzijn ───────────────────────────────────────────────
+  (function() {
+    var d = makeSvg("d3wb", 260); if (!d) return;
+    var g = d.g, w = d.w, h = d.h;
+
+    var xSc = d3.scalePoint().domain(labels).range([0, w]);
+    var ySc = d3.scaleLinear().domain([0, 10]).range([h, 0]);
+    addGrid(g, ySc, w);
+
+    // Referentielijnen — gezonde norm
+    g.append("line").attr("x1",0).attr("y1",ySc(3)).attr("x2",w).attr("y2",ySc(3))
+      .style("stroke","rgba(255,118,117,0.3)").style("stroke-dasharray","5,4").style("stroke-width",1);
+    g.append("text").attr("x",2).attr("y",ySc(3)-4).text("norm pijn/frus ≤3")
+      .style("fill","rgba(255,118,117,0.45)").style("font-size","8px").style("font-family","'DM Mono',monospace");
+    g.append("line").attr("x1",0).attr("y1",ySc(8)).attr("x2",w).attr("y2",ySc(8))
+      .style("stroke","rgba(0,184,148,0.3)").style("stroke-dasharray","5,4").style("stroke-width",1);
+    g.append("text").attr("x",2).attr("y",ySc(8)-4).text("norm energie ≥8")
+      .style("fill","rgba(0,184,148,0.45)").style("font-size","8px").style("font-family","'DM Mono',monospace");
+
+    var series = [
+      {data: ss.map(function(s){return s.pijn;}),       color:"#ff7675", label:"Pijn (↓)",       inv:true},
+      {data: ss.map(function(s){return s.frustratie;}), color:"#FDCB6E", label:"Frustratie (↓)", inv:true},
+      {data: ss.map(function(s){return s.energie;}),    color:"#00B894", label:"Energie (↑)",    inv:false}
     ];
-    // Referentielijnen: pijn/frustratie gezond ≤3, energie gezond ≥8
-    const refs = [{val:3,color:'#ff7675',label:'pijn/frus norm'},{val:8,color:'#00B894',label:'energie norm'}];
-    refs.forEach(r=>{
-      g.append('line').attr('x1',0).attr('y1',ySc(r.val)).attr('x2',w).attr('y2',ySc(r.val))
-        .style('stroke',r.color+'44').style('stroke-dasharray','5,4').style('stroke-width',1);
+    series.forEach(function(sr) {
+      g.append("path").datum(sr.data)
+        .attr("fill","none").attr("stroke",sr.color).attr("stroke-width",2.5)
+        .attr("d", d3.line().x(function(_,i){return xSc(labels[i]);}).y(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
+      sr.data.forEach(function(v,i){
+        var col = deltaColor(v, i>0?sr.data[i-1]:null, sr.inv);
+        g.append("circle").attr("cx",xSc(labels[i])).attr("cy",ySc(v)).attr("r",5)
+          .attr("fill",col).attr("stroke","#0a0b0f").attr("stroke-width",1.5);
+      });
     });
-    series.forEach(sr => {
-      g.append('path').datum(sr.data).attr('fill','none').attr('stroke',sr.color).attr('stroke-width',2)
-        .attr('d', d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)).curve(d3.curveCatmullRom));
-      sr.data.forEach((v,i) => g.append('circle').attr('cx',xSc(labels[i])).attr('cy',ySc(v)).attr('r',4)
-        .attr('fill',sr.color).attr('stroke','#0a0b0f').attr('stroke-width',1));
-    });
+
     // Legenda
-    const leg = g.append('g').attr('transform',`translate(0,-2)`);
-    series.forEach((sr,i)=>{
-      leg.append('rect').attr('x',i*80).attr('width',10).attr('height',3).attr('fill',sr.color).attr('rx',1);
-      leg.append('text').attr('x',i*80+14).attr('y',4).text(sr.label).style('fill','#888').style('font-size','9px').style('font-family',"'DM Mono',monospace");
+    var leg = g.append("g").attr("transform","translate(0,-2)");
+    series.forEach(function(sr,i){
+      leg.append("rect").attr("x",i*90).attr("width",10).attr("height",3).attr("fill",sr.color).attr("rx",1);
+      leg.append("text").attr("x",i*90+14).attr("y",4).text(sr.label).style("fill","#888").style("font-size","9px").style("font-family","'DM Mono',monospace");
     });
-    addAxes(g,xSc,ySc,h,v=>v+'/10');
+    addAxes(g, xSc, ySc, h, function(v){return v+"/10";});
   })();
 
-  // Reiken (Holomoves)
+  // ── Reiken (Holomoves %) ──────────────────────────────────
   (function() {
-    const d = makeSvg('d3reik', 220); if (!d) return;
-    const {g,w,h} = d;
-    const parseScore = v => { if(!v||!String(v).includes('/'))return 0; const[a,b]=String(v).split('/'); return b>0?Math.round(a/b*100):0; };
-    const vals = ss.map(s=>parseScore(s.reiken));
-    const xSc  = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
-    const ySc  = d3.scaleLinear().domain([0,100]).range([h,0]);
-    addGrid(g,ySc,w);
-    g.selectAll('.bar').data(vals).enter().append('rect')
-      .attr('x',(_,i)=>xSc(labels[i])).attr('y',v=>ySc(v))
-      .attr('width',xSc.bandwidth()).attr('height',v=>h-ySc(v))
-      .attr('fill',v=>(v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675')+'BB')
-      .attr('stroke',v=>v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675')
-      .attr('stroke-width',1.5).attr('rx',4);
-    vals.forEach((v,i)=>g.append('text').attr('x',xSc(labels[i])+xSc.bandwidth()/2).attr('y',ySc(v)-4)
-      .attr('text-anchor','middle').text(v+'%').style('fill','#888').style('font-size','10px').style('font-family',"'DM Mono',monospace"));
-    addAxes(g,xSc,ySc,h,v=>v+'%');
+    var d = makeSvg("d3reik", 240); if (!d) return;
+    var g = d.g, w = d.w, h = d.h;
+    var vals = ss.map(function(s){return parseScore(s.reiken);});
+    var xSc = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
+    var ySc = d3.scaleLinear().domain([0,100]).range([h,0]);
+    addGrid(g, ySc, w);
+    g.selectAll(".bar").data(vals).enter().append("rect")
+      .attr("x",function(_,i){return xSc(labels[i]);})
+      .attr("y",function(v){return ySc(v);})
+      .attr("width",xSc.bandwidth())
+      .attr("height",function(v){return h-ySc(v);})
+      .attr("fill",function(v){return (v>=75?"#00B894":v>=50?"#FDCB6E":"#ff7675")+"BB";})
+      .attr("stroke",function(v){return v>=75?"#00B894":v>=50?"#FDCB6E":"#ff7675";})
+      .attr("stroke-width",1.5).attr("rx",4);
+    vals.forEach(function(v,i){
+      g.append("text").attr("x",xSc(labels[i])+xSc.bandwidth()/2).attr("y",ySc(v)-4)
+        .attr("text-anchor","middle").text(v+"%")
+        .style("fill","#888").style("font-size","10px").style("font-family","'DM Mono',monospace");
+    });
+    addAxes(g, xSc, ySc, h, function(v){return v+"%";});
   })();
 
-  // Ketel
+  // ── Ketel gestapeld ───────────────────────────────────────
   (function() {
-    const d = makeSvg('d3ketel', 220); if (!d) return;
-    const {g,w,h} = d;
-    const correct = ss.map(s=>s.ketel_correct||0);
-    const overges = ss.map(s=>s.ketel_overgeslagen||0);
-    const xSc = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
-    const ySc = d3.scaleLinear().domain([0, d3.max(correct.map((c,i)=>c+overges[i]))*1.15||10]).range([h,0]);
-    addGrid(g,ySc,w);
-    // Correct bars (bottom)
-    g.selectAll('.bc').data(correct).enter().append('rect')
-      .attr('x',(_,i)=>xSc(labels[i])).attr('y',v=>ySc(v))
-      .attr('width',xSc.bandwidth()).attr('height',v=>h-ySc(v))
-      .attr('fill','#00B89488').attr('stroke','#00B894').attr('stroke-width',1.5).attr('rx',4);
-    // Overgeslagen bars (stacked on top)
-    overges.forEach((v,i)=>{
+    var d = makeSvg("d3ketel", 240); if (!d) return;
+    var g = d.g, w = d.w, h = d.h;
+    var correct = ss.map(function(s){return s.ketel_correct||0;});
+    var over    = ss.map(function(s){return s.ketel_overgeslagen||0;});
+    var maxV    = d3.max(correct.map(function(c,i){return c+over[i];})) * 1.15 || 10;
+    var xSc = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
+    var ySc = d3.scaleLinear().domain([0,maxV]).range([h,0]);
+    addGrid(g, ySc, w);
+    // Correct
+    g.selectAll(".bc").data(correct).enter().append("rect")
+      .attr("x",function(_,i){return xSc(labels[i]);})
+      .attr("y",function(v){return ySc(v);})
+      .attr("width",xSc.bandwidth()).attr("height",function(v){return h-ySc(v);})
+      .attr("fill","#00B89488").attr("stroke","#00B894").attr("stroke-width",1.5).attr("rx",4);
+    // Overgeslagen (stacked)
+    over.forEach(function(v,i){
       if (!v) return;
-      const base = correct[i];
-      g.append('rect').attr('x',xSc(labels[i])).attr('y',ySc(base+v))
-        .attr('width',xSc.bandwidth()).attr('height',h-ySc(v))
-        .attr('fill','#ff767544').attr('stroke','#ff7675').attr('stroke-width',1.5).attr('rx',4);
+      g.append("rect").attr("x",xSc(labels[i])).attr("y",ySc(correct[i]+v))
+        .attr("width",xSc.bandwidth()).attr("height",h-ySc(v))
+        .attr("fill","#ff767544").attr("stroke","#ff7675").attr("stroke-width",1.5).attr("rx",4);
     });
     // Legenda
-    const leg = g.append('g').attr('transform',`translate(0,-2)`);
-    leg.append('rect').attr('width',10).attr('height',3).attr('fill','#00B894').attr('rx',1);
-    leg.append('text').attr('x',14).attr('y',4).text('Correct').style('fill','#888').style('font-size','9px').style('font-family',"'DM Mono',monospace");
-    leg.append('rect').attr('x',70).attr('width',10).attr('height',3).attr('fill','#ff7675').attr('rx',1);
-    leg.append('text').attr('x',84).attr('y',4).text('Overgeslagen').style('fill','#888').style('font-size','9px').style('font-family',"'DM Mono',monospace");
-    addAxes(g,xSc,ySc,h);
+    var leg = g.append("g").attr("transform","translate(0,-2)");
+    leg.append("rect").attr("width",10).attr("height",3).attr("fill","#00B894").attr("rx",1);
+    leg.append("text").attr("x",14).attr("y",4).text("Correct").style("fill","#888").style("font-size","9px").style("font-family","'DM Mono',monospace");
+    leg.append("rect").attr("x",70).attr("width",10).attr("height",3).attr("fill","#ff7675").attr("rx",1);
+    leg.append("text").attr("x",84).attr("y",4).text("Overgeslagen").style("fill","#888").style("font-size","9px").style("font-family","'DM Mono',monospace");
+    addAxes(g, xSc, ySc, h);
   })();
 }
 
 function selectPatient(nr) {
   currentNr = nr;
-  const p  = ALL_PATIENTS_META.find(x=>x.nr===nr);
-  const ss = ALL_SESSIONS[nr]||[];
+  var p  = ALL_PATIENTS_META.find(function(x){return x.nr===nr;});
+  var ss = ALL_SESSIONS[nr] || [];
   document.getElementById("psAvatar").textContent = p.naam[0];
   document.getElementById("psName").textContent   = p.naam;
-  document.getElementById("psId").textContent     = "#"+p.nr;
-  document.getElementById("pageDesc").textContent = `${p.naam} · ${ss.length} sessie${ss.length!==1?'s':''} geregistreerd · ${p.zijde} zijde aangedaan`;
-  document.querySelectorAll(".ps-item").forEach(el=>el.classList.toggle("active",el.dataset.nr===nr));
+  document.getElementById("psId").textContent     = "#" + p.nr;
+  document.getElementById("pageDesc").textContent = p.naam + " · " + ss.length + " sessie" + (ss.length!==1?"s":"") + " geregistreerd · " + p.zijde + " aangedaan";
+  document.querySelectorAll(".ps-item").forEach(function(el){el.classList.toggle("active",el.dataset.nr===nr);});
   buildTable(ss);
-  buildCharts(ss);
+  buildCharts(ss, p);
+  buildHolomovesTable(ss);
+  buildBlokkiTable(ss);
 }
 
-document.addEventListener("DOMContentLoaded",()=>{buildPatientList();selectPatient(currentNr);});
+document.addEventListener("DOMContentLoaded", function() {
+  buildPatientList();
+  selectPatient(currentNr);
+});
 </script>
 </body>
 </html>

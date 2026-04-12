@@ -831,9 +831,9 @@ function buildBodyHero(p, ss, sd) {
   if (cheekL) cheekL.setAttribute("opacity", faceKey === 'great' ? "0.5" : "0");
   if (cheekR) cheekR.setAttribute("opacity", faceKey === 'great' ? "0.5" : "0");
 
-  // Hoofd rand: groen als doel bereikt (≥80%), anders statuskleur
+  // Hoofd rand: kleur op basis van welzijnsscore
   const headEllipse = document.querySelector('#mainBodySvg ellipse');
-  if (headEllipse) headEllipse.setAttribute("stroke", sym >= 80 ? '#00B894' : statusColor);
+  if (headEllipse) headEllipse.setAttribute("stroke", statusColor);
 
 
 

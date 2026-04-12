@@ -288,8 +288,8 @@ function selectPatient(nr) {
   const diag = (k,v,cls='') => `<div class="diag-row"><div class="diag-label">${k}</div><div class="diag-value ${cls}">${v}</div></div>`;
   document.getElementById("diagDetails").innerHTML =
     diag("Aangedane zijde", `${p.zijde} — beperkte motoriek`, "status-zorgelijk") +
-    diag("Symmetrie-index", `${last.sym_index||'—'}% — ${(last.sym_index||0)>=80?"✓ Doel bereikt":(last.sym_index||0)>=60?"Matig":"Zorgelijk"}`, symClass) +
-    diag("Behandeldoel", `Symmetrie-index verhogen naar ≥80%`) +
+    diag("Symmetrie-index", `${last.sym_index||'—'}% — `, symClass) +
+    diag("Behandeldoel", "IMU-gestuurde bewegingstherapie") +
     diag("Behandelmethode", "IMU-gestuurde bewegingstherapie") +
     diag("Pijnscore laatste sessie", `${last.pijn||'—'}/10`, (last.pijn||0)<=3?'status-ok':(last.pijn||0)<=6?'status-matig':'status-zorgelijk') +
     diag("Energie laatste sessie", `${last.energie||'—'}/10`, (last.energie||0)>=7?'status-ok':(last.energie||0)>=4?'status-matig':'status-zorgelijk');
@@ -298,7 +298,7 @@ function selectPatient(nr) {
   const symPct = Math.min(100, Math.round((last.sym_index||0)/80*100));
   document.getElementById("goalBlock").innerHTML = `
     <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-      <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-muted)">Symmetrie-index richting doel (80%)</span>
+      <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-muted)">Symmetrie-index richting verbetering</span>
       <span style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:${sc}">${last.sym_index||'—'}%</span>
     </div>
     <div style="height:12px;background:var(--bg4);border-radius:6px;overflow:hidden;margin-bottom:6px">
@@ -351,7 +351,7 @@ function selectPatient(nr) {
       over ${ss.length} sessie${ss.length!==1?'s':''} (+${symDiff} procentpunten).
       Laatste pijnscore: <strong>${last.pijn||'—'}/10</strong>,
       energie: <strong>${last.energie||'—'}/10</strong>.
-      ${(last.sym_index||0)>=80?"✅ Doelwaarde van 80% is bereikt.":"📌 Nog "+(80-(last.sym_index||0))+"% te gaan voor doelwaarde (80%)."}
+      
     </div>`;
 }
 

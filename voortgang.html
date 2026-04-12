@@ -9,28 +9,28 @@
   <script src="data.js"></script>
   <link rel="stylesheet" href="css/style.css"/>
   <style>
-    .vg-controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px; align-items:center; }
-    .vg-btn-group { display:flex; gap:6px; }
-    .vg-btn {
-      padding:7px 16px; border-radius:8px; border:1px solid var(--border);
-      background:var(--bg2); color:var(--text-muted);
-      font-family:'DM Mono',monospace; font-size:12px; cursor:pointer; transition:all 0.15s;
-    }
-    .vg-btn:hover { border-color:var(--border2); color:var(--text); }
-    .vg-btn.active { background:rgba(78,205,196,0.12); border-color:var(--accent); color:var(--accent); }
-    .vg-label { font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; margin-right:4px; }
-    .vg-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+    .vg-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;align-items:center;}
+    .vg-btn-group{display:flex;gap:6px;}
+    .vg-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:all 0.15s;}
+    .vg-btn:hover{border-color:var(--border2);color:var(--text);}
+    .vg-btn.active{background:rgba(78,205,196,0.12);border-color:var(--accent);color:var(--accent);}
+    .vg-lbl{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;}
+    .vg-date-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .vg-date-input{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:border-color 0.15s;}
+    .vg-date-input:hover,.vg-date-input:focus{border-color:var(--accent);outline:none;}
+    .vg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
     @media(max-width:800px){.vg-grid{grid-template-columns:1fr;}}
-    .vg-card { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:20px; }
-    .vg-card.full { grid-column:1/-1; }
-    .vg-card-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text); margin-bottom:2px; }
-    .vg-card-sub   { font-family:'DM Mono',monospace; font-size:11px; color:var(--text-muted); margin-bottom:14px; }
-    .vg-kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+    .vg-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;}
+    .vg-card.full{grid-column:1/-1;}
+    .vg-card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+    .vg-card-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:14px;}
+    .vg-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
     @media(max-width:700px){.vg-kpi-row{grid-template-columns:1fr 1fr;}}
-    .vg-kpi { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:16px; text-align:center; }
-    .vg-kpi-val { font-family:'DM Mono',monospace; font-size:26px; font-weight:700; margin-bottom:4px; }
-    .vg-kpi-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; }
-    .vg-kpi-delta { font-family:'DM Mono',monospace; font-size:11px; margin-top:3px; }
+    .vg-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+    .vg-kpi-val{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;margin-bottom:4px;}
+    .vg-kpi-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;}
+    .vg-kpi-delta{font-family:'DM Mono',monospace;font-size:11px;margin-top:3px;}
+    .vg-empty{text-align:center;padding:48px;color:var(--text-muted);font-family:'DM Mono',monospace;font-size:13px;}
   </style>
 </head>
 <body>
@@ -55,7 +55,7 @@
   <div class="page-hero-inner">
     <div class="page-hero-label">Voortgang</div>
     <h1 class="page-hero-title" id="pageTitle">Voortgang</h1>
-    <p class="page-hero-desc" id="pageDesc">Selecteer spel en tijdsperiode.</p>
+    <p class="page-hero-desc" id="pageDesc">Selecteer spel en periode.</p>
   </div>
 </div>
 
@@ -63,32 +63,30 @@
   <div class="section-inner">
 
     <div class="vg-controls">
-      <span class="vg-label">Spel:</span>
+      <span class="vg-lbl">Spel:</span>
       <div class="vg-btn-group" id="gameFilter">
         <button class="vg-btn active" data-game="all">Alles</button>
+        <button class="vg-btn" data-game="sym">Symmetrie</button>
         <button class="vg-btn" data-game="holomoves">🎮 Holomoves</button>
         <button class="vg-btn" data-game="blokki">🧱 Blokki</button>
         <button class="vg-btn" data-game="ketel">🫙 Ketel</button>
       </div>
-      <span class="vg-label" style="margin-left:12px">Periode:</span>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:6px">
-          <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">Van</label>
-          <input type="date" id="dateFrom" value="2025-10-01"
-            style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer"/>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">Tot</label>
-          <input type="date" id="dateTo" value="2026-04-12"
-            style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer"/>
-        </div>
-        <button onclick="document.getElementById('dateFrom').value='2025-10-01';document.getElementById('dateTo').value='2026-04-12';rebuild();"
-          class="vg-btn" style="padding:6px 12px">Reset</button>
+    </div>
+
+    <div class="vg-controls" style="margin-bottom:32px">
+      <span class="vg-lbl">Periode:</span>
+      <div class="vg-date-row">
+        <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">Van sessie</label>
+        <input type="number" id="fromSessie" min="1" value="1" class="vg-date-input" style="width:70px"/>
+        <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">tot sessie</label>
+        <input type="number" id="toSessie" min="1" value="99" class="vg-date-input" style="width:70px"/>
+        <button class="vg-btn" id="resetPeriode">Reset</button>
+        <span id="periodeInfo" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim)"></span>
       </div>
     </div>
 
     <div class="vg-kpi-row" id="vgKpis"></div>
-    <div class="vg-grid"    id="vgGrid"></div>
+    <div class="vg-grid" id="vgGrid"></div>
     <div class="insight-box" id="insightBox" style="margin-top:24px"></div>
 
   </div>
@@ -103,74 +101,62 @@
 </footer>
 
 <script>
-let currentNr  = ALL_PATIENTS_META[0].nr;
-let activeGame = 'all';
+var currentNr  = ALL_PATIENTS_META[0].nr;
+var activeGame = 'all';
 
-// ── Gesimuleerde sessiedatums (wekelijks startend 6 maanden geleden) ──────────
-function getSessionDates(count) {
-  // Startdatum: 6 maanden terug, sessies om de ~week
-  const now  = new Date(2026, 3, 12); // april 2026
-  const start = new Date(now);
-  start.setMonth(start.getMonth() - Math.ceil(count * 7 / 30));
-  const dates = [];
-  for (let i = 0; i < count; i++) {
-    const d = new Date(start);
-    d.setDate(d.getDate() + i * 7 + Math.floor(Math.random() * 3));
-    dates.push(d);
-  }
-  return dates;
-}
-
-function filterByDateRange(ss, dates) {
-  const fromEl = document.getElementById('dateFrom');
-  const toEl   = document.getElementById('dateTo');
-  if (!fromEl || !toEl) return {ss, dates};
-  const from = fromEl.value ? new Date(fromEl.value) : new Date(0);
-  const to   = toEl.value   ? new Date(toEl.value + 'T23:59:59') : new Date(9999, 0);
-  if (!fromEl.value && !toEl.value) return {ss, dates};
-  const filtered  = ss.filter((_, i) => dates[i] >= from && dates[i] <= to);
-  const filtDates = dates.filter(d => d >= from && d <= to);
-  return {ss: filtered, dates: filtDates};
-}
-
-// ── Patient selector ───────────────────────────────────────
+// ── Patient selector ─────────────────────────────────────────
 function buildPatientList() {
-  const list = document.getElementById('psList');
-  ALL_PATIENTS_META.forEach(p => {
-    const el = document.createElement('div');
+  var list = document.getElementById('psList');
+  ALL_PATIENTS_META.forEach(function(p) {
+    var el = document.createElement('div');
     el.className = 'ps-item'; el.dataset.nr = p.nr;
-    el.innerHTML = `<span class="ps-item-avatar">${p.naam[0]}</span><div class="ps-item-info"><div class="ps-item-name">${p.naam}</div><div class="ps-item-meta">#${p.nr} · ${p.kliniek}</div></div><span class="ps-item-caras">${p.caras}</span>`;
-    el.addEventListener('click', () => { selectPatient(p.nr); closeDropdown(); });
+    el.innerHTML = '<span class="ps-item-avatar">'+p.naam[0]+'</span><div class="ps-item-info"><div class="ps-item-name">'+p.naam+'</div><div class="ps-item-meta">#'+p.nr+' · '+p.kliniek+'</div></div><span class="ps-item-caras">'+p.caras+'</span>';
+    el.addEventListener('click', function(){selectPatient(p.nr);closeDropdown();});
     list.appendChild(el);
   });
 }
-function openDropdown()  { document.getElementById('psDropdown').classList.add('open'); document.getElementById('psSearch').focus(); }
-function closeDropdown() { document.getElementById('psDropdown').classList.remove('open'); document.getElementById('psSearch').value=''; filterList(''); }
-document.getElementById('psTrigger').addEventListener('click', e => { e.stopPropagation(); document.getElementById('psDropdown').classList.contains('open')?closeDropdown():openDropdown(); });
-document.addEventListener('click', e => { if(!document.getElementById('patientSelector').contains(e.target)) closeDropdown(); });
-document.getElementById('psSearch').addEventListener('input', e => filterList(e.target.value.toLowerCase()));
-function filterList(q) { document.querySelectorAll('.ps-item').forEach(el => el.style.display = el.textContent.toLowerCase().includes(q)?'':'none'); }
+function openDropdown(){document.getElementById('psDropdown').classList.add('open');document.getElementById('psSearch').focus();}
+function closeDropdown(){document.getElementById('psDropdown').classList.remove('open');document.getElementById('psSearch').value='';filterList('');}
+document.getElementById('psTrigger').addEventListener('click',function(e){e.stopPropagation();document.getElementById('psDropdown').classList.contains('open')?closeDropdown():openDropdown();});
+document.addEventListener('click',function(e){if(!document.getElementById('patientSelector').contains(e.target))closeDropdown();});
+document.getElementById('psSearch').addEventListener('input',function(e){filterList(e.target.value.toLowerCase());});
+function filterList(q){document.querySelectorAll('.ps-item').forEach(function(el){el.style.display=el.textContent.toLowerCase().includes(q)?'':'none';});}
 
-// ── Controls ──────────────────────────────────────────────
-document.getElementById('gameFilter').addEventListener('click', e => {
-  const b = e.target.closest('.vg-btn'); if(!b) return;
-  document.querySelectorAll('#gameFilter .vg-btn').forEach(x=>x.classList.remove('active'));
+// ── Game filter ───────────────────────────────────────────────
+document.getElementById('gameFilter').addEventListener('click', function(e) {
+  var b = e.target.closest('.vg-btn'); if (!b) return;
+  document.querySelectorAll('#gameFilter .vg-btn').forEach(function(x){x.classList.remove('active');});
   b.classList.add('active'); activeGame = b.dataset.game; rebuild();
 });
-// Date range inputs trigger rebuild
-document.getElementById('dateFrom')?.addEventListener('change', rebuild);
-document.getElementById('dateTo')?.addEventListener('change', rebuild);
 
-// ── D3 helpers ────────────────────────────────────────────
+// ── Periode controls ──────────────────────────────────────────
+document.getElementById('fromSessie').addEventListener('input', rebuild);
+document.getElementById('toSessie').addEventListener('input', rebuild);
+document.getElementById('resetPeriode').addEventListener('click', function() {
+  document.getElementById('fromSessie').value = '1';
+  document.getElementById('toSessie').value = '99';
+  rebuild();
+});
+
+// ── Filter sessions by sessie number range ─────────────────────
+function filterSessions(ss) {
+  var from = parseInt(document.getElementById('fromSessie').value) || 1;
+  var to   = parseInt(document.getElementById('toSessie').value)   || 99;
+  return ss.filter(function(s){ return s.sessie >= from && s.sessie <= to; });
+}
+
+// ── D3 helpers ────────────────────────────────────────────────
 function makeSvg(id, h) {
-  const el = document.getElementById(id); if(!el) return null;
+  var el = document.getElementById(id);
+  if (!el) return null;
   el.innerHTML = '';
-  const m = {top:14,right:16,bottom:28,left:44};
-  const W = el.clientWidth||400, H=h;
-  const w = W-m.left-m.right, ch=H-m.top-m.bottom;
-  const svg = d3.select(el).append('svg').attr('width',W).attr('height',H);
-  const g   = svg.append('g').attr('transform',`translate(${m.left},${m.top})`);
-  return {g,w,h:ch};
+  var m = {top:16,right:18,bottom:30,left:48};
+  var W = el.clientWidth || 460;
+  var H = h;
+  var w = W-m.left-m.right, ch = H-m.top-m.bottom;
+  var svg = d3.select(el).append('svg').attr('width',W).attr('height',H);
+  var g = svg.append('g').attr('transform','translate('+m.left+','+m.top+')');
+  return {g:g,w:w,h:ch};
 }
 function addGrid(g,ySc,w){
   g.append('g').call(d3.axisLeft(ySc).ticks(4).tickSize(-w).tickFormat(''))
@@ -178,201 +164,235 @@ function addGrid(g,ySc,w){
   g.select('.domain').remove();
 }
 function addAxes(g,xSc,ySc,h,yFmt){
-  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
+  g.append('g').attr('transform','translate(0,'+h+')').call(d3.axisBottom(xSc).tickSize(0))
     .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
   g.append('g').call(d3.axisLeft(ySc).ticks(4).tickFormat(yFmt||String))
     .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
   g.selectAll('.domain,.tick line').style('stroke','rgba(255,255,255,0.08)');
 }
-function deltaCol(cur,prev,inv){
+function dCol(cur,prev,inv){
   if(prev==null) return '#64748b';
-  const d = inv ? prev-cur : cur-prev;
+  var d = inv ? prev-cur : cur-prev;
   return d>2?'#00B894':d>=-2?'#FDCB6E':'#ff7675';
 }
-const fmtDate = d => `${d.getDate()}/${d.getMonth()+1}`;
+function parseScore(v){
+  if(!v||String(v).indexOf('/')===-1) return 0;
+  var p=String(v).split('/'); return p[1]>0?Math.round(p[0]/p[1]*100):0;
+}
 
-// Line chart helper
+// Generic line chart
 function lineChart(id, labels, datasets, h, yFmt) {
-  const d = makeSvg(id, h||200); if(!d) return;
-  const {g,w,ch} = {g:d.g, w:d.w, ch:d.h};
-  const xSc = d3.scalePoint().domain(labels).range([0,w]);
-  const allV = datasets.flatMap(ds=>ds.data).filter(v=>v!=null);
-  const ySc = d3.scaleLinear().domain([Math.max(0,d3.min(allV)*0.9), d3.max(allV)*1.1||10]).range([ch,0]);
+  var d = makeSvg(id, h||220); if (!d) return;
+  var g=d.g, w=d.w, ch=d.h;
+  var allV = [];
+  datasets.forEach(function(ds){ ds.data.forEach(function(v){ if(v!=null) allV.push(v); }); });
+  if (!allV.length) return;
+  var yMin = Math.max(0, d3.min(allV)*0.88);
+  var yMax = d3.max(allV)*1.1||10;
+  var xSc = d3.scalePoint().domain(labels).range([0,w]);
+  var ySc = d3.scaleLinear().domain([yMin,yMax]).range([ch,0]);
   addGrid(g,ySc,w);
-  datasets.forEach(ds => {
-    if(ds.dash){
-      g.append('path').datum(ds.data).attr('fill','none').attr('stroke',ds.color+'66')
-        .attr('stroke-width',1.5).style('stroke-dasharray','5,4')
-        .attr('d',d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)));
+
+  datasets.forEach(function(ds) {
+    if (ds.refLine) {
+      var ry = ySc(ds.refLine);
+      if (ry>=0&&ry<=ch){
+        g.append('line').attr('x1',0).attr('y1',ry).attr('x2',w).attr('y2',ry)
+          .style('stroke',ds.color+'55').style('stroke-dasharray','5,4').style('stroke-width',1.5);
+      }
       return;
     }
-    if(ds.area){
-      g.append('path').datum(ds.data).attr('fill',ds.color+'22')
-        .attr('d',d3.area().x((_,i)=>xSc(labels[i])).y0(ch).y1(v=>ySc(v)).curve(d3.curveCatmullRom));
+    if (ds.area) {
+      g.append('path').datum(ds.data)
+        .attr('fill',ds.color+'22')
+        .attr('d',d3.area().x(function(_,i){return xSc(labels[i]);}).y0(ch).y1(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
     }
-    g.append('path').datum(ds.data).attr('fill','none').attr('stroke',ds.color).attr('stroke-width',2.5)
-      .attr('d',d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)).curve(d3.curveCatmullRom));
-    ds.data.forEach((v,i)=>{
-      const col = ds.delta ? deltaCol(v, i>0?ds.data[i-1]:null, ds.inv||false) : ds.color;
-      g.append('circle').attr('cx',xSc(labels[i])).attr('cy',ySc(v)).attr('r',5)
+    g.append('path').datum(ds.data)
+      .attr('fill','none').attr('stroke',ds.color).attr('stroke-width',ds.width||2.5)
+      .style('stroke-dasharray',ds.dash||'none')
+      .attr('d',d3.line().x(function(_,i){return xSc(labels[i]);}).y(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
+    ds.data.forEach(function(v,i){
+      var col = ds.delta ? dCol(v,i>0?ds.data[i-1]:null,ds.inv||false) : ds.color;
+      g.append('circle').attr('cx',xSc(labels[i])).attr('cy',ySc(v)).attr('r',ds.r||5)
         .attr('fill',col).attr('stroke','#0a0b0f').attr('stroke-width',1.5);
     });
   });
-  if(datasets.filter(ds=>!ds.dash).length>1){
-    const leg = g.append('g').attr('transform',`translate(0,-2)`);
-    datasets.filter(ds=>!ds.dash).forEach((ds,i)=>{
-      leg.append('rect').attr('x',i*90).attr('width',10).attr('height',3).attr('fill',ds.color).attr('rx',1);
-      leg.append('text').attr('x',i*90+14).attr('y',4).text(ds.label).style('fill','#888').style('font-size','9px').style('font-family',"'DM Mono',monospace");
+
+  // Legend
+  var showLeg = datasets.filter(function(ds){return !ds.refLine && ds.label;});
+  if (showLeg.length > 1) {
+    var leg = g.append('g').attr('transform','translate(0,-2)');
+    showLeg.forEach(function(ds,i){
+      leg.append('rect').attr('x',i*100).attr('width',10).attr('height',3).attr('fill',ds.color).attr('rx',1);
+      leg.append('text').attr('x',i*100+14).attr('y',4).text(ds.label).style('fill','#888').style('font-size','9px').style('font-family',"'DM Mono',monospace");
     });
   }
   addAxes(g,xSc,ySc,ch,yFmt);
 }
 
 function barChart(id, labels, vals, colorFn, h, yFmt) {
-  const d = makeSvg(id,h||200); if(!d) return;
-  const {g,w,ch} = {g:d.g,w:d.w,ch:d.h};
-  const xSc = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
-  const ySc = d3.scaleLinear().domain([0, d3.max(vals)*1.15||10]).range([ch,0]);
+  var d = makeSvg(id,h||220); if(!d) return;
+  var g=d.g, w=d.w, ch=d.h;
+  var mx = d3.max(vals)*1.15||10;
+  var xSc = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
+  var ySc = d3.scaleLinear().domain([0,mx]).range([ch,0]);
   addGrid(g,ySc,w);
   g.selectAll('.b').data(vals).enter().append('rect')
-    .attr('x',(_,i)=>xSc(labels[i])).attr('y',v=>ySc(v))
-    .attr('width',xSc.bandwidth()).attr('height',v=>ch-ySc(v))
-    .attr('fill',(v,i)=>colorFn(v,i)+'BB').attr('stroke',(v,i)=>colorFn(v,i)).attr('stroke-width',1.5).attr('rx',4);
-  vals.forEach((v,i)=>g.append('text').attr('x',xSc(labels[i])+xSc.bandwidth()/2).attr('y',ySc(v)-4)
-    .attr('text-anchor','middle').text(yFmt?yFmt(v):v).style('fill','#888').style('font-size','10px').style('font-family',"'DM Mono',monospace"));
+    .attr('x',function(_,i){return xSc(labels[i]);})
+    .attr('y',function(v){return ySc(v);})
+    .attr('width',xSc.bandwidth()).attr('height',function(v){return ch-ySc(v);})
+    .attr('fill',function(v,i){return colorFn(v,i)+'BB';}).attr('stroke',function(v,i){return colorFn(v,i);})
+    .attr('stroke-width',1.5).attr('rx',4);
+  vals.forEach(function(v,i){
+    g.append('text').attr('x',xSc(labels[i])+xSc.bandwidth()/2).attr('y',ySc(v)-4)
+      .attr('text-anchor','middle').text(yFmt?yFmt(v):v)
+      .style('fill','#888').style('font-size','10px').style('font-family',"'DM Mono',monospace");
+  });
   addAxes(g,xSc,ySc,ch,yFmt);
 }
 
-// ── Build card helper ─────────────────────────────────────
-function card(id, title, sub, full) {
-  const grid = document.getElementById('vgGrid');
-  const div  = document.createElement('div');
-  div.className = 'vg-card' + (full?' full':'');
-  div.innerHTML = `<div class="vg-card-title">${title}</div><div class="vg-card-sub">${sub}</div><div id="${id}" style="height:200px"></div>`;
+// ── Card helper ───────────────────────────────────────────────
+function addCard(id, title, sub, full) {
+  var grid = document.getElementById('vgGrid');
+  var div  = document.createElement('div');
+  div.className = 'vg-card'+(full?' full':'');
+  div.innerHTML = '<div class="vg-card-title">'+title+'</div><div class="vg-card-sub">'+sub+'</div><div id="'+id+'" style="height:220px"></div>';
   grid.appendChild(div);
 }
 
-// ── Rebuild ───────────────────────────────────────────────
+// ── Main rebuild ──────────────────────────────────────────────
 function rebuild() {
-  const p      = ALL_PATIENTS_META.find(x=>x.nr===currentNr);
-  const allSS  = ALL_SESSIONS[currentNr]||[];
-  const allDates = getSessionDates(allSS.length);
+  var p     = ALL_PATIENTS_META.find(function(x){return x.nr===currentNr;});
+  var allSS = ALL_SESSIONS[currentNr]||[];
+  var ss    = filterSessions(allSS);
 
-  const {ss, dates} = filterByDateRange(allSS, allDates);
+  // Update periode info
+  var fromV = parseInt(document.getElementById('fromSessie').value)||1;
+  var toV   = parseInt(document.getElementById('toSessie').value)||99;
+  var actualTo = Math.min(toV, allSS.length);
+  document.getElementById('periodeInfo').textContent =
+    ss.length > 0 ? ('Sessie '+ss[0].sessie+' – '+ss[ss.length-1].sessie+' ('+ss.length+' van '+allSS.length+' sessies)') : 'Geen sessies in range';
 
-  // KPIs
-  const first  = allSS[0]||{};
-  const last   = allSS[allSS.length-1]||{};
-  const filt0  = ss[0]||{};
-  const filtL  = ss[ss.length-1]||{};
-  const symD   = typeof last.sym_index==='number'&&typeof first.sym_index==='number' ? last.sym_index-first.sym_index : 0;
-  const pijnD  = typeof last.pijn==='number'&&typeof first.pijn==='number' ? last.pijn-first.pijn : 0;
-  const ketelAvg = ss.length ? Math.round(ss.reduce((s,x)=>s+(x.ketel_aangeboden?x.ketel_correct/x.ketel_aangeboden*100:0),0)/ss.length) : 0;
-  const enerD  = typeof last.energie==='number'&&typeof first.energie==='number' ? last.energie-first.energie : 0;
+  // ── KPIs ──
+  var first = allSS[0]||{}, last = allSS[allSS.length-1]||{};
+  var symD  = (typeof last.sym_index==='number'&&typeof first.sym_index==='number') ? last.sym_index-first.sym_index : 0;
+  var pijnD = (typeof last.pijn==='number'&&typeof first.pijn==='number') ? last.pijn-first.pijn : 0;
+  var enerD = (typeof last.energie==='number'&&typeof first.energie==='number') ? last.energie-first.energie : 0;
+  var ketelAvg = ss.length ? Math.round(ss.reduce(function(acc,x){ return acc+(x.ketel_aangeboden?x.ketel_correct/x.ketel_aangeboden*100:0); },0)/ss.length) : 0;
 
-  const kpis = [
-    {val:`${last.sym_index??'—'}%`,  label:'Symmetrie nu',    delta:symD,  unit:'pp',  inv:false, color:'#4ECDC4'},
-    {val:`${last.pijn??'—'}/10`,     label:'Pijnscore nu',    delta:pijnD, unit:'/10', inv:true,  color:'#ff7675'},
-    {val:`${last.energie??'—'}/10`,  label:'Energie nu',      delta:enerD, unit:'/10', inv:false, color:'#00B894'},
-    {val:`${ketelAvg}%`,             label:'Ketel gem.',       delta:0,     unit:'',    inv:false, color:'#FDCB6E'},
+  var kpis = [
+    {val:(last.pijn||'—')+'/10',    label:'Pijnscore nu',   delta:pijnD, unit:'/10', inv:true,  color:'#ff7675'},
+    {val:(last.energie||'—')+'/10', label:'Energie nu',     delta:enerD, unit:'/10', inv:false, color:'#00B894'},
+    {val:ketelAvg+'%',              label:'Ketel score gem.', delta:0,   unit:'',    inv:false, color:'#FDCB6E'},
+    {val:(last.sym_index||'—')+'%', label:'Symmetrie nu',   delta:symD,  unit:'pp',  inv:false, color:'#4ECDC4'},
   ];
-  document.getElementById('vgKpis').innerHTML = kpis.map(k=>{
-    const good = k.inv?k.delta<0:k.delta>0;
-    const col  = k.delta===0?'#7a7f8e':good?'#00B894':'#ff7675';
-    const sign = k.delta>0?'+':'';
-    return `<div class="vg-kpi">
-      <div class="vg-kpi-val" style="color:${k.color}">${k.val}</div>
-      <div class="vg-kpi-label">${k.label}</div>
-      ${k.delta!==0?`<div class="vg-kpi-delta" style="color:${col}">${sign}${k.delta}${k.unit} t.o.v. S1</div>`:''}
-    </div>`;
+  document.getElementById('vgKpis').innerHTML = kpis.map(function(k){
+    var good = k.inv?k.delta<0:k.delta>0;
+    var col  = k.delta===0?'#7a7f8e':good?'#00B894':'#ff7675';
+    var sign = k.delta>0?'+':'';
+    return '<div class="vg-kpi"><div class="vg-kpi-val" style="color:'+k.color+'">'+k.val+'</div><div class="vg-kpi-label">'+k.label+'</div>'+(k.delta!==0?'<div class="vg-kpi-delta" style="color:'+col+'">'+sign+k.delta+k.unit+' t.o.v. S1</div>':'')+'</div>';
   }).join('');
 
-  // Periode label voor x-as
-  const labels = activePer==='all'
-    ? ss.map(s=>`S${s.sessie}`)
-    : dates.map(d=>fmtDate(d));
+  document.getElementById('vgGrid').innerHTML = '';
 
-  // Charts
-  document.getElementById('vgGrid').innerHTML='';
-  const parseScore = v=>{ if(!v||!String(v).includes('/'))return 0; const[a,b]=String(v).split('/'); return b>0?Math.round(a/b*100):0; };
-  const lIsAan = p.zijde==='Links';
-
-  if(activeGame==='all'||activeGame==='holomoves') {
-    card('c-sym','Symmetrie-index verloop',`Per sessie — punten = delta t.o.v. vorige (${labels.length} sessies zichtbaar)`);
-    requestAnimationFrame(()=>lineChart('c-sym', labels,[
-      {label:'Symmetrie', color:'#4ECDC4', area:true, delta:true, data:ss.map(s=>s.sym_index)},
-    ], 200, v=>v+'%'));
-
-    card('c-holo','🎮 Holomoves — per categorie','Score als % van maximum');
-    const cats  = ['reiken','ROM','hand_los','vrije_ruimte','palmaire_greep'];
-    const cLabels=['Reiken','ROM','Hand los','Vrije ruimte','Palm.'];
-    const cols  =['#4ECDC4','#A29BFE','#FD79A8','#FDCB6E','#00B894'];
-    requestAnimationFrame(()=>lineChart('c-holo', labels,
-      cats.map((c,i)=>({label:cLabels[i],color:cols[i],data:ss.map(s=>parseScore(s[c]))})),
-      200, v=>v+'%'));
+  if (!ss.length) {
+    document.getElementById('vgGrid').innerHTML = '<div class="vg-card full"><div class="vg-empty">Geen sessies in de geselecteerde range.<br>Pas de sessienummers aan.</div></div>';
+    document.getElementById('insightBox').innerHTML = '';
+    return;
   }
 
-  if(activeGame==='all'||activeGame==='blokki') {
-    card('c-blokki','🧱 Blokki — pijnscore per sessie','Lagere pijn = beter draagbaar');
-    requestAnimationFrame(()=>barChart('c-blokki', labels, ss.map(s=>s.blokki_pijn||0),
-      v=>v>6?'#ff7675':v>3?'#FDCB6E':'#00B894', 200, v=>v+'/10'));
+  var labels = ss.map(function(s){return 'S'+s.sessie;});
+  var lIsAan = p.zijde === 'Links';
+  var sess1  = allSS[0]||{};
+  var gyrGezRef = lIsAan ? (sess1.gyr_rechts||0) : (sess1.gyr_links||0);
+
+  // ── Symmetrie ──
+  if (activeGame === 'all' || activeGame === 'sym') {
+    addCard('c-sym','Symmetrie-index verloop','Punten = delta t.o.v. vorige sessie · Stippellijn = gezonde zijde referentie');
+    lineChart('c-sym', labels, [
+      {data:Array(labels.length).fill(100), color:'rgba(255,255,255,0.25)', width:1.5, dash:'6,4', label:null, refLine:null},
+      {data:ss.map(function(s){return s.sym_index;}), color:'#4ECDC4', area:true, delta:true, label:'Symmetrie-index'},
+    ], 220, function(v){return v+'%';});
   }
 
-  if(activeGame==='all'||activeGame==='ketel') {
-    card('c-ketel','🫙 Magische Ketel — treffscore %','Correct beantwoord als % van aangeboden');
-    const kPcts = ss.map(s=>s.ketel_aangeboden?Math.round(s.ketel_correct/s.ketel_aangeboden*100):0);
-    requestAnimationFrame(()=>barChart('c-ketel', labels, kPcts,
-      v=>v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675', 200, v=>v+'%'));
+  // ── Welzijn ──
+  if (activeGame === 'all' || activeGame === 'sym') {
+    addCard('c-wb','Welzijn — pijn, frustratie & energie','Pijn/frustratie lager = beter · Energie hoger = beter');
+    lineChart('c-wb', labels, [
+      {data:ss.map(function(s){return s.pijn;}),       color:'#ff7675', delta:true, inv:true,  label:'Pijn'},
+      {data:ss.map(function(s){return s.frustratie;}), color:'#FDCB6E', delta:true, inv:true,  label:'Frustratie'},
+      {data:ss.map(function(s){return s.energie;}),    color:'#00B894', delta:true, inv:false, label:'Energie'},
+    ], 220, function(v){return v+'/10';});
   }
 
-  if(activeGame==='all') {
-    card('c-gyr','Gyroscoop — aangedane vs gezonde arm','Hoe dichter bij elkaar, hoe beter het herstel', false);
-    requestAnimationFrame(()=>lineChart('c-gyr', labels,[
-      {label:`${p.zijde} (aangedaan)`, color:'#ff7675', area:true, delta:true,
-        data:ss.map(s=>lIsAan?s.gyr_links:s.gyr_rechts)},
-      {label:`${lIsAan?'Rechts':'Links'} (gezond)`, color:'#64748b',
-        data:ss.map(s=>lIsAan?s.gyr_rechts:s.gyr_links)},
-    ], 200, v=>v+'°/s'));
-
-    card('c-wb','Welzijn — pijn, frustratie & energie','Lager is beter voor pijn/frustratie · hoger voor energie', false);
-    requestAnimationFrame(()=>lineChart('c-wb', labels,[
-      {label:'Pijn (↓)',       color:'#ff7675', delta:true, inv:true,  data:ss.map(s=>s.pijn)},
-      {label:'Frustratie (↓)', color:'#FDCB6E',                        data:ss.map(s=>s.frustratie)},
-      {label:'Energie (↑)',    color:'#00B894', delta:true,             data:ss.map(s=>s.energie)},
-    ], 200, v=>v+'/10'));
+  // ── Gyroscoop ──
+  if (activeGame === 'all' || activeGame === 'sym') {
+    addCard('c-gyr', 'Gyroscoop — '+p.zijde+' (aangedaan) vs '+(lIsAan?'Rechts':'Links')+' (gezond)', 'Hoe dichter bij elkaar, hoe beter het herstel');
+    lineChart('c-gyr', labels, [
+      {data:ss.map(function(s){return lIsAan?s.gyr_links:s.gyr_rechts;}),  color:'#ff7675', area:true, delta:true, label:p.zijde+' (aangedaan)'},
+      {data:ss.map(function(s){return lIsAan?s.gyr_rechts:s.gyr_links;}),  color:'#64748b', dash:'4,3', r:4, label:(lIsAan?'Rechts':'Links')+' (gezond)', width:2},
+    ], 220, function(v){return v+'°/s';});
   }
 
-  // Periode info voor lege staat
-  if(ss.length===0){
-    document.getElementById('vgGrid').innerHTML='<div class="vg-card full" style="text-align:center;padding:40px"><div style="font-family:\'DM Mono\',monospace;color:var(--text-muted)">Geen sessies gevonden in deze periode.<br>Kies \'Alle sessies\' of een langere periode.</div></div>';
+  // ── Holomoves ──
+  if (activeGame === 'all' || activeGame === 'holomoves') {
+    addCard('c-holo','🎮 Holomoves — reikenscore %','Score als % van maximum per sessie');
+    barChart('c-holo', labels, ss.map(function(s){return parseScore(s.reiken);}),
+      function(v){return v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675';}, 220, function(v){return v+'%';});
+
+    addCard('c-holo2','🎮 Holomoves — alle categorieën','Score % per oefencategorie');
+    var cats = ['reiken','ROM','hand_los','vrije_ruimte','palmaire_greep'];
+    var cLbls = ['Reiken','ROM','Hand los','Vrije ruimte','Palm.'];
+    var cols  = ['#4ECDC4','#A29BFE','#FD79A8','#FDCB6E','#00B894'];
+    lineChart('c-holo2', labels,
+      cats.map(function(c,i){return {data:ss.map(function(s){return parseScore(s[c]);}), color:cols[i], label:cLbls[i], r:4};}),
+      220, function(v){return v+'%';});
   }
 
-  // Insight
-  const trend = allSS.length>=2 ? allSS[allSS.length-1].sym_index-allSS[allSS.length-2].sym_index : 0;
-  const trendTxt = trend>2?'📈 Positieve trend':trend<-2?'📉 Terugval t.o.v. vorige':'→ Stabiel t.o.v. vorige sessie';
-  document.getElementById('insightBox').innerHTML=`
-    <div class="insight-icon">📊</div>
-    <div class="insight-text">
-      <strong>Voortgang — ${p.naam}:</strong>
-      Symmetrie van <strong>${first.sym_index??'—'}%</strong> → <strong>${last.sym_index??'—'}%</strong>
-      (+${symD}pp totaal over ${allSS.length} sessies). ${trendTxt}.
-      ${ss.length!==allSS.length?`<br><em>Huidige filter toont ${ss.length} van ${allSS.length} sessies.</em>`:''}
-    </div>`;
+  // ── Blokki ──
+  if (activeGame === 'all' || activeGame === 'blokki') {
+    addCard('c-blokki','🧱 Blokki — pijnscore','Lagere pijn tijdens spel = beter draagbaar');
+    barChart('c-blokki', labels, ss.map(function(s){return s.blokki_pijn||0;}),
+      function(v){return v>6?'#ff7675':v>3?'#FDCB6E':'#00B894';}, 220, function(v){return v+'/10';});
+  }
+
+  // ── Ketel ──
+  if (activeGame === 'all' || activeGame === 'ketel') {
+    addCard('c-ketel','🫙 Magische Ketel — treffscore %','Correct beantwoord als % van aangeboden per sessie');
+    barChart('c-ketel', labels, ss.map(function(s){return s.ketel_aangeboden?Math.round(s.ketel_correct/s.ketel_aangeboden*100):0;}),
+      function(v){return v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675';}, 220, function(v){return v+'%';});
+  }
+
+  // ── Insight ──
+  var trend = allSS.length>=2 ? allSS[allSS.length-1].sym_index-allSS[allSS.length-2].sym_index : 0;
+  var trendTxt = trend>2?'📈 Positieve trend':trend<-2?'📉 Lichte terugval':'→ Stabiel t.o.v. vorige sessie';
+  document.getElementById('insightBox').innerHTML =
+    '<div class="insight-icon">📊</div><div class="insight-text"><strong>Voortgang — '+p.naam+':</strong> ' +
+    'Van <strong>'+first.sym_index+'%</strong> → <strong>'+last.sym_index+'%</strong> symmetrie (+'+symD+'pp totaal). '+trendTxt+'. ' +
+    'Laatste pijn: <strong>'+last.pijn+'/10</strong>, energie: <strong>'+last.energie+'/10</strong>.' +
+    (ss.length!==allSS.length?'<br><em>Toont '+ss.length+' van '+allSS.length+' sessies.</em>':'')+'</div>';
 }
 
 function selectPatient(nr) {
   currentNr = nr;
-  const p = ALL_PATIENTS_META.find(x=>x.nr===nr);
+  var p = ALL_PATIENTS_META.find(function(x){return x.nr===nr;});
   document.getElementById('psAvatar').textContent = p.naam[0];
   document.getElementById('psName').textContent   = p.naam;
   document.getElementById('psId').textContent     = '#'+p.nr;
   document.getElementById('pageTitle').textContent = p.naam+' — Voortgang';
-  document.getElementById('pageDesc').textContent  = `${p.caras} · ${p.kliniek} · ${p.zijde} aangedaan`;
-  document.querySelectorAll('.ps-item').forEach(el=>el.classList.toggle('active',el.dataset.nr===nr));
+  document.getElementById('pageDesc').textContent  = p.caras+' · '+p.kliniek+' · '+p.zijde+' aangedaan';
+  document.querySelectorAll('.ps-item').forEach(function(el){el.classList.toggle('active',el.dataset.nr===nr);});
+  // Reset range to all sessions
+  var totalSS = (ALL_SESSIONS[nr]||[]).length;
+  document.getElementById('fromSessie').value = '1';
+  document.getElementById('toSessie').value   = String(totalSS);
   rebuild();
 }
 
-document.addEventListener('DOMContentLoaded',()=>{buildPatientList();selectPatient(currentNr);});
+document.addEventListener('DOMContentLoaded', function() {
+  buildPatientList();
+  selectPatient(currentNr);
+});
 </script>
 </body>
 </html>
