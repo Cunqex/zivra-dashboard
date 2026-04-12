@@ -9,99 +9,31 @@
   <script src="data.js"></script>
   <link rel="stylesheet" href="css/style.css"/>
   <style>
-    .vg-controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
-      align-items: center;
-    }
-    .vg-btn-group { display: flex; gap: 6px; }
+    .vg-controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px; align-items:center; }
+    .vg-btn-group { display:flex; gap:6px; }
     .vg-btn {
-      padding: 7px 16px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--bg2);
-      color: var(--text-muted);
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.15s;
+      padding:7px 16px; border-radius:8px; border:1px solid var(--border);
+      background:var(--bg2); color:var(--text-muted);
+      font-family:'DM Mono',monospace; font-size:12px; cursor:pointer; transition:all 0.15s;
     }
-    .vg-btn:hover { border-color: var(--border2); color: var(--text); }
-    .vg-btn.active { background: rgba(78,205,196,0.12); border-color: var(--accent); color: var(--accent); }
-    .vg-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-right: 4px;
-    }
-    .vg-charts-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-    @media (max-width: 800px) { .vg-charts-grid { grid-template-columns: 1fr; } }
-    .vg-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-    }
-    .vg-card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-    .vg-card-sub {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .vg-chart { height: 200px; }
-    .vg-full { grid-column: 1 / -1; }
-    .vg-kpi-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    @media (max-width: 700px) { .vg-kpi-row { grid-template-columns: 1fr 1fr; } }
-    .vg-kpi {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-    }
-    .vg-kpi-val {
-      font-family: 'DM Mono', monospace;
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .vg-kpi-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .vg-kpi-delta {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      margin-top: 3px;
-    }
+    .vg-btn:hover { border-color:var(--border2); color:var(--text); }
+    .vg-btn.active { background:rgba(78,205,196,0.12); border-color:var(--accent); color:var(--accent); }
+    .vg-label { font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; margin-right:4px; }
+    .vg-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+    @media(max-width:800px){.vg-grid{grid-template-columns:1fr;}}
+    .vg-card { background:var(--bg2); border:1px solid var(--border); border-radius:16px; padding:20px; }
+    .vg-card.full { grid-column:1/-1; }
+    .vg-card-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text); margin-bottom:2px; }
+    .vg-card-sub   { font-family:'DM Mono',monospace; font-size:11px; color:var(--text-muted); margin-bottom:14px; }
+    .vg-kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+    @media(max-width:700px){.vg-kpi-row{grid-template-columns:1fr 1fr;}}
+    .vg-kpi { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:16px; text-align:center; }
+    .vg-kpi-val { font-family:'DM Mono',monospace; font-size:26px; font-weight:700; margin-bottom:4px; }
+    .vg-kpi-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; }
+    .vg-kpi-delta { font-family:'DM Mono',monospace; font-size:11px; margin-top:3px; }
   </style>
 </head>
 <body>
-
 <header class="site-header">
   <div class="header-inner">
     <a href="index.html" class="logo-block"><span class="logo-mark">Z</span><div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div></a>
@@ -112,15 +44,8 @@
       <a href="voortgang.html" class="nav-link active">Voortgang</a>
     </nav>
     <div class="patient-selector" id="patientSelector">
-      <div class="ps-trigger" id="psTrigger">
-        <span class="ps-avatar" id="psAvatar">V</span>
-        <div class="ps-info"><div class="ps-name" id="psName">Varisha Doggen</div><div class="ps-id" id="psId">#329500</div></div>
-        <svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
-      </div>
-      <div class="ps-dropdown" id="psDropdown">
-        <div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div>
-        <div class="ps-list" id="psList"></div>
-      </div>
+      <div class="ps-trigger" id="psTrigger"><span class="ps-avatar" id="psAvatar">V</span><div class="ps-info"><div class="ps-name" id="psName">Varisha Doggen</div><div class="ps-id" id="psId">#329500</div></div><svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="ps-dropdown" id="psDropdown"><div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div><div class="ps-list" id="psList"></div></div>
     </div>
     <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
   </div>
@@ -129,41 +54,34 @@
 <div class="page-hero">
   <div class="page-hero-inner">
     <div class="page-hero-label">Voortgang</div>
-    <h1 class="page-hero-title" id="pageTitle">Voortganganalyse</h1>
-    <p class="page-hero-desc" id="pageDesc">Selecteer spel en periode om de voortgang te bekijken.</p>
+    <h1 class="page-hero-title" id="pageTitle">Voortgang</h1>
+    <p class="page-hero-desc" id="pageDesc">Selecteer spel en tijdsperiode.</p>
   </div>
 </div>
 
 <section>
   <div class="section-inner">
 
-    <!-- CONTROLS -->
     <div class="vg-controls">
       <span class="vg-label">Spel:</span>
       <div class="vg-btn-group" id="gameFilter">
-        <button class="vg-btn active" data-game="all">Alle spellen</button>
+        <button class="vg-btn active" data-game="all">Alles</button>
         <button class="vg-btn" data-game="holomoves">🎮 Holomoves</button>
         <button class="vg-btn" data-game="blokki">🧱 Blokki</button>
-        <button class="vg-btn" data-game="ketel">🫙 Magische Ketel</button>
+        <button class="vg-btn" data-game="ketel">🫙 Ketel</button>
       </div>
       <span class="vg-label" style="margin-left:12px">Periode:</span>
       <div class="vg-btn-group" id="periodeFilter">
         <button class="vg-btn active" data-periode="all">Alle sessies</button>
-        <button class="vg-btn" data-periode="recent3">Laatste 3</button>
-        <button class="vg-btn" data-periode="first3">Eerste 3</button>
+        <button class="vg-btn" data-periode="week">Afgelopen week</button>
+        <button class="vg-btn" data-periode="month">Afgelopen maand</button>
+        <button class="vg-btn" data-periode="year">Afgelopen jaar</button>
       </div>
     </div>
 
-    <!-- KPI ROW -->
     <div class="vg-kpi-row" id="vgKpis"></div>
-
-    <!-- CHARTS -->
-    <div class="vg-charts-grid" id="vgChartsGrid">
-      <!-- dynamisch ingevuld -->
-    </div>
-
-    <!-- INSIGHT -->
-    <div class="insight-box" id="insightBox"></div>
+    <div class="vg-grid"    id="vgGrid"></div>
+    <div class="insight-box" id="insightBox" style="margin-top:24px"></div>
 
   </div>
 </section>
@@ -177,11 +95,38 @@
 </footer>
 
 <script>
-let currentNr = ALL_PATIENTS_META[0].nr;
+let currentNr  = ALL_PATIENTS_META[0].nr;
 let activeGame = 'all';
-let activePeriode = 'all';
+let activePer  = 'all';
 
-// ── Patient list ──────────────────────────────────────────────
+// ── Gesimuleerde sessiedatums (wekelijks startend 6 maanden geleden) ──────────
+function getSessionDates(count) {
+  // Startdatum: 6 maanden terug, sessies om de ~week
+  const now  = new Date(2026, 3, 12); // april 2026
+  const start = new Date(now);
+  start.setMonth(start.getMonth() - Math.ceil(count * 7 / 30));
+  const dates = [];
+  for (let i = 0; i < count; i++) {
+    const d = new Date(start);
+    d.setDate(d.getDate() + i * 7 + Math.floor(Math.random() * 3));
+    dates.push(d);
+  }
+  return dates;
+}
+
+function filterByPeriode(ss, dates, periode) {
+  if (periode === 'all') return {ss, dates};
+  const now = new Date(2026, 3, 12);
+  const cutoff = new Date(now);
+  if (periode === 'week')  cutoff.setDate(cutoff.getDate() - 7);
+  if (periode === 'month') cutoff.setMonth(cutoff.getMonth() - 1);
+  if (periode === 'year')  cutoff.setFullYear(cutoff.getFullYear() - 1);
+  const filtered = ss.filter((_, i) => dates[i] >= cutoff);
+  const filtDates = dates.filter(d => d >= cutoff);
+  return {ss: filtered, dates: filtDates};
+}
+
+// ── Patient selector ───────────────────────────────────────
 function buildPatientList() {
   const list = document.getElementById('psList');
   ALL_PATIENTS_META.forEach(p => {
@@ -199,145 +144,135 @@ document.addEventListener('click', e => { if(!document.getElementById('patientSe
 document.getElementById('psSearch').addEventListener('input', e => filterList(e.target.value.toLowerCase()));
 function filterList(q) { document.querySelectorAll('.ps-item').forEach(el => el.style.display = el.textContent.toLowerCase().includes(q)?'':'none'); }
 
-// ── Controls ──────────────────────────────────────────────────
+// ── Controls ──────────────────────────────────────────────
 document.getElementById('gameFilter').addEventListener('click', e => {
-  const btn = e.target.closest('.vg-btn');
-  if (!btn) return;
-  document.querySelectorAll('#gameFilter .vg-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  activeGame = btn.dataset.game;
-  rebuild();
+  const b = e.target.closest('.vg-btn'); if(!b) return;
+  document.querySelectorAll('#gameFilter .vg-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); activeGame = b.dataset.game; rebuild();
 });
 document.getElementById('periodeFilter').addEventListener('click', e => {
-  const btn = e.target.closest('.vg-btn');
-  if (!btn) return;
-  document.querySelectorAll('#periodeFilter .vg-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  activePeriode = btn.dataset.periode;
-  rebuild();
+  const b = e.target.closest('.vg-btn'); if(!b) return;
+  document.querySelectorAll('#periodeFilter .vg-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); activePer = b.dataset.periode; rebuild();
 });
 
-// ── D3 helpers ────────────────────────────────────────────────
-function d3svg(containerId, height, m0) {
-  const el = document.getElementById(containerId);
-  if (!el) return null;
+// ── D3 helpers ────────────────────────────────────────────
+function makeSvg(id, h) {
+  const el = document.getElementById(id); if(!el) return null;
   el.innerHTML = '';
-  const m = Object.assign({top:14,right:16,bottom:28,left:44}, m0||{});
-  const W = el.clientWidth || 400;
-  const H = height || 200;
-  const w = W - m.left - m.right;
-  const h = H - m.top - m.bottom;
+  const m = {top:14,right:16,bottom:28,left:44};
+  const W = el.clientWidth||400, H=h;
+  const w = W-m.left-m.right, ch=H-m.top-m.bottom;
   const svg = d3.select(el).append('svg').attr('width',W).attr('height',H);
   const g   = svg.append('g').attr('transform',`translate(${m.left},${m.top})`);
-  return { svg, g, w, h };
+  return {g,w,h:ch};
 }
-function axes(g, xSc, ySc, h, yFmt) {
+function addGrid(g,ySc,w){
+  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickSize(-w).tickFormat(''))
+    .selectAll('line').style('stroke','rgba(255,255,255,0.05)').style('stroke-dasharray','3,3');
+  g.select('.domain').remove();
+}
+function addAxes(g,xSc,ySc,h,yFmt){
   g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
     .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
   g.append('g').call(d3.axisLeft(ySc).ticks(4).tickFormat(yFmt||String))
     .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
   g.selectAll('.domain,.tick line').style('stroke','rgba(255,255,255,0.08)');
 }
-function gridLines(g, ySc, w) {
-  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickSize(-w).tickFormat(''))
-    .selectAll('line').style('stroke','rgba(255,255,255,0.05)').style('stroke-dasharray','3,3');
-  g.select('.domain').remove();
+function deltaCol(cur,prev,inv){
+  if(prev==null) return '#64748b';
+  const d = inv ? prev-cur : cur-prev;
+  return d>2?'#00B894':d>=-2?'#FDCB6E':'#ff7675';
 }
+const fmtDate = d => `${d.getDate()}/${d.getMonth()+1}`;
 
-// Parse score string "12/20" → percentage
-function parseScore(v) {
-  if (!v || !String(v).includes('/')) return 0;
-  const [a,b] = String(v).split('/');
-  return b > 0 ? Math.round(a/b*100) : 0;
-}
-
-// Filter sessions by periode
-function filterSessions(ss) {
-  if (activePeriode === 'first3') return ss.slice(0, 3);
-  if (activePeriode === 'recent3') return ss.slice(-3);
-  return ss;
-}
-
-// Delta color
-function deltaCol(delta, invert) {
-  if (invert) delta = -delta;
-  return delta > 2 ? '#00B894' : delta >= -2 ? '#FDCB6E' : '#ff7675';
-}
-
-// ── Build charts ──────────────────────────────────────────────
-function buildChart(containerId, labels, datasets, height, yFmt) {
-  const d = d3svg(containerId, height || 200);
-  if (!d) return;
-  const { g, w, h } = d;
+// Line chart helper
+function lineChart(id, labels, datasets, h, yFmt) {
+  const d = makeSvg(id, h||200); if(!d) return;
+  const {g,w,ch} = {g:d.g, w:d.w, ch:d.h};
   const xSc = d3.scalePoint().domain(labels).range([0,w]);
-  const maxVal = d3.max(datasets.flatMap(ds=>ds.data))*1.1 || 10;
-  const ySc = d3.scaleLinear().domain([0, maxVal]).range([h,0]);
-  gridLines(g, ySc, w);
+  const allV = datasets.flatMap(ds=>ds.data).filter(v=>v!=null);
+  const ySc = d3.scaleLinear().domain([Math.max(0,d3.min(allV)*0.9), d3.max(allV)*1.1||10]).range([ch,0]);
+  addGrid(g,ySc,w);
   datasets.forEach(ds => {
-    const lineFn = d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)).curve(d3.curveCatmullRom);
-    if (ds.area) {
-      g.append('path').datum(ds.data).attr('fill',ds.color+'22')
-        .attr('d', d3.area().x((_,i)=>xSc(labels[i])).y0(h).y1(v=>ySc(v)).curve(d3.curveCatmullRom));
+    if(ds.dash){
+      g.append('path').datum(ds.data).attr('fill','none').attr('stroke',ds.color+'66')
+        .attr('stroke-width',1.5).style('stroke-dasharray','5,4')
+        .attr('d',d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)));
+      return;
     }
-    g.append('path').datum(ds.data).attr('fill','none').attr('stroke',ds.color).attr('stroke-width',2.5).attr('d',lineFn);
-    ds.data.forEach((v,i) => {
-      const col = ds.deltaColor && i > 0 ? deltaCol(v - ds.data[i-1], ds.invert||false) : ds.color;
+    if(ds.area){
+      g.append('path').datum(ds.data).attr('fill',ds.color+'22')
+        .attr('d',d3.area().x((_,i)=>xSc(labels[i])).y0(ch).y1(v=>ySc(v)).curve(d3.curveCatmullRom));
+    }
+    g.append('path').datum(ds.data).attr('fill','none').attr('stroke',ds.color).attr('stroke-width',2.5)
+      .attr('d',d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)).curve(d3.curveCatmullRom));
+    ds.data.forEach((v,i)=>{
+      const col = ds.delta ? deltaCol(v, i>0?ds.data[i-1]:null, ds.inv||false) : ds.color;
       g.append('circle').attr('cx',xSc(labels[i])).attr('cy',ySc(v)).attr('r',5)
         .attr('fill',col).attr('stroke','#0a0b0f').attr('stroke-width',1.5);
     });
   });
-  if (datasets.length > 1) {
+  if(datasets.filter(ds=>!ds.dash).length>1){
     const leg = g.append('g').attr('transform',`translate(0,-2)`);
-    datasets.forEach((ds,i) => {
+    datasets.filter(ds=>!ds.dash).forEach((ds,i)=>{
       leg.append('rect').attr('x',i*90).attr('width',10).attr('height',3).attr('fill',ds.color).attr('rx',1);
       leg.append('text').attr('x',i*90+14).attr('y',4).text(ds.label).style('fill','#888').style('font-size','9px').style('font-family',"'DM Mono',monospace");
     });
   }
-  axes(g, xSc, ySc, h, yFmt);
+  addAxes(g,xSc,ySc,ch,yFmt);
 }
 
-function buildBarChart(containerId, labels, data, colorFn, height, yFmt) {
-  const d = d3svg(containerId, height || 200);
-  if (!d) return;
-  const { g, w, h } = d;
+function barChart(id, labels, vals, colorFn, h, yFmt) {
+  const d = makeSvg(id,h||200); if(!d) return;
+  const {g,w,ch} = {g:d.g,w:d.w,ch:d.h};
   const xSc = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
-  const ySc = d3.scaleLinear().domain([0, d3.max(data)*1.15||10]).range([h,0]);
-  gridLines(g, ySc, w);
-  g.selectAll('.bar').data(data).enter().append('rect')
+  const ySc = d3.scaleLinear().domain([0, d3.max(vals)*1.15||10]).range([ch,0]);
+  addGrid(g,ySc,w);
+  g.selectAll('.b').data(vals).enter().append('rect')
     .attr('x',(_,i)=>xSc(labels[i])).attr('y',v=>ySc(v))
-    .attr('width',xSc.bandwidth()).attr('height',v=>h-ySc(v))
+    .attr('width',xSc.bandwidth()).attr('height',v=>ch-ySc(v))
     .attr('fill',(v,i)=>colorFn(v,i)+'BB').attr('stroke',(v,i)=>colorFn(v,i)).attr('stroke-width',1.5).attr('rx',4);
-  // value labels
-  g.selectAll('.lbl').data(data).enter().append('text')
-    .attr('x',(_,i)=>xSc(labels[i])+xSc.bandwidth()/2).attr('y',v=>ySc(v)-4)
-    .attr('text-anchor','middle').text(v=>yFmt?yFmt(v):v)
-    .style('fill','#888').style('font-size','10px').style('font-family',"'DM Mono',monospace");
-  axes(g, xSc, ySc, h, yFmt);
+  vals.forEach((v,i)=>g.append('text').attr('x',xSc(labels[i])+xSc.bandwidth()/2).attr('y',ySc(v)-4)
+    .attr('text-anchor','middle').text(yFmt?yFmt(v):v).style('fill','#888').style('font-size','10px').style('font-family',"'DM Mono',monospace"));
+  addAxes(g,xSc,ySc,ch,yFmt);
 }
 
-// ── Main rebuild ──────────────────────────────────────────────
-function rebuild() {
-  const p  = ALL_PATIENTS_META.find(x => x.nr === currentNr);
-  const allSS = ALL_SESSIONS[currentNr] || [];
-  const ss = filterSessions(allSS);
-  const labels = ss.map(s => `S${s.sessie}`);
-  const first = allSS[0] || {};
-  const last  = allSS[allSS.length-1] || {};
+// ── Build card helper ─────────────────────────────────────
+function card(id, title, sub, full) {
+  const grid = document.getElementById('vgGrid');
+  const div  = document.createElement('div');
+  div.className = 'vg-card' + (full?' full':'');
+  div.innerHTML = `<div class="vg-card-title">${title}</div><div class="vg-card-sub">${sub}</div><div id="${id}" style="height:200px"></div>`;
+  grid.appendChild(div);
+}
 
-  // ── KPIs ──
-  const symDelta  = last.sym_index  - first.sym_index;
-  const pijnDelta = last.pijn       - first.pijn;
-  const enerDelta = last.energie    - first.energie;
-  const ketelAvgPct = ss.length ? Math.round(ss.reduce((s,x)=>s+(x.ketel_aangeboden?x.ketel_correct/x.ketel_aangeboden*100:0),0)/ss.length) : 0;
+// ── Rebuild ───────────────────────────────────────────────
+function rebuild() {
+  const p      = ALL_PATIENTS_META.find(x=>x.nr===currentNr);
+  const allSS  = ALL_SESSIONS[currentNr]||[];
+  const allDates = getSessionDates(allSS.length);
+
+  const {ss, dates} = filterByPeriode(allSS, allDates, activePer);
+
+  // KPIs
+  const first  = allSS[0]||{};
+  const last   = allSS[allSS.length-1]||{};
+  const filt0  = ss[0]||{};
+  const filtL  = ss[ss.length-1]||{};
+  const symD   = typeof last.sym_index==='number'&&typeof first.sym_index==='number' ? last.sym_index-first.sym_index : 0;
+  const pijnD  = typeof last.pijn==='number'&&typeof first.pijn==='number' ? last.pijn-first.pijn : 0;
+  const ketelAvg = ss.length ? Math.round(ss.reduce((s,x)=>s+(x.ketel_aangeboden?x.ketel_correct/x.ketel_aangeboden*100:0),0)/ss.length) : 0;
+  const enerD  = typeof last.energie==='number'&&typeof first.energie==='number' ? last.energie-first.energie : 0;
 
   const kpis = [
-    { val:`${last.sym_index||'—'}%`, label:'Symmetrie nu', delta:symDelta, unit:'pp', invert:false, color:'#4ECDC4' },
-    { val:`${last.pijn||'—'}/10`,    label:'Pijnscore nu',  delta:pijnDelta,unit:'/10',invert:true, color:'#ff7675' },
-    { val:`${last.energie||'—'}/10`, label:'Energie nu',    delta:enerDelta,unit:'/10',invert:false,color:'#00B894' },
-    { val:`${ketelAvgPct}%`,         label:'Ketel gem. score', delta:0,    unit:'',   invert:false,color:'#FDCB6E' },
+    {val:`${last.sym_index??'—'}%`,  label:'Symmetrie nu',    delta:symD,  unit:'pp',  inv:false, color:'#4ECDC4'},
+    {val:`${last.pijn??'—'}/10`,     label:'Pijnscore nu',    delta:pijnD, unit:'/10', inv:true,  color:'#ff7675'},
+    {val:`${last.energie??'—'}/10`,  label:'Energie nu',      delta:enerD, unit:'/10', inv:false, color:'#00B894'},
+    {val:`${ketelAvg}%`,             label:'Ketel gem.',       delta:0,     unit:'',    inv:false, color:'#FDCB6E'},
   ];
   document.getElementById('vgKpis').innerHTML = kpis.map(k=>{
-    const good = k.invert ? k.delta<0 : k.delta>0;
+    const good = k.inv?k.delta<0:k.delta>0;
     const col  = k.delta===0?'#7a7f8e':good?'#00B894':'#ff7675';
     const sign = k.delta>0?'+':'';
     return `<div class="vg-kpi">
@@ -347,102 +282,92 @@ function rebuild() {
     </div>`;
   }).join('');
 
-  // ── Charts grid ──
-  const grid = document.getElementById('vgChartsGrid');
-  grid.innerHTML = '';
+  // Periode label voor x-as
+  const labels = activePer==='all'
+    ? ss.map(s=>`S${s.sessie}`)
+    : dates.map(d=>fmtDate(d));
 
-  const card = (id, title, sub, fullWidth) => {
-    const div = document.createElement('div');
-    div.className = 'vg-card' + (fullWidth?' vg-full':'');
-    div.innerHTML = `<div class="vg-card-title">${title}</div><div class="vg-card-sub">${sub}</div><div class="vg-chart" id="${id}"></div>`;
-    grid.appendChild(div);
-    return id;
-  };
+  // Charts
+  document.getElementById('vgGrid').innerHTML='';
+  const parseScore = v=>{ if(!v||!String(v).includes('/'))return 0; const[a,b]=String(v).split('/'); return b>0?Math.round(a/b*100):0; };
+  const lIsAan = p.zijde==='Links';
 
-  // SYMMETRIE (altijd zichtbaar)
-  if (activeGame === 'all') {
-    const cId = card('c-sym', 'Symmetrie-index', 'Gekleurde punten = delta t.o.v. vorige sessie');
-    requestAnimationFrame(() => buildChart(cId, labels, [{
-      label:'Symmetrie', color:'#4ECDC4', area:true, deltaColor:true,
-      data: ss.map(s=>s.sym_index)
-    }], 200, v=>v+'%'));
+  if(activeGame==='all'||activeGame==='holomoves') {
+    card('c-sym','Symmetrie-index verloop',`Per sessie — punten = delta t.o.v. vorige (${labels.length} sessies zichtbaar)`);
+    requestAnimationFrame(()=>lineChart('c-sym', labels,[
+      {label:'Symmetrie', color:'#4ECDC4', area:true, delta:true, data:ss.map(s=>s.sym_index)},
+    ], 200, v=>v+'%'));
 
-    const cId2 = card('c-wb', 'Welzijn — pijn, frustratie & energie', 'Pijn/frustratie: lager = beter · Energie: hoger = beter');
-    requestAnimationFrame(() => buildChart(cId2, labels, [
-      { label:'Pijn (↓)', color:'#ff7675', data: ss.map(s=>s.pijn) },
-      { label:'Frustratie (↓)', color:'#FDCB6E', data: ss.map(s=>s.frustratie) },
-      { label:'Energie (↑)', color:'#00B894', data: ss.map(s=>s.energie) },
-    ], 200, v=>v+'/10'));
+    card('c-holo','🎮 Holomoves — per categorie','Score als % van maximum');
+    const cats  = ['reiken','ROM','hand_los','vrije_ruimte','palmaire_greep'];
+    const cLabels=['Reiken','ROM','Hand los','Vrije ruimte','Palm.'];
+    const cols  =['#4ECDC4','#A29BFE','#FD79A8','#FDCB6E','#00B894'];
+    requestAnimationFrame(()=>lineChart('c-holo', labels,
+      cats.map((c,i)=>({label:cLabels[i],color:cols[i],data:ss.map(s=>parseScore(s[c]))})),
+      200, v=>v+'%'));
+  }
 
-    // Gyroscoop aangedane vs gezonde arm
-    const lIsAan = p.zijde === 'Links';
-    const cId3 = card('c-gyr', 'Gyroscoop — aangedane vs gezonde arm', 'Aangedane arm (rood) t.o.v. gezonde arm (grijs)');
-    requestAnimationFrame(() => buildChart(cId3, labels, [
-      { label:p.zijde+' (aangedaan)', color:'#ff7675', area:true, deltaColor:true,
-        data: ss.map(s => lIsAan ? s.gyr_links : s.gyr_rechts) },
-      { label:(lIsAan?'Rechts':'Links')+' (gezond)', color:'#64748b',
-        data: ss.map(s => lIsAan ? s.gyr_rechts : s.gyr_links) },
+  if(activeGame==='all'||activeGame==='blokki') {
+    card('c-blokki','🧱 Blokki — pijnscore per sessie','Lagere pijn = beter draagbaar');
+    requestAnimationFrame(()=>barChart('c-blokki', labels, ss.map(s=>s.blokki_pijn||0),
+      v=>v>6?'#ff7675':v>3?'#FDCB6E':'#00B894', 200, v=>v+'/10'));
+  }
+
+  if(activeGame==='all'||activeGame==='ketel') {
+    card('c-ketel','🫙 Magische Ketel — treffscore %','Correct beantwoord als % van aangeboden');
+    const kPcts = ss.map(s=>s.ketel_aangeboden?Math.round(s.ketel_correct/s.ketel_aangeboden*100):0);
+    requestAnimationFrame(()=>barChart('c-ketel', labels, kPcts,
+      v=>v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675', 200, v=>v+'%'));
+  }
+
+  if(activeGame==='all') {
+    card('c-gyr','Gyroscoop — aangedane vs gezonde arm','Hoe dichter bij elkaar, hoe beter het herstel', false);
+    requestAnimationFrame(()=>lineChart('c-gyr', labels,[
+      {label:`${p.zijde} (aangedaan)`, color:'#ff7675', area:true, delta:true,
+        data:ss.map(s=>lIsAan?s.gyr_links:s.gyr_rechts)},
+      {label:`${lIsAan?'Rechts':'Links'} (gezond)`, color:'#64748b',
+        data:ss.map(s=>lIsAan?s.gyr_rechts:s.gyr_links)},
     ], 200, v=>v+'°/s'));
+
+    card('c-wb','Welzijn — pijn, frustratie & energie','Lager is beter voor pijn/frustratie · hoger voor energie', false);
+    requestAnimationFrame(()=>lineChart('c-wb', labels,[
+      {label:'Pijn (↓)',       color:'#ff7675', delta:true, inv:true,  data:ss.map(s=>s.pijn)},
+      {label:'Frustratie (↓)', color:'#FDCB6E',                        data:ss.map(s=>s.frustratie)},
+      {label:'Energie (↑)',    color:'#00B894', delta:true,             data:ss.map(s=>s.energie)},
+    ], 200, v=>v+'/10'));
   }
 
-  // HOLOMOVES
-  if (activeGame === 'all' || activeGame === 'holomoves') {
-    const cats = ['reiken','ROM','hand_los','vrije_ruimte','palmaire_greep'];
-    const catLabels = ['Reiken','ROM','Hand los','Vrije ruimte','Palmaire greep'];
-    const colors = ['#4ECDC4','#A29BFE','#FD79A8','#FDCB6E','#00B894'];
-    const id = card('c-holo', '🎮 Holomoves — scores per categorie', 'Score als % van maximum per oefening');
-    requestAnimationFrame(() => buildChart(id, labels,
-      cats.map((c,i)=>({ label:catLabels[i], color:colors[i], data:ss.map(s=>parseScore(s[c])) })),
-      200, v=>v+'%'));
-  }
-
-  // BLOKKI
-  if (activeGame === 'all' || activeGame === 'blokki') {
-    const id = card('c-blokki', '🧱 InMotion Blokki — pijnscore per sessie', 'Lagere pijn = beter draagbaar tijdens spel');
-    requestAnimationFrame(() => buildBarChart(id, labels,
-      ss.map(s=>s.blokki_pijn||0),
-      v => v>6?'#ff7675':v>3?'#FDCB6E':'#00B894',
-      200, v=>v+'/10'));
-  }
-
-  // KETEL
-  if (activeGame === 'all' || activeGame === 'ketel') {
-    const id = card('c-ketel', '🫙 Magische Ketel — treffscore %', 'Correct beantwoord als % van aangeboden');
-    const ketelPcts = ss.map(s => s.ketel_aangeboden ? Math.round(s.ketel_correct/s.ketel_aangeboden*100) : 0);
-    requestAnimationFrame(() => buildBarChart(id, labels, ketelPcts,
-      v => v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675',
-      200, v=>v+'%'));
+  // Periode info voor lege staat
+  if(ss.length===0){
+    document.getElementById('vgGrid').innerHTML='<div class="vg-card full" style="text-align:center;padding:40px"><div style="font-family:\'DM Mono\',monospace;color:var(--text-muted)">Geen sessies gevonden in deze periode.<br>Kies \'Alle sessies\' of een langere periode.</div></div>';
   }
 
   // Insight
-  const symLast3 = allSS.length >= 2 ? allSS[allSS.length-1].sym_index - allSS[allSS.length-2].sym_index : 0;
-  const trend = symLast3 > 2 ? '📈 Positieve trend' : symLast3 < -2 ? '📉 Terugval' : '→ Stabiel';
-  document.getElementById('insightBox').innerHTML = `
+  const trend = allSS.length>=2 ? allSS[allSS.length-1].sym_index-allSS[allSS.length-2].sym_index : 0;
+  const trendTxt = trend>2?'📈 Positieve trend':trend<-2?'📉 Terugval t.o.v. vorige':'→ Stabiel t.o.v. vorige sessie';
+  document.getElementById('insightBox').innerHTML=`
     <div class="insight-icon">📊</div>
     <div class="insight-text">
       <strong>Voortgang — ${p.naam}:</strong>
-      Symmetrie van <strong>${first.sym_index||'—'}%</strong> → <strong>${last.sym_index||'—'}%</strong>
-      (+${symDelta}pp totaal). ${trend} t.o.v. vorige sessie.
-      Huidige ketel treffscore gemiddeld <strong>${ketelAvgPct}%</strong> over de geselecteerde sessies.
+      Symmetrie van <strong>${first.sym_index??'—'}%</strong> → <strong>${last.sym_index??'—'}%</strong>
+      (+${symD}pp totaal over ${allSS.length} sessies). ${trendTxt}.
+      ${ss.length!==allSS.length?`<br><em>Huidige filter toont ${ss.length} van ${allSS.length} sessies.</em>`:''}
     </div>`;
 }
 
 function selectPatient(nr) {
   currentNr = nr;
-  const p = ALL_PATIENTS_META.find(x => x.nr === nr);
+  const p = ALL_PATIENTS_META.find(x=>x.nr===nr);
   document.getElementById('psAvatar').textContent = p.naam[0];
   document.getElementById('psName').textContent   = p.naam;
-  document.getElementById('psId').textContent     = '#' + p.nr;
-  document.getElementById('pageTitle').textContent = p.naam + ' — Voortgang';
+  document.getElementById('psId').textContent     = '#'+p.nr;
+  document.getElementById('pageTitle').textContent = p.naam+' — Voortgang';
   document.getElementById('pageDesc').textContent  = `${p.caras} · ${p.kliniek} · ${p.zijde} aangedaan`;
-  document.querySelectorAll('.ps-item').forEach(el => el.classList.toggle('active', el.dataset.nr===nr));
+  document.querySelectorAll('.ps-item').forEach(el=>el.classList.toggle('active',el.dataset.nr===nr));
   rebuild();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  buildPatientList();
-  selectPatient(currentNr);
-});
+document.addEventListener('DOMContentLoaded',()=>{buildPatientList();selectPatient(currentNr);});
 </script>
 </body>
 </html>
