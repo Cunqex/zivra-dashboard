@@ -164,14 +164,41 @@ function deltaCol(cur, prev, invert) {
 function buildCharts(ss) {
   const labels = ss.map(s => `S${s.sessie}`);
 
-  // Symmetrie
+  // Symmetrie — met gezonde zijde als norm
   (function() {
     const d = makeSvg('d3sym', 240); if (!d) return;
     const {g,w,h} = d;
     const vals = ss.map(s=>s.sym_index);
+    // Norm = gezonde arm gyro als % van totaal (sessie 1 als baseline)
+    // 100% symmetrie = beide armen gelijk. We tonen de "gezonde kant" benchmark.
+    // In de data: sym_index is al de verhouding aangedaan/gezond * 100
+    // Sessie 1 waarde van de gezonde zijde = onze referentielijn
+    const p = ALL_PATIENTS_META.find(x=>x.nr===currentNr);
+    const lIsAan = p && p.zijde === 'Links';
+    const sess1  = ss[0]||{};
+    // Norm = gemiddelde gezonde kant gyro als proxy voor "volledig herstel niveau"
+    // We gebruiken sessie 1 gezonde kant gyr als 100% norm
+    const gyrGezS1 = lIsAan ? (sess1.gyr_rechts||0) : (sess1.gyr_links||0);
+    const gyrAanS1 = lIsAan ? (sess1.gyr_links||0)  : (sess1.gyr_rechts||0);
+    // Verwacht niveau = als aangedane kant gelijk is aan gezonde kant = 100%
+    // Referentie lijn voor de grafiek = de waarde waarbij aangedaan == gezond
+    // Dat is per definitie 100 sym_index. Maar we tonen ook werkelijke gezonde kant gyr
+    const normLine = 100; // perfect symmetrie
+
+    const yMin = Math.max(0, Math.min(...vals) - 5);
+    const yMax = Math.min(100, Math.max(Math.max(...vals) + 5, normLine + 2));
+
     const xSc  = d3.scalePoint().domain(labels).range([0,w]);
-    const ySc  = d3.scaleLinear().domain([Math.max(0,Math.min(...vals)-5), Math.min(100,Math.max(...vals)+5)]).range([h,0]);
+    const ySc  = d3.scaleLinear().domain([yMin, yMax]).range([h,0]);
     addGrid(g,ySc,w);
+
+    // Referentielijn = gezonde zijde (100% = volledig herstel)
+    const refY = ySc(normLine);
+    g.append('line').attr('x1',0).attr('y1',refY).attr('x2',w).attr('y2',refY)
+      .style('stroke','rgba(255,255,255,0.3)').style('stroke-dasharray','6,4').style('stroke-width',1.5);
+    g.append('text').attr('x',w-2).attr('y',refY-5).attr('text-anchor','end')
+      .text('Norm gezond (100%)').style('fill','rgba(255,255,255,0.35)').style('font-size','9px').style('font-family',"'DM Mono',monospace");
+
     g.append('path').datum(vals).attr('fill','#4ECDC422')
       .attr('d', d3.area().x((_,i)=>xSc(labels[i])).y0(h).y1(v=>ySc(v)).curve(d3.curveCatmullRom));
     g.append('path').datum(vals).attr('fill','none').attr('stroke','#4ECDC4').attr('stroke-width',2.5)
@@ -198,6 +225,12 @@ function buildCharts(ss) {
       {data:ss.map(s=>s.frustratie), color:'#FDCB6E', label:'Frustratie'},
       {data:ss.map(s=>s.energie),   color:'#00B894', label:'Energie'},
     ];
+    // Referentielijnen: pijn/frustratie gezond ≤3, energie gezond ≥8
+    const refs = [{val:3,color:'#ff7675',label:'pijn/frus norm'},{val:8,color:'#00B894',label:'energie norm'}];
+    refs.forEach(r=>{
+      g.append('line').attr('x1',0).attr('y1',ySc(r.val)).attr('x2',w).attr('y2',ySc(r.val))
+        .style('stroke',r.color+'44').style('stroke-dasharray','5,4').style('stroke-width',1);
+    });
     series.forEach(sr => {
       g.append('path').datum(sr.data).attr('fill','none').attr('stroke',sr.color).attr('stroke-width',2)
         .attr('d', d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)).curve(d3.curveCatmullRom));

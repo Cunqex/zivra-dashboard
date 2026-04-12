@@ -71,11 +71,19 @@
         <button class="vg-btn" data-game="ketel">🫙 Ketel</button>
       </div>
       <span class="vg-label" style="margin-left:12px">Periode:</span>
-      <div class="vg-btn-group" id="periodeFilter">
-        <button class="vg-btn active" data-periode="all">Alle sessies</button>
-        <button class="vg-btn" data-periode="week">Afgelopen week</button>
-        <button class="vg-btn" data-periode="month">Afgelopen maand</button>
-        <button class="vg-btn" data-periode="year">Afgelopen jaar</button>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:6px">
+          <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">Van</label>
+          <input type="date" id="dateFrom" value="2025-10-01"
+            style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer"/>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">Tot</label>
+          <input type="date" id="dateTo" value="2026-04-12"
+            style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer"/>
+        </div>
+        <button onclick="document.getElementById('dateFrom').value='2025-10-01';document.getElementById('dateTo').value='2026-04-12';rebuild();"
+          class="vg-btn" style="padding:6px 12px">Reset</button>
       </div>
     </div>
 
@@ -97,7 +105,6 @@
 <script>
 let currentNr  = ALL_PATIENTS_META[0].nr;
 let activeGame = 'all';
-let activePer  = 'all';
 
 // ── Gesimuleerde sessiedatums (wekelijks startend 6 maanden geleden) ──────────
 function getSessionDates(count) {
@@ -114,15 +121,15 @@ function getSessionDates(count) {
   return dates;
 }
 
-function filterByPeriode(ss, dates, periode) {
-  if (periode === 'all') return {ss, dates};
-  const now = new Date(2026, 3, 12);
-  const cutoff = new Date(now);
-  if (periode === 'week')  cutoff.setDate(cutoff.getDate() - 7);
-  if (periode === 'month') cutoff.setMonth(cutoff.getMonth() - 1);
-  if (periode === 'year')  cutoff.setFullYear(cutoff.getFullYear() - 1);
-  const filtered = ss.filter((_, i) => dates[i] >= cutoff);
-  const filtDates = dates.filter(d => d >= cutoff);
+function filterByDateRange(ss, dates) {
+  const fromEl = document.getElementById('dateFrom');
+  const toEl   = document.getElementById('dateTo');
+  if (!fromEl || !toEl) return {ss, dates};
+  const from = fromEl.value ? new Date(fromEl.value) : new Date(0);
+  const to   = toEl.value   ? new Date(toEl.value + 'T23:59:59') : new Date(9999, 0);
+  if (!fromEl.value && !toEl.value) return {ss, dates};
+  const filtered  = ss.filter((_, i) => dates[i] >= from && dates[i] <= to);
+  const filtDates = dates.filter(d => d >= from && d <= to);
   return {ss: filtered, dates: filtDates};
 }
 
@@ -150,11 +157,9 @@ document.getElementById('gameFilter').addEventListener('click', e => {
   document.querySelectorAll('#gameFilter .vg-btn').forEach(x=>x.classList.remove('active'));
   b.classList.add('active'); activeGame = b.dataset.game; rebuild();
 });
-document.getElementById('periodeFilter').addEventListener('click', e => {
-  const b = e.target.closest('.vg-btn'); if(!b) return;
-  document.querySelectorAll('#periodeFilter .vg-btn').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); activePer = b.dataset.periode; rebuild();
-});
+// Date range inputs trigger rebuild
+document.getElementById('dateFrom')?.addEventListener('change', rebuild);
+document.getElementById('dateTo')?.addEventListener('change', rebuild);
 
 // ── D3 helpers ────────────────────────────────────────────
 function makeSvg(id, h) {
@@ -253,7 +258,7 @@ function rebuild() {
   const allSS  = ALL_SESSIONS[currentNr]||[];
   const allDates = getSessionDates(allSS.length);
 
-  const {ss, dates} = filterByPeriode(allSS, allDates, activePer);
+  const {ss, dates} = filterByDateRange(allSS, allDates);
 
   // KPIs
   const first  = allSS[0]||{};
