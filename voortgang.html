@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZIVRA — Voortgang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="data.js"></script>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .vg-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+      align-items: center;
+    }
+    .vg-btn-group { display: flex; gap: 6px; }
+    .vg-btn {
+      padding: 7px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .vg-btn:hover { border-color: var(--border2); color: var(--text); }
+    .vg-btn.active { background: rgba(78,205,196,0.12); border-color: var(--accent); color: var(--accent); }
+    .vg-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-right: 4px;
+    }
+    .vg-charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 800px) { .vg-charts-grid { grid-template-columns: 1fr; } }
+    .vg-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .vg-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .vg-card-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .vg-chart { height: 200px; }
+    .vg-full { grid-column: 1 / -1; }
+    .vg-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 700px) { .vg-kpi-row { grid-template-columns: 1fr 1fr; } }
+    .vg-kpi {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .vg-kpi-val {
+      font-family: 'DM Mono', monospace;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .vg-kpi-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .vg-kpi-delta {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo-block"><span class="logo-mark">Z</span><div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div></a>
+    <nav class="main-nav">
+      <a href="index.html" class="nav-link">Dashboard</a>
+      <a href="patient.html" class="nav-link">Patiënt</a>
+      <a href="sessies.html" class="nav-link">Sessies</a>
+      <a href="voortgang.html" class="nav-link active">Voortgang</a>
+    </nav>
+    <div class="patient-selector" id="patientSelector">
+      <div class="ps-trigger" id="psTrigger">
+        <span class="ps-avatar" id="psAvatar">V</span>
+        <div class="ps-info"><div class="ps-name" id="psName">Varisha Doggen</div><div class="ps-id" id="psId">#329500</div></div>
+        <svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div class="ps-dropdown" id="psDropdown">
+        <div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div>
+        <div class="ps-list" id="psList"></div>
+      </div>
+    </div>
+    <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-label">Voortgang</div>
+    <h1 class="page-hero-title" id="pageTitle">Voortganganalyse</h1>
+    <p class="page-hero-desc" id="pageDesc">Selecteer spel en periode om de voortgang te bekijken.</p>
+  </div>
+</div>
+
+<section>
+  <div class="section-inner">
+
+    <!-- CONTROLS -->
+    <div class="vg-controls">
+      <span class="vg-label">Spel:</span>
+      <div class="vg-btn-group" id="gameFilter">
+        <button class="vg-btn active" data-game="all">Alle spellen</button>
+        <button class="vg-btn" data-game="holomoves">🎮 Holomoves</button>
+        <button class="vg-btn" data-game="blokki">🧱 Blokki</button>
+        <button class="vg-btn" data-game="ketel">🫙 Magische Ketel</button>
+      </div>
+      <span class="vg-label" style="margin-left:12px">Periode:</span>
+      <div class="vg-btn-group" id="periodeFilter">
+        <button class="vg-btn active" data-periode="all">Alle sessies</button>
+        <button class="vg-btn" data-periode="recent3">Laatste 3</button>
+        <button class="vg-btn" data-periode="first3">Eerste 3</button>
+      </div>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="vg-kpi-row" id="vgKpis"></div>
+
+    <!-- CHARTS -->
+    <div class="vg-charts-grid" id="vgChartsGrid">
+      <!-- dynamisch ingevuld -->
+    </div>
+
+    <!-- INSIGHT -->
+    <div class="insight-box" id="insightBox"></div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
+    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a></div>
+    <div class="footer-note">IMU data — 2026</div>
+  </div>
+</footer>
+
+<script>
+let currentNr = ALL_PATIENTS_META[0].nr;
+let activeGame = 'all';
+let activePeriode = 'all';
+
+// ── Patient list ──────────────────────────────────────────────
+function buildPatientList() {
+  const list = document.getElementById('psList');
+  ALL_PATIENTS_META.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'ps-item'; el.dataset.nr = p.nr;
+    el.innerHTML = `<span class="ps-item-avatar">${p.naam[0]}</span><div class="ps-item-info"><div class="ps-item-name">${p.naam}</div><div class="ps-item-meta">#${p.nr} · ${p.kliniek}</div></div><span class="ps-item-caras">${p.caras}</span>`;
+    el.addEventListener('click', () => { selectPatient(p.nr); closeDropdown(); });
+    list.appendChild(el);
+  });
+}
+function openDropdown()  { document.getElementById('psDropdown').classList.add('open'); document.getElementById('psSearch').focus(); }
+function closeDropdown() { document.getElementById('psDropdown').classList.remove('open'); document.getElementById('psSearch').value=''; filterList(''); }
+document.getElementById('psTrigger').addEventListener('click', e => { e.stopPropagation(); document.getElementById('psDropdown').classList.contains('open')?closeDropdown():openDropdown(); });
+document.addEventListener('click', e => { if(!document.getElementById('patientSelector').contains(e.target)) closeDropdown(); });
+document.getElementById('psSearch').addEventListener('input', e => filterList(e.target.value.toLowerCase()));
+function filterList(q) { document.querySelectorAll('.ps-item').forEach(el => el.style.display = el.textContent.toLowerCase().includes(q)?'':'none'); }
+
+// ── Controls ──────────────────────────────────────────────────
+document.getElementById('gameFilter').addEventListener('click', e => {
+  const btn = e.target.closest('.vg-btn');
+  if (!btn) return;
+  document.querySelectorAll('#gameFilter .vg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeGame = btn.dataset.game;
+  rebuild();
+});
+document.getElementById('periodeFilter').addEventListener('click', e => {
+  const btn = e.target.closest('.vg-btn');
+  if (!btn) return;
+  document.querySelectorAll('#periodeFilter .vg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activePeriode = btn.dataset.periode;
+  rebuild();
+});
+
+// ── D3 helpers ────────────────────────────────────────────────
+function d3svg(containerId, height, m0) {
+  const el = document.getElementById(containerId);
+  if (!el) return null;
+  el.innerHTML = '';
+  const m = Object.assign({top:14,right:16,bottom:28,left:44}, m0||{});
+  const W = el.clientWidth || 400;
+  const H = height || 200;
+  const w = W - m.left - m.right;
+  const h = H - m.top - m.bottom;
+  const svg = d3.select(el).append('svg').attr('width',W).attr('height',H);
+  const g   = svg.append('g').attr('transform',`translate(${m.left},${m.top})`);
+  return { svg, g, w, h };
+}
+function axes(g, xSc, ySc, h, yFmt) {
+  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
+    .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
+  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickFormat(yFmt||String))
+    .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
+  g.selectAll('.domain,.tick line').style('stroke','rgba(255,255,255,0.08)');
+}
+function gridLines(g, ySc, w) {
+  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickSize(-w).tickFormat(''))
+    .selectAll('line').style('stroke','rgba(255,255,255,0.05)').style('stroke-dasharray','3,3');
+  g.select('.domain').remove();
+}
+
+// Parse score string "12/20" → percentage
+function parseScore(v) {
+  if (!v || !String(v).includes('/')) return 0;
+  const [a,b] = String(v).split('/');
+  return b > 0 ? Math.round(a/b*100) : 0;
+}
+
+// Filter sessions by periode
+function filterSessions(ss) {
+  if (activePeriode === 'first3') return ss.slice(0, 3);
+  if (activePeriode === 'recent3') return ss.slice(-3);
+  return ss;
+}
+
+// Delta color
+function deltaCol(delta, invert) {
+  if (invert) delta = -delta;
+  return delta > 2 ? '#00B894' : delta >= -2 ? '#FDCB6E' : '#ff7675';
+}
+
+// ── Build charts ──────────────────────────────────────────────
+function buildChart(containerId, labels, datasets, height, yFmt) {
+  const d = d3svg(containerId, height || 200);
+  if (!d) return;
+  const { g, w, h } = d;
+  const xSc = d3.scalePoint().domain(labels).range([0,w]);
+  const maxVal = d3.max(datasets.flatMap(ds=>ds.data))*1.1 || 10;
+  const ySc = d3.scaleLinear().domain([0, maxVal]).range([h,0]);
+  gridLines(g, ySc, w);
+  datasets.forEach(ds => {
+    const lineFn = d3.line().x((_,i)=>xSc(labels[i])).y(v=>ySc(v)).curve(d3.curveCatmullRom);
+    if (ds.area) {
+      g.append('path').datum(ds.data).attr('fill',ds.color+'22')
+        .attr('d', d3.area().x((_,i)=>xSc(labels[i])).y0(h).y1(v=>ySc(v)).curve(d3.curveCatmullRom));
+    }
+    g.append('path').datum(ds.data).attr('fill','none').attr('stroke',ds.color).attr('stroke-width',2.5).attr('d',lineFn);
+    ds.data.forEach((v,i) => {
+      const col = ds.deltaColor && i > 0 ? deltaCol(v - ds.data[i-1], ds.invert||false) : ds.color;
+      g.append('circle').attr('cx',xSc(labels[i])).attr('cy',ySc(v)).attr('r',5)
+        .attr('fill',col).attr('stroke','#0a0b0f').attr('stroke-width',1.5);
+    });
+  });
+  if (datasets.length > 1) {
+    const leg = g.append('g').attr('transform',`translate(0,-2)`);
+    datasets.forEach((ds,i) => {
+      leg.append('rect').attr('x',i*90).attr('width',10).attr('height',3).attr('fill',ds.color).attr('rx',1);
+      leg.append('text').attr('x',i*90+14).attr('y',4).text(ds.label).style('fill','#888').style('font-size','9px').style('font-family',"'DM Mono',monospace");
+    });
+  }
+  axes(g, xSc, ySc, h, yFmt);
+}
+
+function buildBarChart(containerId, labels, data, colorFn, height, yFmt) {
+  const d = d3svg(containerId, height || 200);
+  if (!d) return;
+  const { g, w, h } = d;
+  const xSc = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
+  const ySc = d3.scaleLinear().domain([0, d3.max(data)*1.15||10]).range([h,0]);
+  gridLines(g, ySc, w);
+  g.selectAll('.bar').data(data).enter().append('rect')
+    .attr('x',(_,i)=>xSc(labels[i])).attr('y',v=>ySc(v))
+    .attr('width',xSc.bandwidth()).attr('height',v=>h-ySc(v))
+    .attr('fill',(v,i)=>colorFn(v,i)+'BB').attr('stroke',(v,i)=>colorFn(v,i)).attr('stroke-width',1.5).attr('rx',4);
+  // value labels
+  g.selectAll('.lbl').data(data).enter().append('text')
+    .attr('x',(_,i)=>xSc(labels[i])+xSc.bandwidth()/2).attr('y',v=>ySc(v)-4)
+    .attr('text-anchor','middle').text(v=>yFmt?yFmt(v):v)
+    .style('fill','#888').style('font-size','10px').style('font-family',"'DM Mono',monospace");
+  axes(g, xSc, ySc, h, yFmt);
+}
+
+// ── Main rebuild ──────────────────────────────────────────────
+function rebuild() {
+  const p  = ALL_PATIENTS_META.find(x => x.nr === currentNr);
+  const allSS = ALL_SESSIONS[currentNr] || [];
+  const ss = filterSessions(allSS);
+  const labels = ss.map(s => `S${s.sessie}`);
+  const first = allSS[0] || {};
+  const last  = allSS[allSS.length-1] || {};
+
+  // ── KPIs ──
+  const symDelta  = last.sym_index  - first.sym_index;
+  const pijnDelta = last.pijn       - first.pijn;
+  const enerDelta = last.energie    - first.energie;
+  const ketelAvgPct = ss.length ? Math.round(ss.reduce((s,x)=>s+(x.ketel_aangeboden?x.ketel_correct/x.ketel_aangeboden*100:0),0)/ss.length) : 0;
+
+  const kpis = [
+    { val:`${last.sym_index||'—'}%`, label:'Symmetrie nu', delta:symDelta, unit:'pp', invert:false, color:'#4ECDC4' },
+    { val:`${last.pijn||'—'}/10`,    label:'Pijnscore nu',  delta:pijnDelta,unit:'/10',invert:true, color:'#ff7675' },
+    { val:`${last.energie||'—'}/10`, label:'Energie nu',    delta:enerDelta,unit:'/10',invert:false,color:'#00B894' },
+    { val:`${ketelAvgPct}%`,         label:'Ketel gem. score', delta:0,    unit:'',   invert:false,color:'#FDCB6E' },
+  ];
+  document.getElementById('vgKpis').innerHTML = kpis.map(k=>{
+    const good = k.invert ? k.delta<0 : k.delta>0;
+    const col  = k.delta===0?'#7a7f8e':good?'#00B894':'#ff7675';
+    const sign = k.delta>0?'+':'';
+    return `<div class="vg-kpi">
+      <div class="vg-kpi-val" style="color:${k.color}">${k.val}</div>
+      <div class="vg-kpi-label">${k.label}</div>
+      ${k.delta!==0?`<div class="vg-kpi-delta" style="color:${col}">${sign}${k.delta}${k.unit} t.o.v. S1</div>`:''}
+    </div>`;
+  }).join('');
+
+  // ── Charts grid ──
+  const grid = document.getElementById('vgChartsGrid');
+  grid.innerHTML = '';
+
+  const card = (id, title, sub, fullWidth) => {
+    const div = document.createElement('div');
+    div.className = 'vg-card' + (fullWidth?' vg-full':'');
+    div.innerHTML = `<div class="vg-card-title">${title}</div><div class="vg-card-sub">${sub}</div><div class="vg-chart" id="${id}"></div>`;
+    grid.appendChild(div);
+    return id;
+  };
+
+  // SYMMETRIE (altijd zichtbaar)
+  if (activeGame === 'all') {
+    const cId = card('c-sym', 'Symmetrie-index', 'Gekleurde punten = delta t.o.v. vorige sessie');
+    requestAnimationFrame(() => buildChart(cId, labels, [{
+      label:'Symmetrie', color:'#4ECDC4', area:true, deltaColor:true,
+      data: ss.map(s=>s.sym_index)
+    }], 200, v=>v+'%'));
+
+    const cId2 = card('c-wb', 'Welzijn — pijn, frustratie & energie', 'Pijn/frustratie: lager = beter · Energie: hoger = beter');
+    requestAnimationFrame(() => buildChart(cId2, labels, [
+      { label:'Pijn (↓)', color:'#ff7675', data: ss.map(s=>s.pijn) },
+      { label:'Frustratie (↓)', color:'#FDCB6E', data: ss.map(s=>s.frustratie) },
+      { label:'Energie (↑)', color:'#00B894', data: ss.map(s=>s.energie) },
+    ], 200, v=>v+'/10'));
+
+    // Gyroscoop aangedane vs gezonde arm
+    const lIsAan = p.zijde === 'Links';
+    const cId3 = card('c-gyr', 'Gyroscoop — aangedane vs gezonde arm', 'Aangedane arm (rood) t.o.v. gezonde arm (grijs)');
+    requestAnimationFrame(() => buildChart(cId3, labels, [
+      { label:p.zijde+' (aangedaan)', color:'#ff7675', area:true, deltaColor:true,
+        data: ss.map(s => lIsAan ? s.gyr_links : s.gyr_rechts) },
+      { label:(lIsAan?'Rechts':'Links')+' (gezond)', color:'#64748b',
+        data: ss.map(s => lIsAan ? s.gyr_rechts : s.gyr_links) },
+    ], 200, v=>v+'°/s'));
+  }
+
+  // HOLOMOVES
+  if (activeGame === 'all' || activeGame === 'holomoves') {
+    const cats = ['reiken','ROM','hand_los','vrije_ruimte','palmaire_greep'];
+    const catLabels = ['Reiken','ROM','Hand los','Vrije ruimte','Palmaire greep'];
+    const colors = ['#4ECDC4','#A29BFE','#FD79A8','#FDCB6E','#00B894'];
+    const id = card('c-holo', '🎮 Holomoves — scores per categorie', 'Score als % van maximum per oefening');
+    requestAnimationFrame(() => buildChart(id, labels,
+      cats.map((c,i)=>({ label:catLabels[i], color:colors[i], data:ss.map(s=>parseScore(s[c])) })),
+      200, v=>v+'%'));
+  }
+
+  // BLOKKI
+  if (activeGame === 'all' || activeGame === 'blokki') {
+    const id = card('c-blokki', '🧱 InMotion Blokki — pijnscore per sessie', 'Lagere pijn = beter draagbaar tijdens spel');
+    requestAnimationFrame(() => buildBarChart(id, labels,
+      ss.map(s=>s.blokki_pijn||0),
+      v => v>6?'#ff7675':v>3?'#FDCB6E':'#00B894',
+      200, v=>v+'/10'));
+  }
+
+  // KETEL
+  if (activeGame === 'all' || activeGame === 'ketel') {
+    const id = card('c-ketel', '🫙 Magische Ketel — treffscore %', 'Correct beantwoord als % van aangeboden');
+    const ketelPcts = ss.map(s => s.ketel_aangeboden ? Math.round(s.ketel_correct/s.ketel_aangeboden*100) : 0);
+    requestAnimationFrame(() => buildBarChart(id, labels, ketelPcts,
+      v => v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675',
+      200, v=>v+'%'));
+  }
+
+  // Insight
+  const symLast3 = allSS.length >= 2 ? allSS[allSS.length-1].sym_index - allSS[allSS.length-2].sym_index : 0;
+  const trend = symLast3 > 2 ? '📈 Positieve trend' : symLast3 < -2 ? '📉 Terugval' : '→ Stabiel';
+  document.getElementById('insightBox').innerHTML = `
+    <div class="insight-icon">📊</div>
+    <div class="insight-text">
+      <strong>Voortgang — ${p.naam}:</strong>
+      Symmetrie van <strong>${first.sym_index||'—'}%</strong> → <strong>${last.sym_index||'—'}%</strong>
+      (+${symDelta}pp totaal). ${trend} t.o.v. vorige sessie.
+      Huidige ketel treffscore gemiddeld <strong>${ketelAvgPct}%</strong> over de geselecteerde sessies.
+    </div>`;
+}
+
+function selectPatient(nr) {
+  currentNr = nr;
+  const p = ALL_PATIENTS_META.find(x => x.nr === nr);
+  document.getElementById('psAvatar').textContent = p.naam[0];
+  document.getElementById('psName').textContent   = p.naam;
+  document.getElementById('psId').textContent     = '#' + p.nr;
+  document.getElementById('pageTitle').textContent = p.naam + ' — Voortgang';
+  document.getElementById('pageDesc').textContent  = `${p.caras} · ${p.kliniek} · ${p.zijde} aangedaan`;
+  document.querySelectorAll('.ps-item').forEach(el => el.classList.toggle('active', el.dataset.nr===nr));
+  rebuild();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildPatientList();
+  selectPatient(currentNr);
+});
+</script>
+</body>
+</html>
