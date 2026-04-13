@@ -333,6 +333,7 @@
       <a href="index.html" class="nav-link">Dashboard</a>
       <a href="patient.html" class="nav-link">Patiënt</a>
       <a href="sessies.html" class="nav-link active">Sessies</a>
+      <a href="voortgang.html" class="nav-link">Voortgang</a>
     </nav>
     <div class="patient-selector" id="patientSelector">
       <div class="ps-trigger" id="psTrigger">
@@ -373,7 +374,7 @@
     <div class="progress-charts">
       <div class="chart-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px">
         <div class="chart-card-title">Symmetrie-index — alle sessies</div>
-        <div class="chart-card-sub">Groene stippellijn = doel (80%). Kleur toont status per sessie.</div>
+        <div class="chart-card-sub">Groene stippellijn = referentie gezond. Kleur toont status per sessie.</div>
         <div class="chart-wrap"><canvas id="symProgressChart"></canvas></div>
       </div>
       <div class="chart-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px">
@@ -406,7 +407,7 @@
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
-    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a></div>
+    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a></div>
     <div class="footer-note" id="footNote">IMU data — 2026</div>
   </div>
 </footer>
@@ -425,20 +426,39 @@ const SENSOR_COLORS = {
   "Onderarm Rechts": "#00B894"
 };
 
-// Klinische referentiewaarden (gezonde populatie)
-// Gyroscoop: gemiddeld bereik tijdens revalidatieoefeningen bij gezonde volwassenen
-const GYR_REF = {
-  "Schouder Links":  22, "Schouder Rechts": 22,
-  "Bovenarm Links":  35, "Bovenarm Rechts": 35,
-  "Onderarm Links":  45, "Onderarm Rechts": 45,
-  "Sternum (Borst)": 12,
-};
-const ACC_REF = {
-  "Schouder Links":  14, "Schouder Rechts": 14,
-  "Bovenarm Links":  28, "Bovenarm Rechts": 28,
-  "Onderarm Links":  38, "Onderarm Rechts": 38,
-  "Sternum (Borst)": 18,
-};
+// Referentiewaarden = gezonde zijde van deze patient (sessie 1 nulmeting)
+// Wordt dynamisch berekend op basis van p.zijde en sessie 1 gyro-waarden
+function buildRefStats(nr) {
+  const p   = ALL_PATIENTS_META.find(x => x.nr === nr);
+  const ss  = ALL_SESSIONS[nr] || [];
+  const s1  = ss[0] || {};
+  const lIsAan = p && p.zijde === 'Links';
+  // Gezonde kant sessie 1 = referentie
+  const gGez = lIsAan ? (s1.gyr_rechts || 0) : (s1.gyr_links || 0);
+  const aGez = s1.acc_max_links || 20;
+  const GYR_REF = {
+    "Schouder Links":  +(gGez*0.72).toFixed(1),
+    "Schouder Rechts": +(gGez*0.85).toFixed(1),
+    "Bovenarm Links":  +gGez.toFixed(1),
+    "Bovenarm Rechts": +gGez.toFixed(1),
+    "Onderarm Links":  +(gGez*1.22).toFixed(1),
+    "Onderarm Rechts": +(gGez*1.34).toFixed(1),
+    "Sternum (Borst)": 11.45,
+  };
+  const ACC_REF = {
+    "Schouder Links":  16.94,
+    "Schouder Rechts": 19.27,
+    "Bovenarm Links":  +aGez.toFixed(1),
+    "Bovenarm Rechts": 15.71,
+    "Onderarm Links":  +(aGez*1.1).toFixed(1),
+    "Onderarm Rechts": 26.71,
+    "Sternum (Borst)": 21.84,
+  };
+  return { GYR_REF, ACC_REF };
+}
+// GYR_REF / ACC_REF worden gezet in selectPatient via buildRefStats
+let GYR_REF = {};
+let ACC_REF = {};
 
 let currentNr = ALL_PATIENTS_META[0].nr;
 let currentSessIdx = null; // null = laatste
@@ -462,8 +482,8 @@ function getSensorData(ss, sessIdx) {
   const aL = s.acc_max_links || 20;
   return {
     "Sternum (Borst)":  { gyr: 11.45, acc: 21.84, gyr_ref: GYR_REF["Sternum (Borst)"], acc_ref: ACC_REF["Sternum (Borst)"] },
-    "Schouder Links":   { gyr: +(gL*0.72).toFixed(1),  acc: 16.94, gyr_ref: GYR_REF["Schouder Links"],  acc_ref: ACC_REF["Schouder Links"] },
-    "Schouder Rechts":  { gyr: +(gR*0.85).toFixed(1),  acc: 19.27, gyr_ref: GYR_REF["Schouder Rechts"], acc_ref: ACC_REF["Schouder Rechts"] },
+    "Schouder Links":   { gyr: s.gyr_links_sch  != null ? +s.gyr_links_sch.toFixed(1)  : +(gL*0.72).toFixed(1), acc: 16.94, gyr_ref: GYR_REF["Schouder Links"],  acc_ref: ACC_REF["Schouder Links"] },
+    "Schouder Rechts":  { gyr: s.gyr_rechts_sch != null ? +s.gyr_rechts_sch.toFixed(1) : +(gR*0.85).toFixed(1), acc: 19.27, gyr_ref: GYR_REF["Schouder Rechts"], acc_ref: ACC_REF["Schouder Rechts"] },
     "Bovenarm Links":   { gyr: +gL.toFixed(1),          acc: +aL.toFixed(1),   gyr_ref: GYR_REF["Bovenarm Links"],  acc_ref: ACC_REF["Bovenarm Links"] },
     "Bovenarm Rechts":  { gyr: +gR.toFixed(1),          acc: 15.71,            gyr_ref: GYR_REF["Bovenarm Rechts"], acc_ref: ACC_REF["Bovenarm Rechts"] },
     "Onderarm Links":   { gyr: +(gL*1.22).toFixed(1),   acc: +(aL*1.1).toFixed(1), gyr_ref: GYR_REF["Onderarm Links"],  acc_ref: ACC_REF["Onderarm Links"] },
@@ -573,7 +593,7 @@ function buildSessionDetail(ss, idx, p) {
           Symmetrie-index: <span style="color:${sc};font-weight:700">${s.sym_index}%</span>
           ${trend(s.sym_index, prev?.sym_index)}
           &nbsp;·&nbsp;
-          ${s.sym_index >= 80 ? '<span style="color:#00B894">✓ Doel bereikt</span>' : `<span style="color:var(--text-muted)">Nog ${80-s.sym_index}% tot doel (80%)</span>`}
+          ${s.sym_index >= 80 ? '<span style="color:#00B894">✓ Doel bereikt</span>' : `<span style="color:var(--text-muted)">Nog ${80-s.sym_index}% tot referentie gezond</span>`}
         </div>
       </div>
       <div style="text-align:right">
@@ -615,11 +635,9 @@ function buildSessionDetail(ss, idx, p) {
     </div>
 
     <!-- SENSOR DATA MET REFERENTIE -->
-    <div class="sess-section-title">Bewegingsintensiteit per sensor <span class="tag">vergeleken met gezonde norm</span></div>
+    <div class="sess-section-title">Bewegingsintensiteit per sensor <span class="tag">aangedane zijde + sternum · delta t.o.v. vorige sessie</span></div>
     <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">
-      De <strong style="color:rgba(255,255,255,0.4)">witte stippellijn</strong> toont de verwachte waarde bij volledig herstel (gezonde populatie).
-      Hoe dichter de balk bij de lijn, hoe beter de arm functioneert.
-      <span style="color:#ff7675">Rood</span> = ver onder norm · <span style="color:#FF9F43">Oranje</span> = matig · <span style="color:#00B894">Groen</span> = bij of boven norm.
+      Kleur = dichter bij gezonde zijde (S1) dan vorige sessie: <span style="color:#00B894">groen=beter</span> · <span style="color:#FDCB6E">geel=stabiel</span> · <span style="color:#FF9F43">oranje=iets verder</span> · <span style="color:#ff7675">rood=verder van referentie</span>. De aangedane arm compenseert overdreven bij hemiparese — daling richting gezonde waarde is herstel.
     </div>
     <table class="sensor-compare-table">
       <thead>
@@ -658,36 +676,68 @@ function buildSessionDetail(ss, idx, p) {
     </div>
   `;
 
-  // Fill sensor table
+  // Fill sensor table — alleen aangedane sensoren + Sternum
   const tbody = document.getElementById("sensorTable");
   if (!tbody) return;
-  const sensors = Object.keys(SENSOR_COLORS);
+
+  // Vorige sessie voor delta berekening
+  const prevSd = idx > 0 ? getSensorData(ss, idx - 1) : null;
+
+  const sensors = Object.keys(SENSOR_COLORS).filter(name => {
+    // Altijd Sternum tonen
+    if (name.includes('Sternum')) return true;
+    // Alleen aangedane zijde sensoren
+    return name.includes(aangedaan);
+  });
+
   sensors.forEach(name => {
-    const d = sd[name];
-    const pct = Math.min(100, Math.round(d.gyr / d.gyr_ref * 100));
-    const refPct = 100; // reference is always 100% of its own value
-    const col = pct >= 90 ? '#00B894' : pct >= 65 ? '#FDCB6E' : pct >= 45 ? '#FF9F43' : '#ff7675';
-    const statusLabel = pct >= 90 ? 'Bij norm' : pct >= 65 ? 'Matig' : pct >= 45 ? 'Onder norm' : 'Ver onder';
-    const statusClass = pct >= 90 ? 'chip-ok' : pct >= 65 ? 'chip-warn' : 'chip-bad';
-    const isAangedaan = name.includes(aangedaan);
+    const d    = sd[name];
+    const dPrev = prevSd ? prevSd[name] : null;
+
+    // Kleur op basis van delta t.o.v. vorige sessie (niet vs. norm)
+    let col, statusLabel, statusClass;
+    if (!dPrev || name.includes('Sternum')) {
+      // Sternum of eerste sessie: vergelijk met eigen referentie
+      const pctRef = Math.min(100, Math.round(d.gyr / (d.gyr_ref || 1) * 100));
+      col         = pctRef >= 90 ? '#00B894' : pctRef >= 65 ? '#FDCB6E' : pctRef >= 45 ? '#FF9F43' : '#ff7675';
+      statusLabel = name.includes('Sternum') ? 'Sternum' : 'Eerste sessie';
+      statusClass = pctRef >= 90 ? 'chip-ok' : pctRef >= 65 ? 'chip-warn' : 'chip-bad';
+    } else {
+      // Kleur = hoe dichter bij referentie (gezonde zijde S1) dan vorige sessie
+      // Aangedane arm bij hemiparese compenseert overdreven → dalende waarde richting ref = beter
+      const ref   = d.gyr_ref || 1;
+      const distNow  = Math.abs(d.gyr - ref);
+      const distPrev = Math.abs(dPrev.gyr - ref);
+      const improvement = distPrev - distNow; // positief = dichter bij ref = beter
+      const pctImprove  = (improvement / Math.max(distPrev, 0.1)) * 100;
+
+      if      (pctImprove >=  5) { col = '#00B894'; statusLabel = '↑ Dichter bij referentie'; statusClass = 'chip-ok'; }
+      else if (pctImprove >=  0) { col = '#FDCB6E'; statusLabel = '→ Stabiel';                statusClass = 'chip-warn'; }
+      else if (pctImprove >= -15){ col = '#FF9F43'; statusLabel = '↓ Iets verder van ref.';   statusClass = 'chip-warn'; }
+      else                       { col = '#ff7675'; statusLabel = '↓↓ Verder van referentie'; statusClass = 'chip-bad'; }
+    }
+
+    // Balk: hoe ver t.o.v. referentie (gezonde zijde S1)
+    const refVal = d.gyr_ref || 1;
+    const pctBar = Math.min(120, Math.round(d.gyr / refVal * 100));
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>
         <span class="sensor-dot-sm" style="background:${SENSOR_COLORS[name]}"></span>
         <span style="color:var(--text)">${name}</span>
-        ${isAangedaan && !name.includes('Sternum') ? '<span class="status-chip chip-bad" style="margin-left:6px;font-size:9px">aangedaan</span>' : ''}
+        ${!name.includes('Sternum') ? '<span class="status-chip chip-bad" style="margin-left:6px;font-size:9px">aangedaan</span>' : ''}
       </td>
       <td>
         <div class="perf-bar-wrap">
           <div class="perf-bar-track">
-            <div class="perf-bar-fill" style="width:${Math.min(pct,100)}%;background:${col}"></div>
-            <div class="perf-bar-ref" style="left:${Math.min(refPct,100)}%" data-label="norm ${d.gyr_ref}°/s"></div>
+            <div class="perf-bar-fill" style="width:${Math.min(pctBar,100)}%;background:${col}"></div>
+            <div class="perf-bar-ref" style="left:100%" data-label="ref ${refVal}°/s"></div>
           </div>
           <span class="perf-val" style="color:${col}">${d.gyr} °/s</span>
         </div>
       </td>
-      <td><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">${pct}% van norm</span></td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">${pctBar}% van ref. S1</span></td>
       <td><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text)">${d.acc}</span> <span style="font-size:10px;color:var(--text-muted)">/ ref ${d.acc_ref}</span></td>
       <td><span class="status-chip ${statusClass}">${statusLabel}</span></td>
     `;
@@ -724,7 +774,7 @@ function buildProgressCharts(ss, p) {
           tension: 0.4
         },
         {
-          label: "Doel (80%)",
+          label: "Gezonde zijde S1",
           data: Array(labels.length).fill(80),
           borderColor: "#00B894",
           borderDash: [5, 4],
@@ -747,8 +797,8 @@ function buildProgressCharts(ss, p) {
         { label: "Pijn (↓)", data: ss.map(s=>s.pijn), borderColor:"#ff7675", backgroundColor:"#ff767515", borderWidth:2, pointRadius:4, fill:false, tension:0.4 },
         { label: "Frustratie (↓)", data: ss.map(s=>s.frustratie), borderColor:"#FDCB6E", borderWidth:2, pointRadius:4, fill:false, tension:0.4 },
         { label: "Energie (↑)", data: ss.map(s=>s.energie), borderColor:"#00B894", backgroundColor:"#00B89415", borderWidth:2, pointRadius:4, fill:false, tension:0.4 },
-        { label: "Doel pijn/frus ≤3", data: Array(labels.length).fill(3), borderColor:"#ff767555", borderDash:[4,3], borderWidth:1.5, pointRadius:0 },
-        { label: "Doel energie ≥8", data: Array(labels.length).fill(8), borderColor:"#00B89455", borderDash:[4,3], borderWidth:1.5, pointRadius:0 },
+        { label: "Norm pijn/frus ≤3", data: Array(labels.length).fill(3), borderColor:"#ff767555", borderDash:[4,3], borderWidth:1.5, pointRadius:0 },
+        { label: "Norm energie ≥8", data: Array(labels.length).fill(8), borderColor:"#00B89455", borderDash:[4,3], borderWidth:1.5, pointRadius:0 },
       ]
     },
     options: chartOpts({ scales: { x: { ticks:{color:'#666',font:{family:"'DM Mono'",size:10}}, grid:{display:false} }, y: { min:0, max:10, ticks:{color:'#666',font:{family:"'DM Mono'"}}, grid:{color:'rgba(255,255,255,0.04)'} } } })
@@ -757,7 +807,7 @@ function buildProgressCharts(ss, p) {
   // Gyro chart — aangedane vs gezonde arm + referentielijn
   const gyrAangedaan = ss.map(s => aangedaan==="Links" ? +s.gyr_links.toFixed(1) : +s.gyr_rechts.toFixed(1));
   const gyrGezond    = ss.map(s => aangedaan==="Links" ? +s.gyr_rechts.toFixed(1) : +s.gyr_links.toFixed(1));
-  const refVal = GYR_REF["Bovenarm Links"]; // 35 °/s als norm
+  const refVal = GYR_REF["Bovenarm Links"]; // gezonde zijde S1 als norm
 
   if (charts.gyro) charts.gyro.destroy();
   charts.gyro = new Chart(document.getElementById("gyroProgressChart"), {
@@ -776,7 +826,7 @@ function buildProgressCharts(ss, p) {
           tension: 0.4
         },
         {
-          label: `${aangedaan==="Links"?"Rechts":"Links"} (gezond)`,
+          label: `${aangedaan==="Links"?"Rechts":"Links"} (gezond — referentie)`, hidden: true,
           data: gyrGezond,
           borderColor: "#00B894",
           backgroundColor: "rgba(0,184,148,0.08)",
@@ -786,7 +836,7 @@ function buildProgressCharts(ss, p) {
           tension: 0.4
         },
         {
-          label: `Norm gezond (${refVal} °/s)`,
+          label: `Gezonde zijde S1 (${refVal}°/s)`,
           data: Array(labels.length).fill(refVal),
           borderColor: "rgba(255,255,255,0.3)",
           borderDash: [6, 4],
@@ -875,6 +925,10 @@ function buildGoalMeters(ss) {
 function selectPatient(nr) {
   currentNr = nr;
   currentSessIdx = null;
+  // Referentiewaarden = gezonde zijde van DEZE patiënt (sessie 1 nulmeting)
+  const _refs = buildRefStats(nr);
+  GYR_REF = _refs.GYR_REF;
+  ACC_REF = _refs.ACC_REF;
   const p  = ALL_PATIENTS_META.find(x => x.nr === nr);
   const ss = ALL_SESSIONS[nr] || [];
   const last = ss[ss.length-1] || {};
