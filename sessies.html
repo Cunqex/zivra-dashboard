@@ -636,7 +636,7 @@ function buildSessionDetail(ss, idx, p) {
     <!-- SENSOR DATA MET REFERENTIE -->
     <div class="sess-section-title">Bewegingsintensiteit per sensor <span class="tag">aangedane zijde + sternum · delta t.o.v. vorige sessie</span></div>
     <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">
-      Kleur = delta t.o.v. vorige sessie: <span style="color:#00B894">groen=beter</span> · <span style="color:#FDCB6E">geel=stabiel</span> · <span style="color:#FF9F43">oranje=slechter</span> · <span style="color:#ff7675">rood=veel slechter</span>. Balk = waarde t.o.v. gezonde zijde sessie 1 (nulmeting). Alleen aangedane sensoren + Sternum worden getoond.
+      Kleur = dichter bij gezonde zijde (S1) dan vorige sessie: <span style="color:#00B894">groen=beter</span> · <span style="color:#FDCB6E">geel=stabiel</span> · <span style="color:#FF9F43">oranje=iets verder</span> · <span style="color:#ff7675">rood=verder van referentie</span>. De aangedane arm compenseert overdreven bij hemiparese — daling richting gezonde waarde is herstel.
     </div>
     <table class="sensor-compare-table">
       <thead>
@@ -702,12 +702,18 @@ function buildSessionDetail(ss, idx, p) {
       statusLabel = name.includes('Sternum') ? 'Sternum' : 'Eerste sessie';
       statusClass = pctRef >= 90 ? 'chip-ok' : pctRef >= 65 ? 'chip-warn' : 'chip-bad';
     } else {
-      // Delta t.o.v. vorige sessie — positief = meer beweging = beter voor aangedane zijde
-      const delta = ((d.gyr - dPrev.gyr) / Math.max(dPrev.gyr, 0.1)) * 100;
-      if      (delta >=  5) { col = '#00B894'; statusLabel = '↑ Beter dan vorige';    statusClass = 'chip-ok'; }
-      else if (delta >=  0) { col = '#FDCB6E'; statusLabel = '→ Stabiel';             statusClass = 'chip-warn'; }
-      else if (delta >= -10){ col = '#FF9F43'; statusLabel = '↓ Licht slechter';      statusClass = 'chip-warn'; }
-      else                  { col = '#ff7675'; statusLabel = '↓↓ Significant slechter'; statusClass = 'chip-bad'; }
+      // Kleur = hoe dichter bij referentie (gezonde zijde S1) dan vorige sessie
+      // Aangedane arm bij hemiparese compenseert overdreven → dalende waarde richting ref = beter
+      const ref   = d.gyr_ref || 1;
+      const distNow  = Math.abs(d.gyr - ref);
+      const distPrev = Math.abs(dPrev.gyr - ref);
+      const improvement = distPrev - distNow; // positief = dichter bij ref = beter
+      const pctImprove  = (improvement / Math.max(distPrev, 0.1)) * 100;
+
+      if      (pctImprove >=  5) { col = '#00B894'; statusLabel = '↑ Dichter bij referentie'; statusClass = 'chip-ok'; }
+      else if (pctImprove >=  0) { col = '#FDCB6E'; statusLabel = '→ Stabiel';                statusClass = 'chip-warn'; }
+      else if (pctImprove >= -15){ col = '#FF9F43'; statusLabel = '↓ Iets verder van ref.';   statusClass = 'chip-warn'; }
+      else                       { col = '#ff7675'; statusLabel = '↓↓ Verder van referentie'; statusClass = 'chip-bad'; }
     }
 
     // Balk: hoe ver t.o.v. referentie (gezonde zijde S1)
