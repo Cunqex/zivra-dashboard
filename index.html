@@ -26,15 +26,15 @@
     }
 
     /* ── NAV BUTTONS (right panel) ── */
-    .bh-nav-btns { display: flex; flex-direction: column; gap: 8px; }
+    .bh-nav-btns { display: flex; flex-direction: column; gap: 6px; }
     .bh-nav-btn {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
+      gap: 8px;
+      padding: 9px 12px;
       background: var(--bg3);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 10px;
       text-decoration: none;
       color: var(--text);
       transition: all 0.15s;
@@ -45,23 +45,23 @@
       background: rgba(78,205,196,0.06);
       transform: translateX(2px);
     }
-    .bh-nav-icon { font-size: 20px; flex-shrink: 0; }
+    .bh-nav-icon { font-size: 16px; flex-shrink: 0; }
     .bh-nav-text { flex: 1; }
     .bh-nav-title {
       font-family: 'Syne', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text);
     }
     .bh-nav-sub {
       font-family: 'DM Mono', monospace;
-      font-size: 10px;
+      font-size: 9px;
       color: var(--text-muted);
       margin-top: 1px;
     }
     .bh-nav-arrow {
       font-family: 'DM Mono', monospace;
-      font-size: 14px;
+      font-size: 12px;
       color: var(--accent);
       opacity: 0;
       transition: opacity 0.15s;
@@ -197,26 +197,6 @@
         </div>
       </div>
 
-      <div class="bh-divider"></div>
-
-      <!-- ARMBEWEGING VERGELIJKING -->
-      <div class="bh-stat-label" style="margin-bottom:8px">Armbeweging (gyroscoop)</div>
-      <div class="bh-arm-compare">
-        <div class="bh-arm-bar-wrap">
-          <div class="bh-arm-bar-label" id="bh-arm-l-label">Links</div>
-          <div class="bh-arm-bar-row">
-            <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-l-fill"></div></div>
-            <span class="bh-arm-val" id="bh-arm-l-val">—</span>
-          </div>
-        </div>
-        <div class="bh-arm-bar-wrap">
-          <div class="bh-arm-bar-label" id="bh-arm-r-label">Rechts</div>
-          <div class="bh-arm-bar-row">
-            <div class="bh-arm-track"><div class="bh-arm-fill" id="bh-arm-r-fill"></div></div>
-            <span class="bh-arm-val" id="bh-arm-r-val">—</span>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- CENTER: grote body SVG -->
@@ -412,20 +392,20 @@
       <div class="bh-divider"></div>
 
       <!-- NAVIGATIE KNOPPEN -->
-      <div class="bh-stat-label" style="margin-bottom:10px">Verdiep in detail</div>
+      <div class="bh-stat-label" style="margin-bottom:8px">Verdiep in detail</div>
       <div class="bh-nav-btns">
         <a href="sessies.html" class="bh-nav-btn">
           <span class="bh-nav-icon">📋</span>
           <div class="bh-nav-text">
             <div class="bh-nav-title">Alle sessies</div>
-            <div class="bh-nav-sub">Volledige sessietabel</div>
+            <div class="bh-nav-sub">Sensordata & spelresultaten</div>
           </div>
           <span class="bh-nav-arrow">→</span>
         </a>
         <a href="voortgang.html" class="bh-nav-btn">
           <span class="bh-nav-icon">📈</span>
           <div class="bh-nav-text">
-            <div class="bh-nav-title">Voortgang & grafieken</div>
+            <div class="bh-nav-title">Voortgang</div>
             <div class="bh-nav-sub">Per spel, per periode</div>
           </div>
           <span class="bh-nav-arrow">→</span>
@@ -697,49 +677,39 @@ function buildBodyHero(p, ss, sd) {
     trendBlock.innerHTML = '<span style="color:var(--text-muted);font-size:12px">Sessie 1 — geen vorige sessie</span>';
   }
 
-  // ---- ARM KLEUREN op basis van aangedane zijde ----
-  // Gezonde zijde = groen, aangedane zijde = kleur op basis van prestatie
+  // ---- ARM KLEUREN — afstand tot gezonde zijde S1 (zelfde logica als sessies pagina) ----
   const gyrL   = sd["Bovenarm Links"].gyr_mean;
   const gyrR   = sd["Bovenarm Rechts"].gyr_mean;
   const maxGyr = Math.max(gyrL, gyrR, 1);
   const ratioL = gyrL / maxGyr;
   const ratioR = gyrR / maxGyr;
 
-  // Gezonde arm = groen. Aangedane arm = rood/oranje/geel op basis van ratio
-  // Aangedane arm kleur op basis van sym_index
-  // <55  = rood, 55-74 = oranje, 75-89 = geel, 90+ = lichtgroen (anders tint dan gezond)
-  // Bolletjes aangedane zijde: kleur op basis van DELTA t.o.v. vorige sessie
-  // Referentie = sessie 1 (nulmeting = gezonde zijde wordt als baseline gebruikt)
-  // Vergelijking: huidige gyr vs vorige sessie gyr van de AANGEDANE kant
-  function aangedaanKleurDelta(curGyr, prevGyr) {
-    if (!prevGyr || prevGyr === 0) return '#64748b'; // eerste sessie: neutraal grijs
-    const delta = ((curGyr - prevGyr) / prevGyr) * 100; // % verandering
-    if (delta >= 5)    return '#00B894'; // groen  — duidelijk beter (≥5% toename)
-    if (delta >= 0)    return '#FDCB6E'; // geel   — iets beter of gelijk
-    if (delta >= -10)  return '#FF9F43'; // oranje — licht slechter
-    return '#ff7675';                    // rood   — significant slechter (>10% afname)
+  // Referentie = gezonde zijde sessie 1
+  const sess1       = ss[0] || {};
+  const gyrGezondS1 = lIsAangedaan ? (sess1.gyr_rechts || 0) : (sess1.gyr_links || 0);
+
+  // Kleur: hoe dichter aangedane arm bij gezonde zijde S1, hoe beter
+  // Werkt voor zowel overcompensatie (te hoog) als onderbeweging (te laag)
+  function kleurAfstandRef(curGyr, prevGyr, ref) {
+    if (!prevGyr || !ref) return '#64748b'; // eerste sessie
+    const distNow  = Math.abs(curGyr  - ref);
+    const distPrev = Math.abs(prevGyr - ref);
+    const imp = (distPrev - distNow) / Math.max(distPrev, 0.1) * 100;
+    if (imp >=  5) return '#00B894'; // groen  — dichter bij ref
+    if (imp >=  0) return '#FDCB6E'; // geel   — stabiel
+    if (imp >= -15) return '#FF9F43'; // oranje — iets verder
+    return '#ff7675';                 // rood   — significant verder
   }
 
-  // Vorige sessie data ophalen voor delta berekening
-  const prevSessie = sessieIdx > 0 ? ss[sessieIdx - 1] : null;
+  const prevSessie       = sessieIdx > 0 ? ss[sessieIdx - 1] : null;
   const curGyrAangedaan  = lIsAangedaan ? (cur.gyr_links  || gyrL) : (cur.gyr_rechts || gyrR);
   const prevGyrAangedaan = prevSessie ? (lIsAangedaan ? prevSessie.gyr_links : prevSessie.gyr_rechts) : null;
 
-  const kleurAangedaan = aangedaanKleurDelta(curGyrAangedaan, prevGyrAangedaan);
-  const kleurL = lIsAangedaan ? kleurAangedaan : '#64748b'; // gezonde zijde = grijs (neutraal)
+  const kleurAangedaan = kleurAfstandRef(curGyrAangedaan, prevGyrAangedaan, gyrGezondS1);
+  const kleurL = lIsAangedaan ? kleurAangedaan : '#64748b';
   const kleurR = !lIsAangedaan ? kleurAangedaan : '#64748b';
 
-  // Arm balkjes
-  const armLLabel = document.getElementById("bh-arm-l-label");
-  const armRLabel = document.getElementById("bh-arm-r-label");
-  const armLFill  = document.getElementById("bh-arm-l-fill");
-  const armRFill  = document.getElementById("bh-arm-r-fill");
-  if (armLLabel) { armLLabel.textContent = lIsAangedaan ? "Links (aangedaan)" : "Links (gezond)"; armLLabel.style.color = kleurL; }
-  if (armRLabel) { armRLabel.textContent = !lIsAangedaan ? "Rechts (aangedaan)" : "Rechts (gezond)"; armRLabel.style.color = kleurR; }
-  if (armLFill)  { armLFill.style.width = Math.round(ratioL * 100) + "%"; armLFill.style.background = kleurL; }
-  if (armRFill)  { armRFill.style.width = Math.round(ratioR * 100) + "%"; armRFill.style.background = kleurR; }
-  document.getElementById("bh-arm-l-val").textContent = gyrL.toFixed(1) + " °/s";
-  document.getElementById("bh-arm-r-val").textContent = gyrR.toFixed(1) + " °/s";
+
 
   // ---- POPPETJE ANNOTATIES ----
   // Sym% badge gecentreerd op torso bovenkant
