@@ -482,8 +482,8 @@ function getSensorData(ss, sessIdx) {
   const aL = s.acc_max_links || 20;
   return {
     "Sternum (Borst)":  { gyr: 11.45, acc: 21.84, gyr_ref: GYR_REF["Sternum (Borst)"], acc_ref: ACC_REF["Sternum (Borst)"] },
-    "Schouder Links":   { gyr: +(gL*0.72).toFixed(1),  acc: 16.94, gyr_ref: GYR_REF["Schouder Links"],  acc_ref: ACC_REF["Schouder Links"] },
-    "Schouder Rechts":  { gyr: +(gR*0.85).toFixed(1),  acc: 19.27, gyr_ref: GYR_REF["Schouder Rechts"], acc_ref: ACC_REF["Schouder Rechts"] },
+    "Schouder Links":   { gyr: s.gyr_links_sch  != null ? +s.gyr_links_sch.toFixed(1)  : +(gL*0.72).toFixed(1), acc: 16.94, gyr_ref: GYR_REF["Schouder Links"],  acc_ref: ACC_REF["Schouder Links"] },
+    "Schouder Rechts":  { gyr: s.gyr_rechts_sch != null ? +s.gyr_rechts_sch.toFixed(1) : +(gR*0.85).toFixed(1), acc: 19.27, gyr_ref: GYR_REF["Schouder Rechts"], acc_ref: ACC_REF["Schouder Rechts"] },
     "Bovenarm Links":   { gyr: +gL.toFixed(1),          acc: +aL.toFixed(1),   gyr_ref: GYR_REF["Bovenarm Links"],  acc_ref: ACC_REF["Bovenarm Links"] },
     "Bovenarm Rechts":  { gyr: +gR.toFixed(1),          acc: 15.71,            gyr_ref: GYR_REF["Bovenarm Rechts"], acc_ref: ACC_REF["Bovenarm Rechts"] },
     "Onderarm Links":   { gyr: +(gL*1.22).toFixed(1),   acc: +(aL*1.1).toFixed(1), gyr_ref: GYR_REF["Onderarm Links"],  acc_ref: ACC_REF["Onderarm Links"] },
@@ -774,7 +774,7 @@ function buildProgressCharts(ss, p) {
           tension: 0.4
         },
         {
-          label: "Referentie gezond",
+          label: "Gezonde zijde S1",
           data: Array(labels.length).fill(80),
           borderColor: "#00B894",
           borderDash: [5, 4],
@@ -836,7 +836,7 @@ function buildProgressCharts(ss, p) {
           tension: 0.4
         },
         {
-          label: `Gezonde zijde S1 (${refVal} °/s)`,
+          label: `Gezonde zijde S1 (${refVal}°/s)`,
           data: Array(labels.length).fill(refVal),
           borderColor: "rgba(255,255,255,0.3)",
           borderDash: [6, 4],
@@ -925,7 +925,7 @@ function buildGoalMeters(ss) {
 function selectPatient(nr) {
   currentNr = nr;
   currentSessIdx = null;
-  // Update referentiewaarden naar gezonde zijde van DEZE patient
+  // Referentiewaarden = gezonde zijde van DEZE patiënt (sessie 1 nulmeting)
   const _refs = buildRefStats(nr);
   GYR_REF = _refs.GYR_REF;
   ACC_REF = _refs.ACC_REF;
