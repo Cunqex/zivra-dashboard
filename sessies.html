@@ -333,7 +333,7 @@
       <a href="index.html" class="nav-link">Dashboard</a>
       <a href="patient.html" class="nav-link">Patiënt</a>
       <a href="sessies.html" class="nav-link active">Sessies</a>
-      <a href="voortgang.html" class="nav-link">Voortgang</a>
+      <a href="voortgang.html" class="nav-link active">Voortgang</a>
     </nav>
     <div class="patient-selector" id="patientSelector">
       <div class="ps-trigger" id="psTrigger">
@@ -774,7 +774,7 @@ function buildProgressCharts(ss, p) {
           tension: 0.4
         },
         {
-          label: "Gezonde zijde S1",
+          label: "Referentie gezond",
           data: Array(labels.length).fill(80),
           borderColor: "#00B894",
           borderDash: [5, 4],
@@ -836,7 +836,7 @@ function buildProgressCharts(ss, p) {
           tension: 0.4
         },
         {
-          label: `Gezonde zijde S1 (${refVal}°/s)`,
+          label: `Gezonde zijde S1 (${refVal} °/s)`,
           data: Array(labels.length).fill(refVal),
           borderColor: "rgba(255,255,255,0.3)",
           borderDash: [6, 4],
@@ -925,9 +925,6 @@ function buildGoalMeters(ss) {
 function selectPatient(nr) {
   currentNr = nr;
   currentSessIdx = null;
-  const _refs = buildRefStats(nr);
-  GYR_REF = _refs.GYR_REF;
-  ACC_REF = _refs.ACC_REF;
   // Update referentiewaarden naar gezonde zijde van DEZE patient
   const _refs = buildRefStats(nr);
   GYR_REF = _refs.GYR_REF;
