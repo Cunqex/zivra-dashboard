@@ -177,10 +177,10 @@
         </div>
       </div>
 
-      <!-- VOORTGANG T.O.V. SESSIE 1 -->
+      <!-- SYMMETRIE -->
       <div class="bh-progress-block">
         <div class="bh-progress-header">
-          <span class="bh-stat-label">Symmetrie t.o.v. sessie 1</span>
+          <span class="bh-stat-label">Symmetrie-index</span>
           <span class="bh-progress-pct" id="bhSymIndex">—</span>
         </div>
         <div class="bh-progress-track">
@@ -188,8 +188,8 @@
           <div class="bh-progress-goal"></div>
         </div>
         <div class="bh-progress-foot">
-          <span id="bhProgressStart">Start: —</span>
-          <span id="bhProgressNow">Nu: —</span>
+          <span id="bhProgressStart">Begin: —</span>
+          <span id="bhProgressNow">Huidig: —</span>
         </div>
       </div>
 
@@ -628,9 +628,10 @@ function buildBodyHero(p, ss, sd) {
   document.getElementById("bhSymIndex").textContent    = sym + '%';
   document.getElementById("bhSymIndex").style.color    = statusColor;
   const fill = document.getElementById("bhProgressFill");
-  if (fill) { fill.style.width = pct + '%'; fill.style.background = statusColor; }
-  document.getElementById("bhProgressStart").textContent = `Sessie 1: ${first.sym_index ?? '—'}%`;
-  document.getElementById("bhProgressNow").textContent   = `Laatste: ${sym}% (+${sym - (first.sym_index??sym)}pp)`;
+  if (fill) { fill.style.width = Math.min(sym, 100) + '%'; fill.style.background = statusColor; }
+  document.getElementById("bhProgressStart").textContent = `Begin: ${first.sym_index ?? '—'}%`;
+  const symDelta = sym - (first.sym_index ?? sym);
+  document.getElementById("bhProgressNow").textContent = `Huidig: ${sym}%${symDelta !== 0 ? ` (${symDelta > 0 ? '+' : ''}${symDelta}pp)` : ''}`;
 
   // ---- WELZIJN — emoji schaal ----
   const emojiPijn = (v) => v <= 2 ? '😄' : v <= 4 ? '🙂' : v <= 6 ? '😐' : v <= 8 ? '😟' : '😣';
@@ -660,11 +661,11 @@ function buildBodyHero(p, ss, sd) {
   // ---- GYRO — lIsAangedaan nog nodig voor arm-kleuren ----
   const lIsAangedaan = aangedaan === "Links";
 
-  // ---- VOORTGANG GRAFIEK — meerdere metrics ----
+  // ---- VOORTGANG GRAFIEK — pijn comfort + energie, met y-as ----
   const sparkEl = document.getElementById("bhSparkline");
   if (sparkEl) {
     sparkEl.innerHTML = '';
-    const m = { top: 14, right: 6, bottom: 18, left: 6 };
+    const m = { top: 14, right: 6, bottom: 18, left: 28 };
     const W = sparkEl.clientWidth || 260;
     const H = 100;
     const w = W - m.left - m.right, h = H - m.top - m.bottom;
@@ -674,44 +675,49 @@ function buildBodyHero(p, ss, sd) {
     const svg = d3.select(sparkEl).append('svg').attr('width', W).attr('height', H);
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
 
-    // Dataset: symmetrie, comfort (10-pijn)*10, energie*10
-    const datasets = [
-      { key: 'sym',     vals: ss.map(s => s.sym_index),            color: '#4ECDC4', label: 'Sym.' },
-      { key: 'comfort', vals: ss.map(s => (10 - s.pijn) * 10),     color: '#00B894', label: 'Pijnvrij' },
-      { key: 'energie', vals: ss.map(s => s.energie * 10),         color: '#FDCB6E', label: 'Energie' },
-    ];
+    // Subtiele gridlijnen
+    [25, 50, 75].forEach(v => {
+      g.append('line').attr('x1', 0).attr('x2', w).attr('y1', ySc(v)).attr('y2', ySc(v))
+        .style('stroke', 'rgba(255,255,255,0.05)').style('stroke-dasharray', '3,3');
+    });
 
-    // Subtiele gridlijn op 50%
-    g.append('line').attr('x1', 0).attr('x2', w).attr('y1', ySc(50)).attr('y2', ySc(50))
-      .style('stroke', 'rgba(255,255,255,0.05)').style('stroke-dasharray', '3,3');
+    // Alleen pijnvrij en energie
+    const datasets = [
+      { vals: ss.map(s => (10 - s.pijn) * 10),  color: '#00B894', label: 'Pijnvrij' },
+      { vals: ss.map(s => s.energie * 10),        color: '#FDCB6E', label: 'Energie'  },
+    ];
 
     datasets.forEach(ds => {
       g.append('path').datum(ds.vals)
-        .attr('fill', 'none').attr('stroke', ds.color).attr('stroke-width', 2)
-        .attr('opacity', 0.85)
+        .attr('fill', 'none').attr('stroke', ds.color).attr('stroke-width', 2).attr('opacity', 0.9)
         .attr('d', d3.line().x((_, i) => xSc(lbls[i])).y(v => ySc(v)).curve(d3.curveCatmullRom));
-      // Huidig punt
       const v = ds.vals[sessieIdx];
       g.append('circle').attr('cx', xSc(lbls[sessieIdx])).attr('cy', ySc(v))
         .attr('r', 5).attr('fill', ds.color).attr('stroke', '#0a0b0f').attr('stroke-width', 1.5);
     });
 
-    // Legenda bovenaan
+    // Legenda
     datasets.forEach((ds, i) => {
-      g.append('rect').attr('x', i * (w/3)).attr('y', -12).attr('width', 10).attr('height', 3).attr('fill', ds.color).attr('rx', 1);
-      g.append('text').attr('x', i * (w/3) + 13).attr('y', -4).text(ds.label)
+      g.append('rect').attr('x', i * (w / 2)).attr('y', -12).attr('width', 10).attr('height', 3).attr('fill', ds.color).attr('rx', 1);
+      g.append('text').attr('x', i * (w / 2) + 13).attr('y', -4).text(ds.label)
         .style('fill', '#666').style('font-size', '9px').style('font-family', "'DM Mono',monospace");
     });
 
-    // X-as labels
+    // Y-as
+    g.append('g').call(d3.axisLeft(ySc).ticks(4).tickFormat(v => v + '%'))
+      .selectAll('text').style('fill', '#555').style('font-size', '9px').style('font-family', "'DM Mono',monospace");
+    g.select('.domain').remove();
+    g.selectAll('.tick line').style('stroke', 'rgba(255,255,255,0.08)');
+
+    // X-as
     g.append('g').attr('transform', `translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
       .selectAll('text').style('fill', '#555').style('font-size', '10px').style('font-family', "'DM Mono',monospace");
     g.selectAll('.domain').remove();
 
-    // Onderaan: delta symmetrie
+    // Onderaan: symmetrie huidig
     const delta = ss[sessieIdx].sym_index - ss[0].sym_index;
     const sparkNow = document.getElementById('bhSparkNow');
-    if (sparkNow) { sparkNow.textContent = `Sym: ${ss[sessieIdx].sym_index}% (${delta >= 0 ? '+' : ''}${delta}pp)`; sparkNow.style.color = delta > 2 ? '#00B894' : delta >= 0 ? '#FDCB6E' : '#ff7675'; }
+    if (sparkNow) { sparkNow.textContent = `Sym: ${ss[sessieIdx].sym_index}%`; sparkNow.style.color = '#9ba3b8'; }
     const sparkStart = document.getElementById('bhSparkStart');
     if (sparkStart) sparkStart.textContent = `S1: ${ss[0].sym_index}%`;
   }
