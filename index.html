@@ -230,18 +230,24 @@
 
         <!-- NEK -->
         <rect x="439" y="112" width="22" height="18" rx="5" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
-        <!-- TORSO -->
-        <rect x="358" y="128" width="184" height="172" rx="24" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
-
-        <!-- BATTERIJ — energie indicator, verticaal in torso rechts -->
-        <!-- Batterij omhulsel -->
-        <rect id="batt-bg"   x="570" y="148" width="28" height="54" rx="6" fill="var(--bg3)" stroke="var(--body-stroke)" stroke-width="1.5"/>
-        <!-- Batterij pluspool bovenop -->
-        <rect id="batt-tip"  x="578" y="141" width="12" height="7"  rx="3" fill="var(--body-stroke)"/>
-        <!-- Batterij vulling (wordt door JS aangepast: height + y) -->
-        <rect id="batt-fill" x="573" y="186" width="20" height="12" rx="3" fill="#64748b"/>
-        <!-- Batterij label -->
-        <text id="batt-pct" x="584" y="218" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" font-weight="700" fill="var(--text-muted)">—%</text>
+        <!-- TORSO ALS BATTERIJ -->
+        <!-- clipPath zodat de vulling de torso-vorm volgt -->
+        <defs>
+          <clipPath id="torso-clip">
+            <rect x="358" y="128" width="184" height="172" rx="24"/>
+          </clipPath>
+        </defs>
+        <!-- Torso achtergrond (leeg deel) -->
+        <rect x="358" y="128" width="184" height="172" rx="24" fill="var(--bg3)" stroke="var(--body-stroke)" stroke-width="2"/>
+        <!-- Torso vulling — energie, vult van onder naar boven, geclipped op torso-vorm -->
+        <rect id="batt-fill" x="358" y="260" width="184" height="40" rx="0" fill="#64748b" clip-path="url(#torso-clip)"/>
+        <!-- Subtiele horizontale streepjes voor batterij-look -->
+        <line x1="358" y1="215" x2="542" y2="215" stroke="var(--body-stroke)" stroke-width="1" clip-path="url(#torso-clip)" opacity="0.5"/>
+        <line x1="358" y1="243" x2="542" y2="243" stroke="var(--body-stroke)" stroke-width="1" clip-path="url(#torso-clip)" opacity="0.5"/>
+        <!-- Torso rand bovenop alles -->
+        <rect x="358" y="128" width="184" height="172" rx="24" fill="none" stroke="var(--body-stroke)" stroke-width="2"/>
+        <!-- Energie label in torso, onder de sternum sensor -->
+        <text id="batt-pct" x="450" y="288" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" font-weight="700" fill="var(--text-muted)">—/10</text>
         <!-- HEUPEN -->
         <rect x="378" y="296" width="144" height="20" rx="9" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
         <!-- BOVENBEEN links -->
@@ -875,14 +881,15 @@ function buildBodyHero(p, ss, sd) {
     frusRing.setAttribute("opacity", "0.85");
   }
 
-  // ---- BATTERIJ — energie ----
-  // Torso: y=148 (top inner), hoogte beschikbaar = 46px (148→194)
-  // Batterij omhulsel: x=570, y=148, breedte=28, hoogte=54 → vulzone y=150..200 = 48px
-  const battMaxH = 44; // beschikbare vulhoogte in px
-  const battTop  = 152; // y-coördinaat bovenkant vulzone
-  const energiePct = energie / 10; // 0.0 – 1.0
-  const battH   = Math.max(2, Math.round(battMaxH * energiePct));
-  const battY   = battTop + (battMaxH - battH); // vult van onder naar boven
+  // ---- TORSO ALS BATTERIJ — energie ----
+  // Torso: x=358, y=128, breedte=184, hoogte=172 → onderkant=300
+  // Vulling gaat van onder (y=300) naar boven op basis van energie
+  const torsoBottom = 300; // onderkant torso
+  const torsoTop    = 128; // bovenkant torso
+  const torsoH      = torsoBottom - torsoTop; // 172px totaal
+  const energiePct  = energie / 10; // 0.0 – 1.0
+  const battH       = Math.max(4, Math.round(torsoH * energiePct));
+  const battY       = torsoBottom - battH; // vult van onder naar boven
 
   const battColor = energie >= 7 ? '#00B894'
                   : energie >= 4 ? '#FDCB6E'
@@ -890,19 +897,16 @@ function buildBodyHero(p, ss, sd) {
 
   const battFill = document.getElementById("batt-fill");
   const battPct  = document.getElementById("batt-pct");
-  const battTip  = document.getElementById("batt-tip");
 
   if (battFill) {
     battFill.setAttribute("y", battY);
     battFill.setAttribute("height", battH);
     battFill.setAttribute("fill", battColor);
+    battFill.setAttribute("opacity", "0.55");
   }
   if (battPct) {
     battPct.textContent = energie + "/10";
     battPct.setAttribute("fill", battColor);
-  }
-  if (battTip) {
-    battTip.setAttribute("fill", battColor);
   }
 
   // Hoofd rand: kleur op basis van statusColor (symmetrie)
