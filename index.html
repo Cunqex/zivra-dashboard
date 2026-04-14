@@ -167,50 +167,34 @@
     <!-- LEFT PANEL -->
     <div class="body-hero-panel body-hero-panel--left">
 
-      <!-- STATUS BANNER — eerste ding wat je ziet -->
+      <!-- STATUS BANNER -->
       <div class="bh-status-banner" id="bhStatusBanner">
-        <div class="bh-status-icon" id="bhStatusIcon">—</div>
+        <div class="bh-status-icon" id="bhStatusIcon" style="font-size:22px">—</div>
         <div class="bh-status-text">
-          <div class="bh-status-label" id="bhStatusLabel">—</div>
-          <div class="bh-status-sub"   id="bhStatusSub">—</div>
-        </div>
-      </div>
-
-      <!-- VOORTGANG T.O.V. SESSIE 1 -->
-      <div class="bh-progress-block">
-        <div class="bh-progress-header">
-          <span class="bh-stat-label">Symmetrie t.o.v. sessie 1</span>
-          <span class="bh-progress-pct" id="bhSymIndex">—</span>
-        </div>
-        <div class="bh-progress-track">
-          <div class="bh-progress-fill" id="bhProgressFill"></div>
-          <div class="bh-progress-goal"></div>
-        </div>
-        <div class="bh-progress-foot">
-          <span id="bhProgressStart">Start: —</span>
-          <span id="bhProgressNow">Nu: —</span>
+          <div class="bh-status-label" id="bhStatusLabel" style="font-size:15px;font-weight:800">—</div>
+          <div class="bh-status-sub" id="bhStatusSub" style="font-size:12px;margin-top:3px">—</div>
         </div>
       </div>
 
       <div class="bh-divider"></div>
 
-      <!-- HOE VOELT DE PATIËNT ZICH -->
-      <div class="bh-stat-label" style="margin-bottom:10px">Hoe voelt de patiënt zich?</div>
+      <!-- HOE VOELT DE PATIËNT ZICH — grotere kaartjes -->
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">Hoe voelt de patiënt zich?</div>
       <div class="bh-wellbeing-row">
         <div class="bh-wb-item">
-          <div class="bh-wb-emoji" id="bhWbPijnEmoji">😐</div>
-          <div class="bh-wb-label">Pijn</div>
-          <div class="bh-wb-val" id="bhWbPijn">—</div>
+          <div class="bh-wb-emoji" id="bhWbPijnEmoji" style="font-size:32px">😐</div>
+          <div class="bh-wb-label" style="font-size:12px;margin-top:4px">Pijn</div>
+          <div class="bh-wb-val" id="bhWbPijn" style="font-size:20px;font-weight:800">—</div>
         </div>
         <div class="bh-wb-item">
-          <div class="bh-wb-emoji" id="bhWbFrusEmoji">😐</div>
-          <div class="bh-wb-label">Frustratie</div>
-          <div class="bh-wb-val" id="bhWbFrus">—</div>
+          <div class="bh-wb-emoji" id="bhWbFrusEmoji" style="font-size:32px">😐</div>
+          <div class="bh-wb-label" style="font-size:12px;margin-top:4px">Frustratie</div>
+          <div class="bh-wb-val" id="bhWbFrus" style="font-size:20px;font-weight:800">—</div>
         </div>
         <div class="bh-wb-item">
-          <div class="bh-wb-emoji" id="bhWbEnerEmoji">😐</div>
-          <div class="bh-wb-label">Energie</div>
-          <div class="bh-wb-val" id="bhWbEner">—</div>
+          <div class="bh-wb-emoji" id="bhWbEnerEmoji" style="font-size:32px">😐</div>
+          <div class="bh-wb-label" style="font-size:12px;margin-top:4px">Energie</div>
+          <div class="bh-wb-val" id="bhWbEner" style="font-size:20px;font-weight:800">—</div>
         </div>
       </div>
 
@@ -219,14 +203,14 @@
       <!-- SESSIE INFO -->
       <div class="bh-two-col">
         <div class="bh-stat-block">
-          <div class="bh-stat-label">Sessies</div>
-          <div class="bh-stat-value" id="bhSessies">—</div>
-          <div class="bh-stat-sub">van 10 gepland</div>
+          <div class="bh-stat-label" style="font-size:11px">Sessie</div>
+          <div class="bh-stat-value" id="bhSessies" style="font-size:32px">—</div>
+          <div class="bh-stat-sub" style="font-size:11px">van 10 gepland</div>
         </div>
         <div class="bh-stat-block">
-          <div class="bh-stat-label">Aangedane zijde</div>
-          <div class="bh-stat-value" id="bhZijde" style="font-size:16px">—</div>
-          <div class="bh-stat-sub" id="bhZijdeSub">—</div>
+          <div class="bh-stat-label" style="font-size:11px">Aangedane zijde</div>
+          <div class="bh-stat-value" id="bhZijde" style="font-size:22px;font-weight:800">—</div>
+          <div class="bh-stat-sub" id="bhZijdeSub" style="font-size:11px">—</div>
         </div>
       </div>
 
@@ -396,75 +380,48 @@
       <div id="sensorTooltip"></div>
     </div>
 
-    <!-- RIGHT PANEL — navigatie & trends -->
+    <!-- RIGHT PANEL -->
     <div class="body-hero-panel body-hero-panel--right">
 
-      <!-- GYRO VERGELIJKING (compact) -->
-      <div class="bh-stat-label" style="margin-bottom:8px">Gyroscoop activiteit (°/s)</div>
-      <div class="bh-compare-grid">
-        <div class="bh-compare-col">
-          <div class="bh-compare-title" id="bh-title-l">● Links</div>
-          <div class="bh-compare-row">
-            <span class="bh-compare-key">Schouder</span>
-            <span class="bh-compare-val" id="bh-gyr-schouder-l">—</span>
-          </div>
-          <div class="bh-compare-row">
-            <span class="bh-compare-key">Bovenarm</span>
-            <span class="bh-compare-val" id="bh-gyr-boven-l">—</span>
-          </div>
-          <div class="bh-compare-row">
-            <span class="bh-compare-key">Onderarm</span>
-            <span class="bh-compare-val" id="bh-gyr-onder-l">—</span>
-          </div>
-        </div>
-        <div class="bh-compare-divider"></div>
-        <div class="bh-compare-col">
-          <div class="bh-compare-title" id="bh-title-r">● Rechts</div>
-          <div class="bh-compare-row">
-            <span class="bh-compare-key">Schouder</span>
-            <span class="bh-compare-val" id="bh-gyr-schouder-r">—</span>
-          </div>
-          <div class="bh-compare-row">
-            <span class="bh-compare-key">Bovenarm</span>
-            <span class="bh-compare-val" id="bh-gyr-boven-r">—</span>
-          </div>
-          <div class="bh-compare-row">
-            <span class="bh-compare-key">Onderarm</span>
-            <span class="bh-compare-val" id="bh-gyr-onder-r">—</span>
-          </div>
-        </div>
+      <!-- VOORTGANG GRAFIEK -->
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Symmetrie — alle sessies</div>
+      <div id="bhSparkline" style="height:110px;width:100%"></div>
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px">
+        <span id="bhSparkStart">S1: —</span>
+        <span id="bhSparkNow" style="font-weight:700">Nu: —</span>
       </div>
 
       <div class="bh-divider"></div>
 
-      <!-- NAVIGATIE KNOPPEN -->
-      <div class="bh-stat-label" style="margin-bottom:8px">Verdiep in detail</div>
+      <!-- NAVIGATIE KNOPPEN — groter -->
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">Ga naar</div>
       <div class="bh-nav-btns">
         <a href="sessies.html" class="bh-nav-btn">
-          <span class="bh-nav-icon">📋</span>
+          <span class="bh-nav-icon" style="font-size:22px">📋</span>
           <div class="bh-nav-text">
-            <div class="bh-nav-title">Alle sessies</div>
-            <div class="bh-nav-sub">Sensordata & spelresultaten</div>
+            <div class="bh-nav-title" style="font-size:15px">Alle sessies</div>
+            <div class="bh-nav-sub" style="font-size:11px">Sensordata & spelresultaten</div>
           </div>
-          <span class="bh-nav-arrow">→</span>
+          <span class="bh-nav-arrow" style="font-size:18px">→</span>
         </a>
         <a href="voortgang.html" class="bh-nav-btn">
-          <span class="bh-nav-icon">📈</span>
+          <span class="bh-nav-icon" style="font-size:22px">📈</span>
           <div class="bh-nav-text">
-            <div class="bh-nav-title">Voortgang</div>
-            <div class="bh-nav-sub">Per spel, per periode</div>
+            <div class="bh-nav-title" style="font-size:15px">Voortgang</div>
+            <div class="bh-nav-sub" style="font-size:11px">Per spel, per periode</div>
           </div>
-          <span class="bh-nav-arrow">→</span>
+          <span class="bh-nav-arrow" style="font-size:18px">→</span>
         </a>
         <a href="patient.html" class="bh-nav-btn">
-          <span class="bh-nav-icon">🩺</span>
+          <span class="bh-nav-icon" style="font-size:22px">🩺</span>
           <div class="bh-nav-text">
-            <div class="bh-nav-title">Patiëntdossier</div>
-            <div class="bh-nav-sub">Diagnose & behandelplan</div>
+            <div class="bh-nav-title" style="font-size:15px">Patiëntdossier</div>
+            <div class="bh-nav-sub" style="font-size:11px">Diagnose & behandelplan</div>
           </div>
-          <span class="bh-nav-arrow">→</span>
+          <span class="bh-nav-arrow" style="font-size:18px">→</span>
         </a>
       </div>
+
     </div>
 
   </div>
@@ -684,20 +641,56 @@ function buildBodyHero(p, ss, sd) {
   document.getElementById("bhZijde").style.color     = '#ff7675';
   document.getElementById("bhZijdeSub").textContent  = `Aangedane zijde — verlamd / beperkt`;
 
-  // ---- GYRO VERGELIJKING ----
-  // Bepaal welke kant aangedaan is
+  // ---- SPARKLINE — symmetrie over alle sessies ----
   const lIsAangedaan = aangedaan === "Links";
-  document.getElementById("bh-title-l").textContent  = lIsAangedaan ? "● Links (aangedaan)" : "● Links (gezond)";
-  document.getElementById("bh-title-l").style.color  = lIsAangedaan ? "#ff7675" : "#00B894";
-  document.getElementById("bh-title-r").textContent  = !lIsAangedaan ? "● Rechts (aangedaan)" : "● Rechts (gezond)";
-  document.getElementById("bh-title-r").style.color  = !lIsAangedaan ? "#ff7675" : "#00B894";
+  const sparkEl = document.getElementById("bhSparkline");
+  if (sparkEl && ss.length > 0) {
+    sparkEl.innerHTML = '';
+    const m = { top: 8, right: 6, bottom: 4, left: 6 };
+    const W = sparkEl.clientWidth || 220;
+    const H = 110;
+    const w = W - m.left - m.right;
+    const h = H - m.top - m.bottom;
+    const vals = ss.map(s => s.sym_index);
+    const labels = ss.map((s, i) => `S${s.sessie}`);
+    const minV = Math.max(0, Math.min(...vals) - 5);
+    const maxV = Math.min(100, Math.max(...vals) + 5);
+    const xSc = d3.scalePoint().domain(labels).range([0, w]);
+    const ySc = d3.scaleLinear().domain([minV, maxV]).range([h, 0]);
+    const svg = d3.select(sparkEl).append('svg').attr('width', W).attr('height', H);
+    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
 
-  document.getElementById("bh-gyr-schouder-l").textContent = sd["Schouder Links"].gyr_mean.toFixed(1)  + " °/s";
-  document.getElementById("bh-gyr-boven-l").textContent    = sd["Bovenarm Links"].gyr_mean.toFixed(1)  + " °/s";
-  document.getElementById("bh-gyr-onder-l").textContent    = sd["Onderarm Links"].gyr_mean.toFixed(1)  + " °/s";
-  document.getElementById("bh-gyr-schouder-r").textContent = sd["Schouder Rechts"].gyr_mean.toFixed(1) + " °/s";
-  document.getElementById("bh-gyr-boven-r").textContent    = sd["Bovenarm Rechts"].gyr_mean.toFixed(1) + " °/s";
-  document.getElementById("bh-gyr-onder-r").textContent    = sd["Onderarm Rechts"].gyr_mean.toFixed(1) + " °/s";
+    // Gebied onder de lijn
+    g.append('path').datum(vals)
+      .attr('fill', 'rgba(78,205,196,0.12)')
+      .attr('d', d3.area().x((_, i) => xSc(labels[i])).y0(h).y1(v => ySc(v)).curve(d3.curveCatmullRom));
+
+    // Lijn
+    g.append('path').datum(vals)
+      .attr('fill', 'none').attr('stroke', '#4ECDC4').attr('stroke-width', 2.5)
+      .attr('d', d3.line().x((_, i) => xSc(labels[i])).y(v => ySc(v)).curve(d3.curveCatmullRom));
+
+    // Punten — kleur per sessie
+    vals.forEach((v, i) => {
+      const col = v >= 80 ? '#00B894' : v >= 65 ? '#FDCB6E' : '#ff7675';
+      // Huidig geselecteerde sessie groter
+      const r = i === sessieIdx ? 7 : 4;
+      g.append('circle').attr('cx', xSc(labels[i])).attr('cy', ySc(v))
+        .attr('r', r).attr('fill', col).attr('stroke', '#0a0b0f').attr('stroke-width', 1.5);
+    });
+
+    // Sessielabels op x-as
+    g.append('g').attr('transform', `translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
+      .selectAll('text').style('fill', '#555').style('font-family', "'DM Mono',monospace").style('font-size', '10px');
+    g.selectAll('.domain').remove();
+
+    // Labels start/nu
+    const first = ss[0], last = ss[sessieIdx];
+    document.getElementById('bhSparkStart').textContent = `S1: ${first.sym_index}%`;
+    const delta = last.sym_index - first.sym_index;
+    document.getElementById('bhSparkNow').textContent = `Nu: ${last.sym_index}% (${delta >= 0 ? '+' : ''}${delta}pp)`;
+    document.getElementById('bhSparkNow').style.color = delta > 2 ? '#00B894' : delta >= 0 ? '#FDCB6E' : '#ff7675';
+  }
 
   // (signaalkaartjes worden verderop gebouwd, na sensorkleur-berekeningen)
 
