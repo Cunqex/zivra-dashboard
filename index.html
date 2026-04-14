@@ -230,6 +230,8 @@
 
         <!-- NEK -->
         <rect x="439" y="112" width="22" height="18" rx="5" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
+        <!-- Energie icoon ⚡ links van de torso -->
+        <text x="338" y="222" text-anchor="middle" font-size="22" opacity="0.4" fill="var(--text-muted)">⚡</text>
         <!-- TORSO ALS BATTERIJ -->
         <!-- clipPath zodat de vulling de torso-vorm volgt -->
         <defs>
@@ -793,11 +795,11 @@ function buildBodyHero(p, ss, sd) {
 
 
   // ---- POPPETJE ANNOTATIES ----
-  // Sym% badge gecentreerd op torso bovenkant
+  // Sym% badge — altijd grijs, geen kleurcodering
   const symBadgeBg  = document.getElementById("body-sym-bg");
   const symBadgeVal = document.getElementById("body-sym-val");
-  if (symBadgeBg)  { symBadgeBg.setAttribute("fill", statusColor + "22"); symBadgeBg.setAttribute("stroke", statusColor + "66"); }
-  if (symBadgeVal) { symBadgeVal.textContent = sym + "%"; symBadgeVal.setAttribute("fill", statusColor); }
+  if (symBadgeBg)  { symBadgeBg.setAttribute("fill", "#2a2f3e"); symBadgeBg.setAttribute("stroke", "#3a4050"); }
+  if (symBadgeVal) { symBadgeVal.textContent = sym + "%"; symBadgeVal.setAttribute("fill", "#9ba3b8"); }
 
   // ---- SVG GEZICHT — puur op basis van PIJN ----
   const pijn       = cur.pijn       ?? 5;
@@ -909,9 +911,7 @@ function buildBodyHero(p, ss, sd) {
     battPct.setAttribute("fill", battColor);
   }
 
-  // Hoofd rand: kleur op basis van statusColor (symmetrie)
-  const headEllipse = document.querySelector('#mainBodySvg ellipse');
-  if (headEllipse) headEllipse.setAttribute("stroke", statusColor);
+  // Hoofd rand: neutraal laten — frustratiering is het kleurkanaal voor het hoofd
 
 
 
