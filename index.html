@@ -67,39 +67,6 @@
       transition: opacity 0.15s;
     }
     .bh-nav-btn:hover .bh-nav-arrow { opacity: 1; }
-
-    /* ── SIGNAAL KAARTJES ── */
-    .bh-signal-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      margin-bottom: 6px;
-      background: var(--bg3);
-      transition: border-color 0.2s;
-    }
-    .bh-signal-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      margin-top: 4px;
-      flex-shrink: 0;
-    }
-    .bh-signal-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.3;
-    }
-    .bh-signal-sub {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 2px;
-      line-height: 1.4;
-    }
   </style>
 </head>
 <body>
@@ -167,7 +134,7 @@
     <!-- LEFT PANEL -->
     <div class="body-hero-panel body-hero-panel--left">
 
-      <!-- STATUS BANNER -->
+      <!-- STATUS BANNER — eerste ding wat je ziet -->
       <div class="bh-status-banner" id="bhStatusBanner">
         <div class="bh-status-icon" id="bhStatusIcon" style="font-size:22px">—</div>
         <div class="bh-status-text">
@@ -178,21 +145,21 @@
 
       <div class="bh-divider"></div>
 
-      <!-- HOE VOELT DE PATIËNT ZICH — grotere kaartjes -->
-      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">Hoe voelt de patiënt zich?</div>
+      <!-- HOE VOELT DE PATIËNT ZICH -->
+      <div class="bh-stat-label" style="margin-bottom:10px;font-size:12px">Hoe voelt de patiënt zich?</div>
       <div class="bh-wellbeing-row">
         <div class="bh-wb-item">
-          <div class="bh-wb-emoji" id="bhWbPijnEmoji" style="font-size:32px">😐</div>
+          <div class="bh-wb-emoji" id="bhWbPijnEmoji" style="font-size:30px">😐</div>
           <div class="bh-wb-label" style="font-size:12px;margin-top:4px">Pijn</div>
           <div class="bh-wb-val" id="bhWbPijn" style="font-size:20px;font-weight:800">—</div>
         </div>
         <div class="bh-wb-item">
-          <div class="bh-wb-emoji" id="bhWbFrusEmoji" style="font-size:32px">😐</div>
+          <div class="bh-wb-emoji" id="bhWbFrusEmoji" style="font-size:30px">😐</div>
           <div class="bh-wb-label" style="font-size:12px;margin-top:4px">Frustratie</div>
           <div class="bh-wb-val" id="bhWbFrus" style="font-size:20px;font-weight:800">—</div>
         </div>
         <div class="bh-wb-item">
-          <div class="bh-wb-emoji" id="bhWbEnerEmoji" style="font-size:32px">😐</div>
+          <div class="bh-wb-emoji" id="bhWbEnerEmoji" style="font-size:30px">😐</div>
           <div class="bh-wb-label" style="font-size:12px;margin-top:4px">Energie</div>
           <div class="bh-wb-val" id="bhWbEner" style="font-size:20px;font-weight:800">—</div>
         </div>
@@ -223,7 +190,7 @@
       <svg id="mainBodySvg" class="main-body-svg" viewBox="0 0 900 800" fill="none" xmlns="http://www.w3.org/2000/svg">
 
         <!-- HOOFD — SVG gezicht dat de toestand weergeeft -->
-        <!-- Frustratie ring (buitenste gekleurde ring, wordt door JS bijgewerkt) -->
+        <!-- Frustratie ring (buitenste gekleurde ring) -->
         <ellipse id="head-frus-ring" cx="450" cy="62" rx="54" ry="62" fill="none" stroke="#64748b" stroke-width="5" stroke-dasharray="4,3" opacity="0.5"/>
         <!-- Hoofd cirkel -->
         <ellipse cx="450" cy="62" rx="46" ry="54" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="2"/>
@@ -248,22 +215,16 @@
         <!-- NEK -->
         <rect x="439" y="112" width="22" height="18" rx="5" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
         <!-- TORSO ALS BATTERIJ -->
-        <!-- clipPath zodat de vulling de torso-vorm volgt -->
         <defs>
           <clipPath id="torso-clip">
             <rect x="358" y="128" width="184" height="172" rx="24"/>
           </clipPath>
         </defs>
-        <!-- Torso achtergrond (leeg deel) -->
         <rect x="358" y="128" width="184" height="172" rx="24" fill="var(--bg3)" stroke="var(--body-stroke)" stroke-width="2"/>
-        <!-- Torso vulling — energie, vult van onder naar boven, geclipped op torso-vorm -->
         <rect id="batt-fill" x="358" y="260" width="184" height="40" rx="0" fill="#64748b" clip-path="url(#torso-clip)"/>
-        <!-- Subtiele horizontale streepjes voor batterij-look -->
         <line x1="358" y1="215" x2="542" y2="215" stroke="var(--body-stroke)" stroke-width="1" clip-path="url(#torso-clip)" opacity="0.5"/>
         <line x1="358" y1="243" x2="542" y2="243" stroke="var(--body-stroke)" stroke-width="1" clip-path="url(#torso-clip)" opacity="0.5"/>
-        <!-- Torso rand bovenop alles -->
         <rect x="358" y="128" width="184" height="172" rx="24" fill="none" stroke="var(--body-stroke)" stroke-width="2"/>
-        <!-- Energie label in torso, onder de sternum sensor -->
         <text id="batt-icon" x="436" y="288" text-anchor="end" font-family="'DM Mono',monospace" font-size="13" fill="var(--text-muted)" opacity="0.6">⚡</text>
         <text id="batt-pct" x="440" y="288" text-anchor="start" font-family="'DM Mono',monospace" font-size="11" font-weight="700" fill="var(--text-muted)">—/10</text>
         <!-- HEUPEN -->
@@ -380,48 +341,47 @@
       <div id="sensorTooltip"></div>
     </div>
 
-    <!-- RIGHT PANEL -->
+    <!-- RIGHT PANEL — voortgang & navigatie -->
     <div class="body-hero-panel body-hero-panel--right">
 
-      <!-- VOORTGANG GRAFIEK -->
-      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Symmetrie — alle sessies</div>
-      <div id="bhSparkline" style="height:110px;width:100%"></div>
-      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px">
+      <!-- SPARKLINE VOORTGANG -->
+      <div class="bh-stat-label" style="margin-bottom:8px;font-size:12px">Symmetrie — alle sessies</div>
+      <div id="bhSparkline" style="height:100px;width:100%"></div>
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:12px;color:var(--text-dim);margin-top:4px">
         <span id="bhSparkStart">S1: —</span>
         <span id="bhSparkNow" style="font-weight:700">Nu: —</span>
       </div>
 
       <div class="bh-divider"></div>
 
-      <!-- NAVIGATIE KNOPPEN — groter -->
-      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">Ga naar</div>
+      <!-- NAVIGATIE KNOPPEN -->
+      <div class="bh-stat-label" style="margin-bottom:8px;font-size:12px">Ga naar</div>
       <div class="bh-nav-btns">
         <a href="sessies.html" class="bh-nav-btn">
-          <span class="bh-nav-icon" style="font-size:22px">📋</span>
+          <span class="bh-nav-icon" style="font-size:20px">📋</span>
           <div class="bh-nav-text">
-            <div class="bh-nav-title" style="font-size:15px">Alle sessies</div>
+            <div class="bh-nav-title" style="font-size:14px">Alle sessies</div>
             <div class="bh-nav-sub" style="font-size:11px">Sensordata & spelresultaten</div>
           </div>
-          <span class="bh-nav-arrow" style="font-size:18px">→</span>
+          <span class="bh-nav-arrow" style="font-size:16px">→</span>
         </a>
         <a href="voortgang.html" class="bh-nav-btn">
-          <span class="bh-nav-icon" style="font-size:22px">📈</span>
+          <span class="bh-nav-icon" style="font-size:20px">📈</span>
           <div class="bh-nav-text">
-            <div class="bh-nav-title" style="font-size:15px">Voortgang</div>
+            <div class="bh-nav-title" style="font-size:14px">Voortgang</div>
             <div class="bh-nav-sub" style="font-size:11px">Per spel, per periode</div>
           </div>
-          <span class="bh-nav-arrow" style="font-size:18px">→</span>
+          <span class="bh-nav-arrow" style="font-size:16px">→</span>
         </a>
         <a href="patient.html" class="bh-nav-btn">
-          <span class="bh-nav-icon" style="font-size:22px">🩺</span>
+          <span class="bh-nav-icon" style="font-size:20px">🩺</span>
           <div class="bh-nav-text">
-            <div class="bh-nav-title" style="font-size:15px">Patiëntdossier</div>
+            <div class="bh-nav-title" style="font-size:14px">Patiëntdossier</div>
             <div class="bh-nav-sub" style="font-size:11px">Diagnose & behandelplan</div>
           </div>
-          <span class="bh-nav-arrow" style="font-size:18px">→</span>
+          <span class="bh-nav-arrow" style="font-size:16px">→</span>
         </a>
       </div>
-
     </div>
 
   </div>
@@ -459,21 +419,15 @@ const RING_IDS = {
 // ============================================================
 // STATE
 // ============================================================
-// Lees patient: eerst URL param, dan localStorage, dan eerste patient
 const _urlPatient = new URLSearchParams(window.location.search).get('p');
 if (_urlPatient) localStorage.setItem('zivra_patient', _urlPatient);
 let currentPatientNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
-
-window.addEventListener('beforeunload', () => {
-  localStorage.setItem('zivra_patient', currentPatientNr);
-});
-
+window.addEventListener('beforeunload', () => { localStorage.setItem('zivra_patient', currentPatientNr); });
 function updateNavLinks(nr) {
   document.querySelectorAll('a[href]').forEach(a => {
     const href = a.getAttribute('href');
-    if (href && (href.includes('.html')) && !href.startsWith('http')) {
-      const base = href.split('?')[0];
-      a.setAttribute('href', base + '?p=' + nr);
+    if (href && href.includes('.html') && !href.startsWith('http')) {
+      a.setAttribute('href', href.split('?')[0] + '?p=' + nr);
     }
   });
 }
@@ -600,11 +554,10 @@ function buildBodyHero(p, ss, sd) {
   const sym   = cur.sym_index ?? 0;
   const aangedaan = p.zijde; // "Links" of "Rechts"
 
-  // ---- STATUS BANNER — één slimme boodschap ----
-  // Wordt ingevuld NA sensorkleur-berekeningen verderop;
-  // we slaan de inputs op als closure-variabelen
-  window._bannerInputs = { sessieIdx, sym, symDeltaVorig: sessieIdx > 0 ? sym - (ss[sessieIdx-1]?.sym_index ?? sym) : 0, cur, prev, aangedaan };
-  let statusColor = '#7a7f8e'; // default grijs, wordt later overschreven
+  // ---- STATUS BANNER ----
+  let statusIcon, statusLabel, statusSub, statusColor;
+  const symDeltaVorig = sessieIdx > 0 ? sym - (ss[sessieIdx-1]?.sym_index ?? sym) : 0;
+  // (banner wordt ingevuld na sensorkleur-berekeningen)
 
   // ---- VOORTGANGSBALK ----
   // Voortgangsbalk: toon verbetering t.o.v. sessie 1, niet t.o.v. een vaste grens
@@ -617,9 +570,9 @@ function buildBodyHero(p, ss, sd) {
   document.getElementById("bhProgressNow").textContent   = `Laatste: ${sym}% (+${sym - (first.sym_index??sym)}pp)`;
 
   // ---- WELZIJN — emoji schaal ----
-  const emojiPijn = (v) => v <= 2 ? '😄' : v <= 4 ? '🙂' : v <= 6 ? '😐' : v <= 8 ? '😟' : '😣';
-  const emojiFrus = (v) => v <= 2 ? '😌' : v <= 4 ? '🙂' : v <= 6 ? '😐' : v <= 8 ? '😤' : '😡';
-  const emojiEner = (v) => v <= 2 ? '🪫' : v <= 4 ? '😑' : v <= 6 ? '🙂' : v <= 8 ? '⚡' : '🔋';
+  const emojiPijn = (v) => v <= 2 ? '😊' : v <= 4 ? '🙂' : v <= 6 ? '😐' : v <= 8 ? '😟' : '😣';
+  const emojiFrus = (v) => v <= 2 ? '😊' : v <= 4 ? '🙂' : v <= 6 ? '😐' : v <= 8 ? '😤' : '😡';
+  const emojiEner = (v) => v <= 2 ? '😴' : v <= 4 ? '😑' : v <= 6 ? '🙂' : v <= 8 ? '😀' : '⚡';
   const colPijn = (v) => v <= 3 ? '#00B894' : v <= 6 ? '#FDCB6E' : '#ff7675';
   const colEner = (v) => v >= 7 ? '#00B894' : v >= 4 ? '#FDCB6E' : '#ff7675';
 
@@ -641,58 +594,45 @@ function buildBodyHero(p, ss, sd) {
   document.getElementById("bhZijde").style.color     = '#ff7675';
   document.getElementById("bhZijdeSub").textContent  = `Aangedane zijde — verlamd / beperkt`;
 
-  // ---- SPARKLINE — symmetrie over alle sessies ----
+  // ---- GYRO VERGELIJKING ----
+  // Bepaal welke kant aangedaan is
   const lIsAangedaan = aangedaan === "Links";
-  const sparkEl = document.getElementById("bhSparkline");
-  if (sparkEl && ss.length > 0) {
-    sparkEl.innerHTML = '';
-    const m = { top: 8, right: 6, bottom: 4, left: 6 };
-    const W = sparkEl.clientWidth || 220;
-    const H = 110;
-    const w = W - m.left - m.right;
-    const h = H - m.top - m.bottom;
-    const vals = ss.map(s => s.sym_index);
-    const labels = ss.map((s, i) => `S${s.sessie}`);
-    const minV = Math.max(0, Math.min(...vals) - 5);
-    const maxV = Math.min(100, Math.max(...vals) + 5);
-    const xSc = d3.scalePoint().domain(labels).range([0, w]);
-    const ySc = d3.scaleLinear().domain([minV, maxV]).range([h, 0]);
-    const svg = d3.select(sparkEl).append('svg').attr('width', W).attr('height', H);
-    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+  document.getElementById("bh-title-l").textContent  = lIsAangedaan ? "● Links (aangedaan)" : "● Links (gezond)";
+  document.getElementById("bh-title-l").style.color  = lIsAangedaan ? "#ff7675" : "#00B894";
+  document.getElementById("bh-title-r").textContent  = !lIsAangedaan ? "● Rechts (aangedaan)" : "● Rechts (gezond)";
+  document.getElementById("bh-title-r").style.color  = !lIsAangedaan ? "#ff7675" : "#00B894";
 
-    // Gebied onder de lijn
-    g.append('path').datum(vals)
-      .attr('fill', 'rgba(78,205,196,0.12)')
-      .attr('d', d3.area().x((_, i) => xSc(labels[i])).y0(h).y1(v => ySc(v)).curve(d3.curveCatmullRom));
+  document.getElementById("bh-gyr-schouder-l").textContent = sd["Schouder Links"].gyr_mean.toFixed(1)  + " °/s";
+  document.getElementById("bh-gyr-boven-l").textContent    = sd["Bovenarm Links"].gyr_mean.toFixed(1)  + " °/s";
+  document.getElementById("bh-gyr-onder-l").textContent    = sd["Onderarm Links"].gyr_mean.toFixed(1)  + " °/s";
+  document.getElementById("bh-gyr-schouder-r").textContent = sd["Schouder Rechts"].gyr_mean.toFixed(1) + " °/s";
+  document.getElementById("bh-gyr-boven-r").textContent    = sd["Bovenarm Rechts"].gyr_mean.toFixed(1) + " °/s";
+  document.getElementById("bh-gyr-onder-r").textContent    = sd["Onderarm Rechts"].gyr_mean.toFixed(1) + " °/s";
 
-    // Lijn
-    g.append('path').datum(vals)
-      .attr('fill', 'none').attr('stroke', '#4ECDC4').attr('stroke-width', 2.5)
-      .attr('d', d3.line().x((_, i) => xSc(labels[i])).y(v => ySc(v)).curve(d3.curveCatmullRom));
-
-    // Punten — kleur per sessie
-    vals.forEach((v, i) => {
-      const col = v >= 80 ? '#00B894' : v >= 65 ? '#FDCB6E' : '#ff7675';
-      // Huidig geselecteerde sessie groter
-      const r = i === sessieIdx ? 7 : 4;
-      g.append('circle').attr('cx', xSc(labels[i])).attr('cy', ySc(v))
-        .attr('r', r).attr('fill', col).attr('stroke', '#0a0b0f').attr('stroke-width', 1.5);
-    });
-
-    // Sessielabels op x-as
-    g.append('g').attr('transform', `translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
-      .selectAll('text').style('fill', '#555').style('font-family', "'DM Mono',monospace").style('font-size', '10px');
-    g.selectAll('.domain').remove();
-
-    // Labels start/nu
-    const first = ss[0], last = ss[sessieIdx];
-    document.getElementById('bhSparkStart').textContent = `S1: ${first.sym_index}%`;
-    const delta = last.sym_index - first.sym_index;
-    document.getElementById('bhSparkNow').textContent = `Nu: ${last.sym_index}% (${delta >= 0 ? '+' : ''}${delta}pp)`;
-    document.getElementById('bhSparkNow').style.color = delta > 2 ? '#00B894' : delta >= 0 ? '#FDCB6E' : '#ff7675';
+  // ---- TREND T.O.V. VORIGE SESSIE ----
+  const trendBlock = document.getElementById("bhTrendBlock");
+  if (trendBlock && sessieIdx > 0) {
+    const symDiff  = cur.sym_index  - prev.sym_index;
+    const pijnDiff = cur.pijn       - prev.pijn;
+    const rows = [
+      { label: "Symmetrie", diff: symDiff,   unit: "pp", invert: false },
+      { label: "Pijnscore", diff: pijnDiff,  unit: "/10", invert: true  },
+      { label: "Energie",   diff: cur.energie - prev.energie, unit: "/10", invert: false },
+    ];
+    trendBlock.innerHTML = rows.map(r => {
+      const good = r.invert ? r.diff < 0 : r.diff > 0;
+      const neutral = r.diff === 0;
+      const color = neutral ? '#7a7f8e' : good ? '#00B894' : '#ff7675';
+      const arrow = neutral ? '→' : r.diff > 0 ? '↑' : '↓';
+      const sign  = r.diff > 0 ? '+' : '';
+      return `<div class="bh-trend-row">
+        <span class="bh-trend-label">${r.label}</span>
+        <span class="bh-trend-val" style="color:${color}">${arrow} ${sign}${r.diff}${r.unit}</span>
+      </div>`;
+    }).join('');
+  } else if (trendBlock) {
+    trendBlock.innerHTML = '<span style="color:var(--text-muted);font-size:12px">Sessie 1 — geen vorige sessie</span>';
   }
-
-  // (signaalkaartjes worden verderop gebouwd, na sensorkleur-berekeningen)
 
   // ---- ARM KLEUREN — afstand tot gezonde zijde S1 (zelfde logica als sessies pagina) ----
   const gyrL   = sd["Bovenarm Links"].gyr_mean;
@@ -770,44 +710,33 @@ function buildBodyHero(p, ss, sd) {
   const kleurL = aanIdx ? kleurBov : '#64748b';
   const kleurR = !aanIdx ? kleurBovR : '#64748b';
 
-  // ---- STATUS BANNER — één slimme boodschap ----
+  // ---- STATUS BANNER — na sensorkleur-berekeningen ----
   {
-    const { sessieIdx: sIdx, sym: sSym, cur: sCur, aangedaan: sZijde } = window._bannerInputs || {};
-    const sDelta = sIdx > 0 ? sSym - (ss[sIdx-1]?.sym_index ?? sSym) : 0;
-
-    // Alleen sensoren tellen mee
     const punten = [
-      { naam: `Schouder ${sZijde}`, kleur: aanIdx ? kleurSch : kleurSchR },
-      { naam: `Bovenarm ${sZijde}`, kleur: aanIdx ? kleurBov : kleurBovR },
-      { naam: `Onderarm ${sZijde}`, kleur: aanIdx ? kleurOnd : kleurOndR },
+      { naam: `Schouder ${aangedaan}`, kleur: aanIdx ? kleurSch : kleurSchR },
+      { naam: `Bovenarm ${aangedaan}`, kleur: aanIdx ? kleurBov : kleurBovR },
+      { naam: `Onderarm ${aangedaan}`, kleur: aanIdx ? kleurOnd : kleurOndR },
     ];
+    const rang = { '#ff7675': 4, '#FF9F43': 3, '#FDCB6E': 2, '#00B894': 1, '#64748b': 0 };
+    const problemen = punten.filter(p => rang[p.kleur] >= 2);
 
-    const kleurRang = { '#ff7675': 4, '#FF9F43': 3, '#FDCB6E': 2, '#00B894': 1, '#64748b': 0 };
-    const probleemPunten = punten.filter(p => kleurRang[p.kleur] >= 2);
-
-    let statusIcon, statusLabel, statusSub, statusColor;
-
-    if (sIdx === 0) {
+    if (sessieIdx === 0) {
       statusIcon = '📍'; statusColor = '#7a7f8e';
       statusLabel = 'Nulmeting';
-      statusSub = `Symmetrie: ${sSym}% — startwaarde vastgelegd`;
-
-    } else if (probleemPunten.length === 0) {
-      // Alles groen — symmetrie melden
+      statusSub = `Symmetrie: ${sym}% — startwaarde vastgelegd`;
+    } else if (problemen.length === 0) {
       statusIcon = '↑'; statusColor = '#00B894';
       statusLabel = 'Symmetrie verbeterd';
-      statusSub = `+${sDelta}pp t.o.v. vorige sessie — ${sSym}%`;
-
+      statusSub = `+${symDeltaVorig}pp t.o.v. vorige sessie — ${sym}%`;
     } else {
-      // Één of meer sensoren niet groen — ergste kleur, sensornamen in sub
-      const ergste = probleemPunten.reduce((a, b) => kleurRang[a.kleur] >= kleurRang[b.kleur] ? a : b);
+      const ergste = problemen.reduce((a, b) => rang[a.kleur] >= rang[b.kleur] ? a : b);
       statusColor = ergste.kleur;
       statusIcon = '↓';
-      statusLabel = probleemPunten.length === 1
-        ? `${probleemPunten[0].naam} vraagt aandacht`
-        : `${probleemPunten.map(p => p.naam).join(', ')} vragen aandacht`;
-      statusSub = probleemPunten.length === 1
-        ? `Beweegactiviteit verder van referentie dan vorige sessie`
+      statusLabel = problemen.length === 1
+        ? `${problemen[0].naam} vraagt aandacht`
+        : `${problemen.map(p => p.naam).join(', ')} vragen aandacht`;
+      statusSub = problemen.length === 1
+        ? `Beweegactiviteit verder van referentie`
         : `Meerdere sensoren verder van referentie`;
     }
 
@@ -819,12 +748,48 @@ function buildBodyHero(p, ss, sd) {
     document.getElementById("bhStatusSub").textContent   = statusSub;
   }
 
-  // (voortgang signalen zijn verwerkt in de statusbanner linksboven)
+  // ---- SPARKLINE — symmetrie alle sessies ----
+  const sparkEl = document.getElementById("bhSparkline");
+  if (sparkEl) {
+    sparkEl.innerHTML = '';
+    const m = { top: 8, right: 6, bottom: 18, left: 6 };
+    const W = sparkEl.clientWidth || 220;
+    const H = 100;
+    const w = W - m.left - m.right, h = H - m.top - m.bottom;
+    const vals = ss.map(s => s.sym_index);
+    const lbls = ss.map(s => `S${s.sessie}`);
+    const minV = Math.max(0, Math.min(...vals) - 5);
+    const maxV = Math.min(100, Math.max(...vals) + 8);
+    const xSc = d3.scalePoint().domain(lbls).range([0, w]);
+    const ySc = d3.scaleLinear().domain([minV, maxV]).range([h, 0]);
+    const svg = d3.select(sparkEl).append('svg').attr('width', W).attr('height', H);
+    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+    g.append('path').datum(vals).attr('fill', 'rgba(78,205,196,0.1)')
+      .attr('d', d3.area().x((_, i) => xSc(lbls[i])).y0(h).y1(v => ySc(v)).curve(d3.curveCatmullRom));
+    g.append('path').datum(vals).attr('fill', 'none').attr('stroke', '#4ECDC4').attr('stroke-width', 2.5)
+      .attr('d', d3.line().x((_, i) => xSc(lbls[i])).y(v => ySc(v)).curve(d3.curveCatmullRom));
+    vals.forEach((v, i) => {
+      const col = v >= 80 ? '#00B894' : v >= 65 ? '#FDCB6E' : '#ff7675';
+      g.append('circle').attr('cx', xSc(lbls[i])).attr('cy', ySc(v))
+        .attr('r', i === sessieIdx ? 7 : 4).attr('fill', col).attr('stroke', '#0a0b0f').attr('stroke-width', 1.5);
+    });
+    g.append('g').attr('transform', `translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
+      .selectAll('text').style('fill', '#555').style('font-size', '10px').style('font-family', "'DM Mono',monospace");
+    g.selectAll('.domain').remove();
+    const delta = ss[sessieIdx].sym_index - ss[0].sym_index;
+    const sparkNow = document.getElementById('bhSparkNow');
+    if (sparkNow) {
+      sparkNow.textContent = `Nu: ${ss[sessieIdx].sym_index}% (${delta >= 0 ? '+' : ''}${delta}pp)`;
+      sparkNow.style.color = delta > 2 ? '#00B894' : delta >= 0 ? '#FDCB6E' : '#ff7675';
+    }
+    const sparkStart = document.getElementById('bhSparkStart');
+    if (sparkStart) sparkStart.textContent = `S1: ${ss[0].sym_index}%`;
+  }
 
 
 
   // ---- POPPETJE ANNOTATIES ----
-  // Sym% badge — altijd grijs, geen kleurcodering
+  // Sym% badge — altijd grijs
   const symBadgeBg  = document.getElementById("body-sym-bg");
   const symBadgeVal = document.getElementById("body-sym-val");
   if (symBadgeBg)  { symBadgeBg.setAttribute("fill", "#2a2f3e"); symBadgeBg.setAttribute("stroke", "#3a4050"); }
@@ -835,59 +800,25 @@ function buildBodyHero(p, ss, sd) {
   const frustratie = cur.frustratie ?? 5;
   const energie    = cur.energie    ?? 5;
 
-  // Gezichtsexpressies per niveau — alleen gebaseerd op PIJN (laag = blij)
   const FACES = {
-    great: {
-      browL:  "M422 36 Q432 32 441 36",
-      browR:  "M459 36 Q468 32 478 36",
-      mouth:  "M434 74 Q450 88 466 74",
-      eyeRx: 5, eyeRy: 6,
-    },
-    good: {
-      browL:  "M424 39 Q432 36 440 39",
-      browR:  "M460 39 Q468 36 476 39",
-      mouth:  "M436 76 Q450 84 464 76",
-      eyeRx: 5, eyeRy: 6,
-    },
-    neutral: {
-      browL:  "M424 40 Q432 38 440 40",
-      browR:  "M460 40 Q468 38 476 40",
-      mouth:  "M436 78 Q450 78 464 78",
-      eyeRx: 5, eyeRy: 6,
-    },
-    worried: {
-      browL:  "M424 41 Q432 37 440 40",
-      browR:  "M460 40 Q468 37 476 41",
-      mouth:  "M436 82 Q450 76 464 82",
-      eyeRx: 5, eyeRy: 5,
-    },
-    sad: {
-      browL:  "M423 42 Q432 36 440 41",
-      browR:  "M460 41 Q468 36 477 42",
-      mouth:  "M435 84 Q450 74 465 84",
-      eyeRx: 4, eyeRy: 7,
-    }
+    great:   { browL: "M422 36 Q432 32 441 36", browR: "M459 36 Q468 32 478 36", mouth: "M434 74 Q450 88 466 74", eyeRx: 5, eyeRy: 6 },
+    good:    { browL: "M424 39 Q432 36 440 39", browR: "M460 39 Q468 36 476 39", mouth: "M436 76 Q450 84 464 76", eyeRx: 5, eyeRy: 6 },
+    neutral: { browL: "M424 40 Q432 38 440 40", browR: "M460 40 Q468 38 476 40", mouth: "M436 78 Q450 78 464 78", eyeRx: 5, eyeRy: 6 },
+    worried: { browL: "M424 41 Q432 37 440 40", browR: "M460 40 Q468 37 476 41", mouth: "M436 82 Q450 76 464 82", eyeRx: 5, eyeRy: 5 },
+    sad:     { browL: "M423 42 Q432 36 440 41", browR: "M460 41 Q468 36 477 42", mouth: "M435 84 Q450 74 465 84", eyeRx: 4, eyeRy: 7 },
   };
 
-  // Smiley op basis van PIJN (1=great, 10=sad)
-  let faceKey;
-  if      (pijn <= 2) faceKey = 'great';
-  else if (pijn <= 4) faceKey = 'good';
-  else if (pijn <= 6) faceKey = 'neutral';
-  else if (pijn <= 8) faceKey = 'worried';
-  else                faceKey = 'sad';
-
+  // Smiley op PIJN
+  const faceKey = pijn <= 2 ? 'great' : pijn <= 4 ? 'good' : pijn <= 6 ? 'neutral' : pijn <= 8 ? 'worried' : 'sad';
   const face = FACES[faceKey];
   const faceColor = "#c8cfe0";
-
-  const browL   = document.getElementById("face-brow-l");
-  const browR   = document.getElementById("face-brow-r");
-  const mouth   = document.getElementById("face-mouth");
-  const eyeL    = document.getElementById("face-eye-l");
-  const eyeR    = document.getElementById("face-eye-r");
-  const cheekL  = document.getElementById("face-cheek-l");
-  const cheekR  = document.getElementById("face-cheek-r");
-
+  const browL  = document.getElementById("face-brow-l");
+  const browR  = document.getElementById("face-brow-r");
+  const mouth  = document.getElementById("face-mouth");
+  const eyeL   = document.getElementById("face-eye-l");
+  const eyeR   = document.getElementById("face-eye-r");
+  const cheekL = document.getElementById("face-cheek-l");
+  const cheekR = document.getElementById("face-cheek-r");
   if (browL)  { browL.setAttribute("d", face.browL); browL.setAttribute("stroke", faceColor); }
   if (browR)  { browR.setAttribute("d", face.browR); browR.setAttribute("stroke", faceColor); }
   if (mouth)  { mouth.setAttribute("d", face.mouth); mouth.setAttribute("stroke", faceColor); }
@@ -896,53 +827,26 @@ function buildBodyHero(p, ss, sd) {
   if (cheekL) cheekL.setAttribute("opacity", faceKey === 'great' ? "0.5" : "0");
   if (cheekR) cheekR.setAttribute("opacity", faceKey === 'great' ? "0.5" : "0");
 
-  // ---- FRUSTRATIE RING om het hoofd ----
-  // Frustratie 1–10: laag = rustig groen, hoog = boos rood
+  // ---- FRUSTRATIE RING ----
   const frusRing = document.getElementById("head-frus-ring");
   if (frusRing) {
-    const frusColor = frustratie <= 3 ? '#00B894'
-                    : frustratie <= 5 ? '#FDCB6E'
-                    : frustratie <= 7 ? '#FF9F43'
-                    : '#ff7675';
+    const frusColor = frustratie <= 3 ? '#00B894' : frustratie <= 5 ? '#FDCB6E' : frustratie <= 7 ? '#FF9F43' : '#ff7675';
     frusRing.setAttribute("stroke", frusColor);
-    // Hoe hoger de frustratie, hoe meer de ring "trilt" (dikkere streepjes)
-    const dashLen = Math.max(2, 8 - frustratie * 0.5);
-    frusRing.setAttribute("stroke-dasharray", `${dashLen},${Math.max(2, 4 - frustratie * 0.2)}`);
     frusRing.setAttribute("stroke-width", frustratie >= 7 ? "7" : frustratie >= 4 ? "5.5" : "4");
+    frusRing.setAttribute("stroke-dasharray", `${Math.max(2, 8 - frustratie * 0.5)},${Math.max(2, 4 - frustratie * 0.2)}`);
     frusRing.setAttribute("opacity", "0.85");
   }
 
-  // ---- TORSO ALS BATTERIJ — energie ----
-  // Torso: x=358, y=128, breedte=184, hoogte=172 → onderkant=300
-  // Vulling gaat van onder (y=300) naar boven op basis van energie
-  const torsoBottom = 300; // onderkant torso
-  const torsoTop    = 128; // bovenkant torso
-  const torsoH      = torsoBottom - torsoTop; // 172px totaal
-  const energiePct  = energie / 10; // 0.0 – 1.0
-  const battH       = Math.max(4, Math.round(torsoH * energiePct));
-  const battY       = torsoBottom - battH; // vult van onder naar boven
-
-  const battColor = energie >= 7 ? '#00B894'
-                  : energie >= 4 ? '#FDCB6E'
-                  : '#ff7675';
-
+  // ---- BATTERIJ (torso) ----
+  const battColor = energie >= 7 ? '#00B894' : energie >= 4 ? '#FDCB6E' : '#ff7675';
+  const battH = Math.max(4, Math.round(172 * (energie / 10)));
+  const battY = 300 - battH;
   const battFill = document.getElementById("batt-fill");
   const battPct  = document.getElementById("batt-pct");
-
-  if (battFill) {
-    battFill.setAttribute("y", battY);
-    battFill.setAttribute("height", battH);
-    battFill.setAttribute("fill", battColor);
-    battFill.setAttribute("opacity", "0.55");
-  }
-  if (battPct) {
-    battPct.textContent = energie + "/10";
-    battPct.setAttribute("fill", battColor);
-  }
   const battIcon = document.getElementById("batt-icon");
+  if (battFill) { battFill.setAttribute("y", battY); battFill.setAttribute("height", battH); battFill.setAttribute("fill", battColor); battFill.setAttribute("opacity", "0.55"); }
+  if (battPct)  { battPct.textContent = energie + "/10"; battPct.setAttribute("fill", battColor); }
   if (battIcon) battIcon.setAttribute("fill", battColor);
-
-  // Hoofd rand: neutraal laten — frustratiering is het kleurkanaal voor het hoofd
 
 
 
