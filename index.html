@@ -17,6 +17,7 @@
       min-height: 0 !important;
       height: calc(100vh - 64px);
       overflow: hidden;
+      grid-template-columns: 290px 1fr 290px !important;
     }
     .body-hero-panel {
       height: 100%;
@@ -659,37 +660,58 @@ function buildBodyHero(p, ss, sd) {
   // ---- GYRO — lIsAangedaan nog nodig voor arm-kleuren ----
   const lIsAangedaan = aangedaan === "Links";
 
-  // ---- SPARKLINE — symmetrie alle sessies ----
+  // ---- VOORTGANG GRAFIEK — meerdere metrics ----
   const sparkEl = document.getElementById("bhSparkline");
   if (sparkEl) {
     sparkEl.innerHTML = '';
-    const m = { top: 8, right: 6, bottom: 18, left: 6 };
-    const W = sparkEl.clientWidth || 220;
+    const m = { top: 14, right: 6, bottom: 18, left: 6 };
+    const W = sparkEl.clientWidth || 260;
     const H = 100;
     const w = W - m.left - m.right, h = H - m.top - m.bottom;
-    const vals = ss.map(s => s.sym_index);
     const lbls = ss.map(s => `S${s.sessie}`);
-    const minV = Math.max(0, Math.min(...vals) - 5);
-    const maxV = Math.min(100, Math.max(...vals) + 8);
     const xSc = d3.scalePoint().domain(lbls).range([0, w]);
-    const ySc = d3.scaleLinear().domain([minV, maxV]).range([h, 0]);
+    const ySc = d3.scaleLinear().domain([0, 100]).range([h, 0]);
     const svg = d3.select(sparkEl).append('svg').attr('width', W).attr('height', H);
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
-    g.append('path').datum(vals).attr('fill', 'rgba(78,205,196,0.1)')
-      .attr('d', d3.area().x((_, i) => xSc(lbls[i])).y0(h).y1(v => ySc(v)).curve(d3.curveCatmullRom));
-    g.append('path').datum(vals).attr('fill', 'none').attr('stroke', '#4ECDC4').attr('stroke-width', 2.5)
-      .attr('d', d3.line().x((_, i) => xSc(lbls[i])).y(v => ySc(v)).curve(d3.curveCatmullRom));
-    vals.forEach((v, i) => {
-      const col = v >= 80 ? '#00B894' : v >= 65 ? '#FDCB6E' : '#ff7675';
-      g.append('circle').attr('cx', xSc(lbls[i])).attr('cy', ySc(v))
-        .attr('r', i === sessieIdx ? 7 : 4).attr('fill', col).attr('stroke', '#0a0b0f').attr('stroke-width', 1.5);
+
+    // Dataset: symmetrie, comfort (10-pijn)*10, energie*10
+    const datasets = [
+      { key: 'sym',     vals: ss.map(s => s.sym_index),            color: '#4ECDC4', label: 'Sym.' },
+      { key: 'comfort', vals: ss.map(s => (10 - s.pijn) * 10),     color: '#00B894', label: 'Pijnvrij' },
+      { key: 'energie', vals: ss.map(s => s.energie * 10),         color: '#FDCB6E', label: 'Energie' },
+    ];
+
+    // Subtiele gridlijn op 50%
+    g.append('line').attr('x1', 0).attr('x2', w).attr('y1', ySc(50)).attr('y2', ySc(50))
+      .style('stroke', 'rgba(255,255,255,0.05)').style('stroke-dasharray', '3,3');
+
+    datasets.forEach(ds => {
+      g.append('path').datum(ds.vals)
+        .attr('fill', 'none').attr('stroke', ds.color).attr('stroke-width', 2)
+        .attr('opacity', 0.85)
+        .attr('d', d3.line().x((_, i) => xSc(lbls[i])).y(v => ySc(v)).curve(d3.curveCatmullRom));
+      // Huidig punt
+      const v = ds.vals[sessieIdx];
+      g.append('circle').attr('cx', xSc(lbls[sessieIdx])).attr('cy', ySc(v))
+        .attr('r', 5).attr('fill', ds.color).attr('stroke', '#0a0b0f').attr('stroke-width', 1.5);
     });
+
+    // Legenda bovenaan
+    datasets.forEach((ds, i) => {
+      g.append('rect').attr('x', i * (w/3)).attr('y', -12).attr('width', 10).attr('height', 3).attr('fill', ds.color).attr('rx', 1);
+      g.append('text').attr('x', i * (w/3) + 13).attr('y', -4).text(ds.label)
+        .style('fill', '#666').style('font-size', '9px').style('font-family', "'DM Mono',monospace");
+    });
+
+    // X-as labels
     g.append('g').attr('transform', `translate(0,${h})`).call(d3.axisBottom(xSc).tickSize(0))
       .selectAll('text').style('fill', '#555').style('font-size', '10px').style('font-family', "'DM Mono',monospace");
     g.selectAll('.domain').remove();
+
+    // Onderaan: delta symmetrie
     const delta = ss[sessieIdx].sym_index - ss[0].sym_index;
     const sparkNow = document.getElementById('bhSparkNow');
-    if (sparkNow) { sparkNow.textContent = `Nu: ${ss[sessieIdx].sym_index}% (${delta >= 0 ? '+' : ''}${delta}pp)`; sparkNow.style.color = delta > 2 ? '#00B894' : delta >= 0 ? '#FDCB6E' : '#ff7675'; }
+    if (sparkNow) { sparkNow.textContent = `Sym: ${ss[sessieIdx].sym_index}% (${delta >= 0 ? '+' : ''}${delta}pp)`; sparkNow.style.color = delta > 2 ? '#00B894' : delta >= 0 ? '#FDCB6E' : '#ff7675'; }
     const sparkStart = document.getElementById('bhSparkStart');
     if (sparkStart) sparkStart.textContent = `S1: ${ss[0].sym_index}%`;
   }
