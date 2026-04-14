@@ -460,7 +460,7 @@ function buildRefStats(nr) {
 let GYR_REF = {};
 let ACC_REF = {};
 
-let currentNr = ALL_PATIENTS_META[0].nr;
+let currentNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
 let currentSessIdx = null; // null = laatste
 let charts = {};
 
@@ -924,6 +924,7 @@ function buildGoalMeters(ss) {
 // ─────────────────────────────────────────────────────────────
 function selectPatient(nr) {
   currentNr = nr;
+  localStorage.setItem('zivra_patient', nr);
   currentSessIdx = null;
   // Referentiewaarden = gezonde zijde van DEZE patiënt (sessie 1 nulmeting)
   const _refs = buildRefStats(nr);

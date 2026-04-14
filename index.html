@@ -456,7 +456,7 @@ const RING_IDS = {
 // ============================================================
 // STATE
 // ============================================================
-let currentPatientNr = ALL_PATIENTS_META[0].nr;
+let currentPatientNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
 let activeSensor     = SENSORS[0];
 let activeGame       = 'holomoves';
 let charts           = {};  // named chart instances
@@ -519,6 +519,7 @@ function filterPatientList(q) {
 
 function selectPatient(nr) {
   currentPatientNr = nr;
+  localStorage.setItem('zivra_patient', nr);
   window.selectedSessieIdx = undefined;
   const ssVal = document.getElementById("ssValue");
   if (ssVal) ssVal.textContent = "Laatste";

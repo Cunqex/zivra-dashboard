@@ -101,7 +101,7 @@
 </footer>
 
 <script>
-var currentNr  = ALL_PATIENTS_META[0].nr;
+var currentNr  = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
 var activeGame = 'all';
 
 // ── Patient selector ─────────────────────────────────────────
@@ -375,6 +375,7 @@ function rebuild() {
 
 function selectPatient(nr) {
   currentNr = nr;
+  localStorage.setItem('zivra_patient', nr);
   var p = ALL_PATIENTS_META.find(function(x){return x.nr===nr;});
   document.getElementById('psAvatar').textContent = p.naam[0];
   document.getElementById('psName').textContent   = p.naam;

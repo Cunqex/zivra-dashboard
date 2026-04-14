@@ -218,7 +218,7 @@
 </footer>
 
 <script>
-let currentNr = ALL_PATIENTS_META[0].nr;
+let currentNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
 let miniChart = null;
 
 function buildPatientList() {
@@ -242,6 +242,7 @@ function symColor(v) { return v>=80?'#00B894':v>=70?'#FDCB6E':v>=55?'#FF9F43':'#
 
 function selectPatient(nr) {
   currentNr = nr;
+  localStorage.setItem('zivra_patient', nr);
   const p  = ALL_PATIENTS_META.find(x => x.nr === nr);
   const ss = ALL_SESSIONS[nr] || [];
   const first = ss[0]||{}, last = ss[ss.length-1]||{};
