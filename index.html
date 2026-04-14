@@ -230,8 +230,6 @@
 
         <!-- NEK -->
         <rect x="439" y="112" width="22" height="18" rx="5" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
-        <!-- Energie icoon ⚡ links van de torso -->
-        <text x="338" y="222" text-anchor="middle" font-size="22" opacity="0.4" fill="var(--text-muted)">⚡</text>
         <!-- TORSO ALS BATTERIJ -->
         <!-- clipPath zodat de vulling de torso-vorm volgt -->
         <defs>
@@ -249,7 +247,8 @@
         <!-- Torso rand bovenop alles -->
         <rect x="358" y="128" width="184" height="172" rx="24" fill="none" stroke="var(--body-stroke)" stroke-width="2"/>
         <!-- Energie label in torso, onder de sternum sensor -->
-        <text id="batt-pct" x="450" y="288" text-anchor="middle" font-family="'DM Mono',monospace" font-size="11" font-weight="700" fill="var(--text-muted)">—/10</text>
+        <text id="batt-icon" x="436" y="288" text-anchor="end" font-family="'DM Mono',monospace" font-size="13" fill="var(--text-muted)" opacity="0.6">⚡</text>
+        <text id="batt-pct" x="440" y="288" text-anchor="start" font-family="'DM Mono',monospace" font-size="11" font-weight="700" fill="var(--text-muted)">—/10</text>
         <!-- HEUPEN -->
         <rect x="378" y="296" width="144" height="20" rx="9" fill="var(--body-fill)" stroke="var(--body-stroke)" stroke-width="1.5"/>
         <!-- BOVENBEEN links -->
@@ -910,6 +909,8 @@ function buildBodyHero(p, ss, sd) {
     battPct.textContent = energie + "/10";
     battPct.setAttribute("fill", battColor);
   }
+  const battIcon = document.getElementById("batt-icon");
+  if (battIcon) battIcon.setAttribute("fill", battColor);
 
   // Hoofd rand: neutraal laten — frustratiering is het kleurkanaal voor het hoofd
 
