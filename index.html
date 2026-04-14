@@ -399,12 +399,6 @@
     <!-- RIGHT PANEL — navigatie & trends -->
     <div class="body-hero-panel body-hero-panel--right">
 
-      <!-- VOORTGANG SIGNALEN -->
-      <div class="bh-stat-label" style="margin-bottom:8px">Voortgang deze sessie</div>
-      <div id="bhTrendBlock" class="bh-trend-block">—</div>
-
-      <div class="bh-divider"></div>
-
       <!-- GYRO VERGELIJKING (compact) -->
       <div class="bh-stat-label" style="margin-bottom:8px">Gyroscoop activiteit (°/s)</div>
       <div class="bh-compare-grid">
@@ -649,31 +643,11 @@ function buildBodyHero(p, ss, sd) {
   const sym   = cur.sym_index ?? 0;
   const aangedaan = p.zijde; // "Links" of "Rechts"
 
-  // ---- STATUS BANNER ----
-  let statusIcon, statusLabel, statusSub, statusColor;
-  const symDeltaVorig = sessieIdx > 0 ? sym - (ss[sessieIdx-1]?.sym_index ?? sym) : 0;
-  if (sessieIdx === 0) {
-    statusIcon = '📍'; statusLabel = 'Nulmeting'; statusColor = '#7a7f8e';
-    statusSub = `Symmetrie-index: ${sym}% — startwaarde vastgelegd`;
-  } else if (symDeltaVorig > 2) {
-    statusIcon = '↑'; statusLabel = 'Voortgang zichtbaar'; statusColor = '#00B894';
-    statusSub = `Symmetrie: ${sym}% (+${symDeltaVorig}pp t.o.v. vorige sessie)`;
-  } else if (symDeltaVorig >= -2) {
-    statusIcon = '→'; statusLabel = 'Stabiel verloop'; statusColor = '#FDCB6E';
-    statusSub = `Symmetrie: ${sym}% — vergelijkbaar met vorige sessie`;
-  } else {
-    statusIcon = '↓'; statusLabel = 'Terugval — aandacht nodig'; statusColor = '#ff7675';
-    statusSub = `Symmetrie: ${sym}% (${symDeltaVorig}pp t.o.v. vorige sessie)`;
-  }
-  const banner = document.getElementById("bhStatusBanner");
-  if (banner) {
-    banner.style.borderColor = statusColor + '55';
-    banner.style.background  = statusColor + '12';
-  }
-  document.getElementById("bhStatusIcon").textContent  = statusIcon;
-  document.getElementById("bhStatusLabel").textContent = statusLabel;
-  document.getElementById("bhStatusLabel").style.color = statusColor;
-  document.getElementById("bhStatusSub").textContent   = statusSub;
+  // ---- STATUS BANNER — één slimme boodschap ----
+  // Wordt ingevuld NA sensorkleur-berekeningen verderop;
+  // we slaan de inputs op als closure-variabelen
+  window._bannerInputs = { sessieIdx, sym, symDeltaVorig: sessieIdx > 0 ? sym - (ss[sessieIdx-1]?.sym_index ?? sym) : 0, cur, prev, aangedaan };
+  let statusColor = '#7a7f8e'; // default grijs, wordt later overschreven
 
   // ---- VOORTGANGSBALK ----
   // Voortgangsbalk: toon verbetering t.o.v. sessie 1, niet t.o.v. een vaste grens
@@ -803,88 +777,56 @@ function buildBodyHero(p, ss, sd) {
   const kleurL = aanIdx ? kleurBov : '#64748b';
   const kleurR = !aanIdx ? kleurBovR : '#64748b';
 
-  // ---- VOORTGANG SIGNAALKAARTJES ----
-  // Nu kunnen we sensorkleur gebruiken om te vermelden welke sensor aandacht nodig heeft
-  const trendBlock = document.getElementById("bhTrendBlock");
-  if (trendBlock) {
-    const signals = [];
-    const zijde = aangedaan; // "Links" of "Rechts"
+  // ---- STATUS BANNER — één slimme boodschap ----
+  {
+    const { sessieIdx: sIdx, sym: sSym, cur: sCur, aangedaan: sZijde } = window._bannerInputs || {};
+    const sDelta = sIdx > 0 ? sSym - (ss[sIdx-1]?.sym_index ?? sSym) : 0;
 
-    const isProbleem = (kleur) => kleur === '#ff7675' || kleur === '#FF9F43' || kleur === '#FDCB6E';
-    const isGoed     = (kleur) => kleur === '#00B894';
+    // Alleen sensoren tellen mee
+    const punten = [
+      { naam: `Schouder ${sZijde}`, kleur: aanIdx ? kleurSch : kleurSchR },
+      { naam: `Bovenarm ${sZijde}`, kleur: aanIdx ? kleurBov : kleurBovR },
+      { naam: `Onderarm ${sZijde}`, kleur: aanIdx ? kleurOnd : kleurOndR },
+    ];
 
-    // Helper: kleur → urgentie label
-    const urgentie = (kleur) => kleur === '#ff7675' ? 'vraagt direct aandacht'
-                               : kleur === '#FF9F43' ? 'vraagt aandacht'
-                               : 'stabiel';
+    const kleurRang = { '#ff7675': 4, '#FF9F43': 3, '#FDCB6E': 2, '#00B894': 1, '#64748b': 0 };
+    const probleemPunten = punten.filter(p => kleurRang[p.kleur] >= 2);
 
-    if (sessieIdx === 0) {
-      signals.push({ color: '#7a7f8e', title: 'Nulmeting — sessie 1', sub: 'Startwaarde vastgelegd. Voortgang wordt zichtbaar vanaf sessie 2.' });
+    let statusIcon, statusLabel, statusSub, statusColor;
+
+    if (sIdx === 0) {
+      statusIcon = '📍'; statusColor = '#7a7f8e';
+      statusLabel = 'Nulmeting';
+      statusSub = `Symmetrie: ${sSym}% — startwaarde vastgelegd`;
+
+    } else if (probleemPunten.length === 0) {
+      // Alles groen — symmetrie melden
+      statusIcon = '↑'; statusColor = '#00B894';
+      statusLabel = 'Symmetrie verbeterd';
+      statusSub = `+${sDelta}pp t.o.v. vorige sessie — ${sSym}%`;
+
     } else {
-      const symDiff  = cur.sym_index  - prev.sym_index;
-      const pijnDiff = cur.pijn       - prev.pijn;
-      const frusDiff = cur.frustratie - prev.frustratie;
-      const enerDiff = cur.energie    - prev.energie;
-
-      // --- SYMMETRIE ---
-      if (symDiff > 2) {
-        signals.push({ color: '#00B894', title: 'Symmetrie verbeterd', sub: `+${symDiff}pp t.o.v. vorige sessie` });
-      } else if (symDiff >= 0) {
-        signals.push({ color: '#FDCB6E', title: 'Symmetrie stabiel', sub: `Weinig verandering (+${symDiff}pp) — monitor verloop` });
-      } else {
-        signals.push({ color: '#ff7675', title: 'Symmetrie achteruitgegaan', sub: `${symDiff}pp t.o.v. vorige sessie — bespreek oorzaak` });
-      }
-
-      // --- SENSOREN — alleen tonen als er iets niet groen is ---
-      const sensorStatus = [
-        { naam: `Schouder ${zijde}`, kleur: aanIdx ? kleurSch : kleurSchR },
-        { naam: `Bovenarm ${zijde}`, kleur: aanIdx ? kleurBov : kleurBovR },
-        { naam: `Onderarm ${zijde}`, kleur: aanIdx ? kleurOnd : kleurOndR },
-      ];
-
-      const rood   = sensorStatus.filter(s => s.kleur === '#ff7675');
-      const oranje = sensorStatus.filter(s => s.kleur === '#FF9F43');
-      const geel   = sensorStatus.filter(s => s.kleur === '#FDCB6E');
-
-      if (rood.length > 0) {
-        signals.push({ color: '#ff7675', title: `${rood.map(s=>s.naam).join(' & ')} — direct aandacht`, sub: `Beweegactiviteit verder van referentie dan vorige sessie` });
-      }
-      if (oranje.length > 0) {
-        signals.push({ color: '#FF9F43', title: `${oranje.map(s=>s.naam).join(' & ')} — aandacht nodig`, sub: `Lichte achteruitgang t.o.v. vorige sessie` });
-      }
-      if (geel.length > 0 && rood.length === 0 && oranje.length === 0) {
-        signals.push({ color: '#FDCB6E', title: `${geel.map(s=>s.naam).join(', ')} — stabiel`, sub: `Geen significante verandering t.o.v. vorige sessie` });
-      }
-
-      // --- PIJN — alleen tonen als er iets is ---
-      if (pijnDiff < -1) {
-        signals.push({ color: '#00B894', title: 'Pijn afgenomen', sub: `Van ${prev.pijn}/10 naar ${cur.pijn}/10` });
-      } else if (pijnDiff > 1) {
-        signals.push({ color: '#ff7675', title: 'Pijn toegenomen', sub: `Van ${prev.pijn}/10 naar ${cur.pijn}/10 — monitor intensiteit` });
-      } else if (cur.pijn >= 7) {
-        signals.push({ color: '#FF9F43', title: 'Pijn blijft hoog', sub: `${cur.pijn}/10 — overweeg aanpassing therapie` });
-      }
-
-      // --- FRUSTRATIE — alleen tonen als er iets is ---
-      if (frusDiff > 1 || cur.frustratie >= 7) {
-        signals.push({ color: cur.frustratie >= 7 ? '#ff7675' : '#FF9F43', title: 'Frustratie vraagt aandacht', sub: `${cur.frustratie}/10 — motivatie bespreken kan helpen` });
-      }
-
-      // --- ENERGIE — alleen tonen als er iets is ---
-      if (cur.energie <= 3) {
-        signals.push({ color: '#ff7675', title: 'Lage energie', sub: `${cur.energie}/10 — overweeg sessie-intensiteit aan te passen` });
-      }
+      // Één of meer sensoren niet groen — ergste kleur, sensornamen in sub
+      const ergste = probleemPunten.reduce((a, b) => kleurRang[a.kleur] >= kleurRang[b.kleur] ? a : b);
+      statusColor = ergste.kleur;
+      statusIcon = '↓';
+      statusLabel = probleemPunten.length === 1
+        ? `${probleemPunten[0].naam} vraagt aandacht`
+        : `${probleemPunten.map(p => p.naam).join(', ')} vragen aandacht`;
+      statusSub = probleemPunten.length === 1
+        ? `Beweegactiviteit verder van referentie dan vorige sessie`
+        : `Meerdere sensoren verder van referentie`;
     }
 
-    trendBlock.innerHTML = signals.map(s => `
-      <div class="bh-signal-card" style="border-color:${s.color}28;background:${s.color}0d">
-        <div class="bh-signal-dot" style="background:${s.color}"></div>
-        <div>
-          <div class="bh-signal-title" style="color:${s.color}">${s.title}</div>
-          <div class="bh-signal-sub">${s.sub}</div>
-        </div>
-      </div>`).join('');
+    const banner = document.getElementById("bhStatusBanner");
+    if (banner) { banner.style.borderColor = statusColor + '55'; banner.style.background = statusColor + '12'; }
+    document.getElementById("bhStatusIcon").textContent  = statusIcon;
+    document.getElementById("bhStatusLabel").textContent = statusLabel;
+    document.getElementById("bhStatusLabel").style.color = statusColor;
+    document.getElementById("bhStatusSub").textContent   = statusSub;
   }
+
+  // (voortgang signalen zijn verwerkt in de statusbanner linksboven)
 
 
 
