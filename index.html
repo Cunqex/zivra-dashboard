@@ -1065,7 +1065,13 @@ function buildBodyHero(p, ss, sd) {
   })();
   if (sternumDot) sternumDot.setAttribute('fill', sternumCol);
   if (sternumBg)  sternumBg.setAttribute('fill', sternumCol);
-  COLORS["Sternum (Borst)"] = sternumCol;
+  COLORS["Sternum (Borst)"]  = sternumCol;
+  COLORS["Schouder Links"]   = lIsAangedaan ? kleurSch  : '#4a5568';
+  COLORS["Schouder Rechts"]  = !lIsAangedaan ? kleurSchR : '#4a5568';
+  COLORS["Bovenarm Links"]   = lIsAangedaan ? kleurBov  : '#4a5568';
+  COLORS["Bovenarm Rechts"]  = !lIsAangedaan ? kleurBovR : '#4a5568';
+  COLORS["Onderarm Links"]   = lIsAangedaan ? kleurOnd  : '#4a5568';
+  COLORS["Onderarm Rechts"]  = !lIsAangedaan ? kleurOndR : '#4a5568';
   const sternumDelta = prevSym ? curSym - prevSym : null;
   const lblSternumId  = document.getElementById('lbl-sternum-id');
   const lblSternumSub = document.getElementById('lbl-sternum-sub');
