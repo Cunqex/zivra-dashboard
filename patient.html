@@ -171,14 +171,14 @@
 
       <!-- LEFT: ID CARD -->
       <div class="pat-id-card">
-        <div id="patAvatarWrap" style="position:relative;width:80px;height:80px;margin:0 auto 16px;cursor:pointer" onclick="document.getElementById('patFotoInput').click()" title="Klik om foto toe te voegen">
-          <div class="pat-avatar-big" id="patAvatar">V</div>
+        <div id="patAvatarWrap" style="position:relative;width:80px;height:80px;margin:0 auto 16px;cursor:pointer" title="Klik om foto toe te voegen">
+          <div class="pat-avatar-big" id="patAvatar" style="margin:0">V</div>
           <div id="patAvatarImg" style="display:none;width:80px;height:80px;border-radius:50%;overflow:hidden;position:absolute;inset:0">
             <img id="patAvatarImgEl" src="" style="width:100%;height:100%;object-fit:cover"/>
           </div>
-          <div style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;border:2px solid var(--bg2)">📷</div>
+          <div style="position:absolute;bottom:0;right:0;width:22px;height:22px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid var(--bg2)">📷</div>
+          <input type="file" id="patFotoInput" accept="image/*" style="display:none"/>
         </div>
-        <input type="file" id="patFotoInput" accept="image/*" style="display:none"/>
         <div class="pat-fullname" id="patName">—</div>
         <div class="pat-nr" id="patNr">—</div>
         <div id="patDetails"></div>
@@ -194,12 +194,6 @@
         <div class="status-block">
           <div class="status-block-title">Diagnose & behandelplan</div>
           <div id="diagDetails"></div>
-        </div>
-
-        <!-- Foto placeholder -->
-        <div class="status-block">
-          <div class="status-block-title">Foto patiënt</div>
-          <div id="patFotoBlock"></div>
         </div>
 
         <!-- Klinisch inzicht -->
@@ -254,6 +248,8 @@ function selectPatient(nr) {
   document.getElementById("pageTitle").textContent = p.naam;
   document.getElementById("pageDesc").textContent  = `${p.caras} · ${p.kliniek} · ${p.zijde} zijde aangedaan`;
   document.getElementById("patAvatar").textContent = p.naam[0];
+  const savedFoto = localStorage.getItem('zivra_foto_'+nr);
+  if (savedFoto) showAvatarFoto(savedFoto); else clearAvatarFoto();
   document.getElementById("patName").textContent   = p.naam;
   document.getElementById("patNr").textContent     = "ZVR-2026-" + p.nr;
 
@@ -293,15 +289,6 @@ function selectPatient(nr) {
     diag("Energie laatste sessie", `${last.energie||'—'}/10`, (last.energie||0)>=7?'status-ok':(last.energie||0)>=4?'status-matig':'status-zorgelijk') +
     diag("Frustratie laatste sessie", `${last.frustratie||'—'}/10`, (last.frustratie||0)<=3?'status-ok':(last.frustratie||0)<=6?'status-matig':'status-zorgelijk');
 
-  // Foto laden indien opgeslagen
-  const savedFoto = localStorage.getItem('zivra_foto_'+nr);
-  if (savedFoto) {
-    showAvatarFoto(savedFoto);
-  } else {
-    document.getElementById('patAvatar').style.display = '';
-    document.getElementById('patAvatarImg').style.display = 'none';
-  }
-
   // Inzicht
   document.getElementById("insightBox").innerHTML = `
     <div class="insight-icon">🩺</div>
@@ -314,26 +301,12 @@ function selectPatient(nr) {
     </div>`;
 }
 
-function loadFoto(input, nr) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    localStorage.setItem('zivra_foto_'+nr, e.target.result);
-    showAvatarFoto(e.target.result);
-  };
-  reader.readAsDataURL(file);
-}
-
 function showAvatarFoto(src) {
   document.getElementById('patAvatar').style.display = 'none';
-  const wrap = document.getElementById('patAvatarImg');
-  wrap.style.display = 'block';
+  document.getElementById('patAvatarImg').style.display = 'block';
   document.getElementById('patAvatarImgEl').src = src;
 }
-
-function verwijderFoto(nr) {
-  localStorage.removeItem('zivra_foto_'+nr);
+function clearAvatarFoto() {
   document.getElementById('patAvatar').style.display = '';
   document.getElementById('patAvatarImg').style.display = 'none';
   document.getElementById('patAvatarImgEl').src = '';
@@ -343,7 +316,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("psTrigger").addEventListener("click", e => { e.stopPropagation(); document.getElementById("psDropdown").classList.contains("open")?closeDropdown():openDropdown(); });
   document.addEventListener("click", e => { if(!document.getElementById("patientSelector").contains(e.target)) closeDropdown(); });
   document.getElementById("psSearch").addEventListener("input", e => filterList(e.target.value.toLowerCase()));
-  document.getElementById("patFotoInput").addEventListener("change", function(){ loadFoto(this, currentNr); });
+  document.getElementById("patAvatarWrap").addEventListener("click", () => document.getElementById("patFotoInput").click());
+  document.getElementById("patFotoInput").addEventListener("change", function() {
+    const file = this.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => { localStorage.setItem('zivra_foto_'+currentNr, e.target.result); showAvatarFoto(e.target.result); };
+    reader.readAsDataURL(file);
+  });
   buildPatientList();
   selectPatient(currentNr);
 });
