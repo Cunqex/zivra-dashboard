@@ -346,11 +346,19 @@
 <script>
 // ── STATE ──
 const _urlPatient = new URLSearchParams(window.location.search).get('p');
+const _urlMetric  = new URLSearchParams(window.location.search).get('metric');
 if (_urlPatient) localStorage.setItem('zivra_patient', _urlPatient);
 var currentNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
 window.addEventListener('beforeunload', function(){ localStorage.setItem('zivra_patient', currentNr); });
 
 var activeMetrics = new Set(['pijn']);
+
+// Als we via sensor-klik binnenkomen, activeer die metric direct
+var _urlMetric = new URLSearchParams(window.location.search).get('metric');
+if (_urlMetric) {
+  activeMetrics.clear();
+  activeMetrics.add(_urlMetric);
+}
 
 // ── METRIC CONFIG ──
 function parseScore(v) {
@@ -719,6 +727,16 @@ function selectPatient(nr){
 
 document.addEventListener('DOMContentLoaded',function(){
   buildPatientList();
+  // Als een metric meegegeven via URL, activeer die ipv standaard pijn
+  if(_urlMetric && METRICS[_urlMetric]){
+    activeMetrics.clear();
+    activeMetrics.add(_urlMetric);
+    // Deactiveer standaard pijn chip, activeer juiste chip
+    document.querySelectorAll('.vg-chip').forEach(function(c){
+      if(c.dataset.metric===_urlMetric) c.classList.add('active');
+      else c.classList.remove('active');
+    });
+  }
   selectPatient(currentNr);
 });
 </script>
