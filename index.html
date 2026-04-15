@@ -306,8 +306,8 @@
         <g class="sensor-dot-group" data-sensor="Sternum (Borst)" style="cursor:pointer">
           <circle cx="450" cy="218" r="48" fill="#64748b" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle cx="450" cy="218" r="34" fill="#64748b" class="sensor-dot-main"/>
-          <text x="450" y="213" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">A1</text>
-          <text x="450" y="230" text-anchor="middle" font-family="'Syne',sans-serif" font-size="12" font-weight="600" fill="#0a0b0f">Sternum</text>
+          <text id="lbl-sternum-id"  x="450" y="213" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-sternum-sub" x="450" y="228" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f">—</text>
         </g>
 
         <!-- =====================================================
@@ -351,45 +351,45 @@
         <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
           <circle cx="358" cy="168" r="48" fill="#A29BFE" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle cx="358" cy="168" r="34" fill="#A29BFE" class="sensor-dot-main"/>
-          <text x="358" y="163" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">B1</text>
-          <text x="358" y="180" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f">Sch. L</text>
+          <text id="lbl-schl-id"  x="358" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schl-sub" x="358" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f">—</text>
         </g>
 
         <!-- SCHOUDER RECHTS -->
         <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
           <circle cx="542" cy="168" r="48" fill="#45B7D1" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle cx="542" cy="168" r="34" fill="#45B7D1" class="sensor-dot-main"/>
-          <text x="542" y="163" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">B2</text>
-          <text x="542" y="180" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f">Sch. R</text>
+          <text id="lbl-schr-id"  x="542" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schr-sub" x="542" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f">—</text>
         </g>
 
         <!-- ARM SENSORS — positie door JS -->
         <g id="sensor-bovl" class="sensor-dot-group" data-sensor="Bovenarm Links" style="cursor:pointer">
           <circle id="bg-bovl"  r="46" fill="#FD79A8" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle id="dot-bovl" r="32" fill="#FD79A8" class="sensor-dot-main"/>
-          <text id="lbl-bovl-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">A3</text>
-          <text id="lbl-bovl-sub" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f" text-anchor="middle">Bov. L</text>
+          <text id="lbl-bovl-id"  font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f" text-anchor="middle">—</text>
+          <text id="lbl-bovl-sub" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
         </g>
 
         <g id="sensor-ondl" class="sensor-dot-group" data-sensor="Onderarm Links" style="cursor:pointer">
           <circle id="bg-ondl"  r="46" fill="#6C5CE7" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle id="dot-ondl" r="32" fill="#6C5CE7" class="sensor-dot-main"/>
-          <text id="lbl-ondl-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">A5</text>
-          <text id="lbl-ondl-sub" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f" text-anchor="middle">Ond. L</text>
+          <text id="lbl-ondl-id"  font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f" text-anchor="middle">—</text>
+          <text id="lbl-ondl-sub" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
         </g>
 
         <g id="sensor-bovr" class="sensor-dot-group" data-sensor="Bovenarm Rechts" style="cursor:pointer">
           <circle id="bg-bovr"  r="46" fill="#FDCB6E" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle id="dot-bovr" r="32" fill="#FDCB6E" class="sensor-dot-main"/>
-          <text id="lbl-bovr-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">A2</text>
-          <text id="lbl-bovr-sub" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f" text-anchor="middle">Bov. R</text>
+          <text id="lbl-bovr-id"  font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f" text-anchor="middle">—</text>
+          <text id="lbl-bovr-sub" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
         </g>
 
         <g id="sensor-ondr" class="sensor-dot-group" data-sensor="Onderarm Rechts" style="cursor:pointer">
           <circle id="bg-ondr"  r="46" fill="#00B894" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle id="dot-ondr" r="32" fill="#00B894" class="sensor-dot-main"/>
-          <text id="lbl-ondr-id"  font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">A4</text>
-          <text id="lbl-ondr-sub" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f" text-anchor="middle">Ond. R</text>
+          <text id="lbl-ondr-id"  font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f" text-anchor="middle">—</text>
+          <text id="lbl-ondr-sub" font-family="'DM Mono',monospace" font-size="10" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
         </g>
 
       </svg>
@@ -1022,32 +1022,60 @@ function buildBodyHero(p, ss, sd) {
     if (bgEl)  { bgEl.setAttribute('fill', col); }
   }
 
-  // Schouder sensor kleuren updaten
+  // Helper: bereken % delta t.o.v. vorige sessie en geef label + pijltje terug
+  function sensorLabel(curGyr, prevGyr) {
+    if (!prevGyr || prevGyr === 0) return { top: '—', sub: '' };
+    const pct = Math.round(Math.abs(curGyr - prevGyr) / prevGyr * 100);
+    const beter = curGyr <= prevGyr; // dalende waarde = dichter bij ref = beter bij hemiparese
+    const pijltje = beter ? '↑' : '↓';
+    return { top: pct + '%', sub: pijltje };
+  }
+
+  // Schouder sensor kleuren + labels updaten
   const schLDot = document.querySelector('[data-sensor="Schouder Links"] circle.sensor-dot-main');
   const schRDot = document.querySelector('[data-sensor="Schouder Rechts"] circle.sensor-dot-main');
-  // Schouder: eigen kleur op basis van schouder-specifieke sensor
   if (schLDot) schLDot.setAttribute('fill', lIsAangedaan ? kleurSch : '#64748b');
   if (schRDot) schRDot.setAttribute('fill', !lIsAangedaan ? kleurSchR : '#64748b');
 
-  // Sternum: kleur op basis van delta t.o.v. vorige sessie (acc beweging)
-  // Gebruik gyr gemiddelde als proxy voor rompactiviteit
+  // Schouder labels
+  const lblSchLId  = document.getElementById('lbl-schl-id');
+  const lblSchLSub = document.getElementById('lbl-schl-sub');
+  const lblSchRId  = document.getElementById('lbl-schr-id');
+  const lblSchRSub = document.getElementById('lbl-schr-sub');
+  const schLGyrCur  = curGyrAanSchOvr;
+  const schLGyrPrev = prevGyrAanSchOvr;
+  const schLbl = sensorLabel(schLGyrCur, schLGyrPrev);
+  const schRbl = sensorLabel(curGyrAanSchOvr, prevGyrAanSchOvr);
+  if (lblSchLId)  { lblSchLId.textContent  = lIsAangedaan ? schLbl.top : '—'; lblSchLId.setAttribute('fill', '#0a0b0f'); }
+  if (lblSchLSub) { lblSchLSub.textContent = lIsAangedaan ? schLbl.sub : '';  lblSchLSub.setAttribute('fill', '#0a0b0f'); }
+  if (lblSchRId)  { lblSchRId.textContent  = !lIsAangedaan ? schRbl.top : '—'; lblSchRId.setAttribute('fill', '#0a0b0f'); }
+  if (lblSchRSub) { lblSchRSub.textContent = !lIsAangedaan ? schRbl.sub : '';  lblSchRSub.setAttribute('fill', '#0a0b0f'); }
+
+  // Sternum: sym delta als label
   const sternumDot = document.querySelector('[data-sensor="Sternum (Borst)"] circle.sensor-dot-main');
   const sternumBg  = document.querySelector('[data-sensor="Sternum (Borst)"] circle.sensor-pulse-bg');
-  // Sternum heeft geen directe gyr meting per sessie — gebruik sym_index als proxy voor rompstabiliteit
-  // Delta sym t.o.v. vorige sessie bepaalt de kleur
   const curSym  = cur.sym_index  || 0;
   const prevSym = prevSessie ? (prevSessie.sym_index || 0) : null;
   const sternumCol = (() => {
     if (!prevSym) return '#64748b';
     const d = curSym - prevSym;
-    if (d >= 3)  return '#00B894'; // groen — symmetrie verbeterd
-    if (d >= 0)  return '#FDCB6E'; // geel — stabiel
-    if (d >= -5) return '#FF9F43'; // oranje — licht slechter
-    return '#ff7675';              // rood — significant slechter
+    if (d >= 3)  return '#00B894';
+    if (d >= 0)  return '#FDCB6E';
+    if (d >= -5) return '#FF9F43';
+    return '#ff7675';
   })();
   if (sternumDot) sternumDot.setAttribute('fill', sternumCol);
   if (sternumBg)  sternumBg.setAttribute('fill', sternumCol);
   COLORS["Sternum (Borst)"] = sternumCol;
+  const sternumDelta = prevSym ? curSym - prevSym : null;
+  const lblSternumId  = document.getElementById('lbl-sternum-id');
+  const lblSternumSub = document.getElementById('lbl-sternum-sub');
+  if (lblSternumId)  lblSternumId.textContent  = sternumDelta !== null ? Math.abs(sternumDelta) + '%' : '—';
+  if (lblSternumSub) lblSternumSub.textContent = sternumDelta !== null ? (sternumDelta >= 0 ? '↑' : '↓') : '';
+
+  // Arm gyr labels: bereken % delta per sensor
+  const bovLbl  = sensorLabel(curAanBov,  prevAanBov);
+  const ondLbl  = sensorLabel(curAanOnd,  prevAanOnd);
 
   let step = 0;
   const steps = 35;
@@ -1061,9 +1089,8 @@ function buildBodyHero(p, ss, sd) {
     drawArm('arm-links-drawn',  SL.x, SL.y, ptsL, kleurL);
     drawArm('arm-rechts-drawn', SR.x, SR.y, ptsR, kleurR);
 
-    // Elke sensor krijgt eigen kleur: bovenarm en onderarm onafhankelijk
-    const kleurBovL = lIsAangedaan ? kleurBov : '#64748b';
-    const kleurOndL = lIsAangedaan ? kleurOnd : '#64748b';
+    const kleurBovL  = lIsAangedaan ? kleurBov : '#64748b';
+    const kleurOndL  = lIsAangedaan ? kleurOnd : '#64748b';
     const kleurBovR2 = !lIsAangedaan ? kleurBovR : '#64748b';
     const kleurOndR2 = !lIsAangedaan ? kleurOndR : '#64748b';
     positionSensor('bg-bovl','dot-bovl','lbl-bovl-id','lbl-bovl-sub', ptsL.bovAcc.x, ptsL.bovAcc.y, kleurBovL);
@@ -1071,7 +1098,20 @@ function buildBodyHero(p, ss, sd) {
     positionSensor('bg-bovr','dot-bovr','lbl-bovr-id','lbl-bovr-sub', ptsR.bovAcc.x, ptsR.bovAcc.y, kleurBovR2);
     positionSensor('bg-ondr','dot-ondr','lbl-ondr-id','lbl-ondr-sub', ptsR.ondAcc.x, ptsR.ondAcc.y, kleurOndR2);
 
-    if (step >= steps) clearInterval(window._armAnim);
+    // Labels invullen na positionering
+    if (step >= steps) {
+      const setLbl = (idId, subId, lbl, actief) => {
+        const idEl  = document.getElementById(idId);
+        const subEl = document.getElementById(subId);
+        if (idEl)  idEl.textContent  = actief ? lbl.top : '—';
+        if (subEl) subEl.textContent = actief ? lbl.sub : '';
+      };
+      setLbl('lbl-bovl-id','lbl-bovl-sub', bovLbl,  lIsAangedaan);
+      setLbl('lbl-ondl-id','lbl-ondl-sub', ondLbl,  lIsAangedaan);
+      setLbl('lbl-bovr-id','lbl-bovr-sub', bovLbl,  !lIsAangedaan);
+      setLbl('lbl-ondr-id','lbl-ondr-sub', ondLbl,  !lIsAangedaan);
+      clearInterval(window._armAnim);
+    }
   }, 1200 / steps);
 }
 
