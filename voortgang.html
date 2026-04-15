@@ -345,21 +345,33 @@
 
 <script>
 // ── STATE ──
-const _urlPatient = new URLSearchParams(window.location.search).get('p');
-const _urlMetric  = new URLSearchParams(window.location.search).get('metric');
-if (_urlPatient) localStorage.setItem('zivra_patient', _urlPatient);
-var currentNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
-window.addEventListener('beforeunload', function(){ localStorage.setItem('zivra_patient', currentNr); });
+// URL params (1x ophalen!)
+const urlParams = new URLSearchParams(window.location.search);
+const urlPatient = urlParams.get('p');
+const urlMetric  = urlParams.get('metric');
 
+// ✅ BELANGRIJK: gebruik URL direct + force string
+var currentNr = String(
+  urlPatient || 
+  localStorage.getItem('zivra_patient') || 
+  ALL_PATIENTS_META[0].nr
+);
+
+// sync naar localStorage
+localStorage.setItem('zivra_patient', currentNr);
+
+// opslaan bij verlaten pagina (mag blijven)
+window.addEventListener('beforeunload', function(){
+  localStorage.setItem('zivra_patient', currentNr);
+});
+
+// metrics
 var activeMetrics = new Set(['pijn']);
 
-// Als we via sensor-klik binnenkomen, activeer die metric direct
-var _urlMetric = new URLSearchParams(window.location.search).get('metric');
-if (_urlMetric) {
+if (urlMetric) {
   activeMetrics.clear();
-  activeMetrics.add(_urlMetric);
+  activeMetrics.add(urlMetric);
 }
-
 // ── METRIC CONFIG ──
 function parseScore(v) {
   if (!v || String(v).indexOf('/')===-1) return 0;
