@@ -346,21 +346,29 @@
 <script>
 // ── STATE ──
 // URL params (1x ophalen!)
+// URL params (1x ophalen!)
 const urlParams = new URLSearchParams(window.location.search);
 const urlPatient = urlParams.get('p');
 const urlMetric  = urlParams.get('metric');
 
-// ✅ BELANGRIJK: gebruik URL direct + force string
+// current patient bepalen
 var currentNr = String(
   urlPatient || 
   localStorage.getItem('zivra_patient') || 
   ALL_PATIENTS_META[0].nr
 );
 
+// 🔥 FIX: URL consistent houden
+if (!urlPatient) {
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set('p', currentNr);
+  window.history.replaceState({}, '', newUrl);
+}
+
 // sync naar localStorage
 localStorage.setItem('zivra_patient', currentNr);
 
-// opslaan bij verlaten pagina (mag blijven)
+// opslaan bij verlaten pagina
 window.addEventListener('beforeunload', function(){
   localStorage.setItem('zivra_patient', currentNr);
 });
