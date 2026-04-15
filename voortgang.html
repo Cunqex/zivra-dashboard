@@ -9,109 +9,369 @@
   <script src="data.js"></script>
   <link rel="stylesheet" href="css/style.css"/>
   <style>
-    .vg-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;align-items:center;}
-    .vg-btn-group{display:flex;gap:6px;}
-    .vg-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:all 0.15s;}
-    .vg-btn:hover{border-color:var(--border2);color:var(--text);}
-    .vg-btn.active{background:rgba(78,205,196,0.12);border-color:var(--accent);color:var(--accent);}
-    .vg-lbl{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;}
-    .vg-date-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-    .vg-date-input{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:border-color 0.15s;}
-    .vg-date-input:hover,.vg-date-input:focus{border-color:var(--accent);outline:none;}
-    .vg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
-    @media(max-width:800px){.vg-grid{grid-template-columns:1fr;}}
-    .vg-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;}
-    .vg-card.full{grid-column:1/-1;}
-    .vg-card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
-    .vg-card-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:14px;}
-    .vg-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
-    @media(max-width:700px){.vg-kpi-row{grid-template-columns:1fr 1fr;}}
-    .vg-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
-    .vg-kpi-val{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;margin-bottom:4px;}
-    .vg-kpi-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;}
-    .vg-kpi-delta{font-family:'DM Mono',monospace;font-size:11px;margin-top:3px;}
-    .vg-empty{text-align:center;padding:48px;color:var(--text-muted);font-family:'DM Mono',monospace;font-size:13px;}
+    html, body { overflow: hidden; height: 100%; }
+
+    .vg-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .vg-sidebar {
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border2) transparent;
+    }
+    .vg-section-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2px;
+    }
+
+    .vg-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      user-select: none;
+      line-height: 1.3;
+    }
+    .vg-chip:hover { border-color: var(--border2); color: var(--text); }
+    .vg-chip.active {
+      border-color: var(--chip-color, var(--accent));
+      background: color-mix(in srgb, var(--chip-color, var(--accent)) 10%, transparent);
+      color: var(--chip-color, var(--accent));
+    }
+    .vg-chip-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--chip-color, var(--accent));
+      flex-shrink: 0;
+      opacity: 0.4;
+      transition: opacity 0.15s;
+    }
+    .vg-chip.active .vg-chip-dot { opacity: 1; }
+
+    .vg-range-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .vg-range-input {
+      width: 44px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 6px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      text-align: center;
+    }
+    .vg-range-input:focus { outline: none; border-color: var(--accent); }
+    .vg-reset-btn {
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      cursor: pointer;
+    }
+    .vg-reset-btn:hover { color: var(--text); border-color: var(--border2); }
+
+    .vg-sel-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .vg-sel-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+
+    /* ── MAIN ── */
+    .vg-main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .vg-kpi-bar {
+      display: flex;
+      gap: 10px;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      flex-shrink: 0;
+      scrollbar-width: none;
+      background: var(--bg2);
+    }
+    .vg-kpi-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 72px;
+      padding: 6px 10px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .vg-kpi-val { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 700; }
+    .vg-kpi-lbl { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; text-align: center; }
+
+    .vg-chart-header {
+      padding: 12px 20px 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .vg-chart-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); }
+    .vg-chart-sub   { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    .vg-chart-wrap {
+      flex: 1;
+      padding: 16px 20px;
+      min-height: 0;
+      position: relative;
+    }
+    .vg-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .vg-session-strip {
+      display: flex;
+      gap: 6px;
+      padding: 8px 20px;
+      border-top: 1px solid var(--border);
+      overflow-x: auto;
+      flex-shrink: 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border2) transparent;
+      background: var(--bg2);
+    }
+    .vg-sess-pill {
+      flex-shrink: 0;
+      padding: 5px 10px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .vg-sess-divider {
+      width: 1px;
+      background: var(--border);
+      margin: 0 2px;
+      align-self: stretch;
+    }
   </style>
 </head>
 <body>
+
 <header class="site-header">
   <div class="header-inner">
     <a href="index.html" class="logo-block"><span class="logo-mark">Z</span><div><div class="logo-text">ZIVRA</div><div class="logo-sub">Bewegingsrevalidatie</div></div></a>
     <nav class="main-nav">
       <a href="index.html" class="nav-link">Dashboard</a>
       <a href="patient.html" class="nav-link">Patiënt</a>
-      <a href="sessies.html" class="nav-link">Sessies</a>
       <a href="voortgang.html" class="nav-link active">Voortgang</a>
     </nav>
     <div class="patient-selector" id="patientSelector">
-      <div class="ps-trigger" id="psTrigger"><span class="ps-avatar" id="psAvatar">V</span><div class="ps-info"><div class="ps-name" id="psName">Varisha Doggen</div><div class="ps-id" id="psId">#329500</div></div><svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></div>
-      <div class="ps-dropdown" id="psDropdown"><div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div><div class="ps-list" id="psList"></div></div>
+      <div class="ps-trigger" id="psTrigger">
+        <span class="ps-avatar" id="psAvatar">V</span>
+        <div class="ps-info"><div class="ps-name" id="psName">—</div><div class="ps-id" id="psId">—</div></div>
+        <svg class="ps-chevron" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div class="ps-dropdown" id="psDropdown">
+        <div class="ps-search-wrap"><input class="ps-search" id="psSearch" type="text" placeholder="Zoek patiënt…"/></div>
+        <div class="ps-list" id="psList"></div>
+      </div>
     </div>
     <div class="meta-chip live-chip"><span class="live-dot"></span>Analyse actief</div>
   </div>
 </header>
 
-<div class="page-hero">
-  <div class="page-hero-inner">
-    <div class="page-hero-label">Voortgang</div>
-    <h1 class="page-hero-title" id="pageTitle">Voortgang</h1>
-    <p class="page-hero-desc" id="pageDesc">Selecteer spel en periode.</p>
+<div class="vg-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="vg-sidebar">
+
+    <div>
+      <div class="vg-section-title">Sessie range</div>
+      <div class="vg-range-row" style="margin-top:6px">
+        <span>S</span>
+        <input type="number" id="fromSessie" min="1" value="1" class="vg-range-input"/>
+        <span>→ S</span>
+        <input type="number" id="toSessie" min="1" value="6" class="vg-range-input"/>
+        <button class="vg-reset-btn" id="resetRange">Reset</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="vg-section-title">Welzijn</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
+        <div class="vg-chip active" data-metric="pijn" style="--chip-color:#ff7675"><div class="vg-chip-dot"></div>Pijn</div>
+        <div class="vg-chip" data-metric="frustratie" style="--chip-color:#FDCB6E"><div class="vg-chip-dot"></div>Frustratie</div>
+        <div class="vg-chip" data-metric="energie" style="--chip-color:#00B894"><div class="vg-chip-dot"></div>Energie</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="vg-section-title">Beweging</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
+        <div class="vg-chip" data-metric="sym_index" style="--chip-color:#6C5CE7"><div class="vg-chip-dot"></div>Symmetrie-index</div>
+        <div class="vg-chip" data-metric="gyr_links" style="--chip-color:#4ECDC4"><div class="vg-chip-dot"></div><span id="lbl-gyr-links">Gyro Links</span></div>
+        <div class="vg-chip" data-metric="gyr_rechts" style="--chip-color:#A29BFE"><div class="vg-chip-dot"></div><span id="lbl-gyr-rechts">Gyro Rechts</span></div>
+        <div class="vg-chip" data-metric="acc_max_links" style="--chip-color:#FD79A8"><div class="vg-chip-dot"></div>Max acceleratie</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="vg-section-title">🎮 Holomoves</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
+        <div class="vg-chip" data-metric="reiken" style="--chip-color:#FDCB6E"><div class="vg-chip-dot"></div>Reiken</div>
+        <div class="vg-chip" data-metric="ROM" style="--chip-color:#45B7D1"><div class="vg-chip-dot"></div>ROM</div>
+        <div class="vg-chip" data-metric="hand_los" style="--chip-color:#00B894"><div class="vg-chip-dot"></div>Hand los</div>
+        <div class="vg-chip" data-metric="vrije_ruimte" style="--chip-color:#FF9F43"><div class="vg-chip-dot"></div>Vrije ruimte</div>
+        <div class="vg-chip" data-metric="palmaire_greep" style="--chip-color:#fd79a8"><div class="vg-chip-dot"></div>Palmaire greep</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="vg-section-title">🫙 Magische Ketel</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
+        <div class="vg-chip" data-metric="ketel_correct" style="--chip-color:#55efc4"><div class="vg-chip-dot"></div>Correct</div>
+        <div class="vg-chip" data-metric="ketel_overgeslagen" style="--chip-color:#ff7675"><div class="vg-chip-dot"></div>Overgeslagen</div>
+        <div class="vg-chip" data-metric="ketel_pct" style="--chip-color:#4ECDC4"><div class="vg-chip-dot"></div>Score %</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="vg-section-title">🧱 Blokki</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
+        <div class="vg-chip" data-metric="blokki_pijn" style="--chip-color:#b2bec3"><div class="vg-chip-dot"></div>Pijn tijdens spel</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── MAIN ── -->
+  <div class="vg-main">
+
+    <!-- KPI balk -->
+    <div class="vg-kpi-bar" id="vgKpiBar"></div>
+
+    <!-- Header -->
+    <div class="vg-chart-header">
+      <div>
+        <div class="vg-chart-title" id="vgChartTitle">Selecteer metrics links →</div>
+        <div class="vg-chart-sub" id="vgChartSub">Meerdere metrics tegelijk mogelijk · punten kleuren mee met voortgang</div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim)" id="vgSessieInfo"></div>
+    </div>
+
+    <!-- Grafiek -->
+    <div class="vg-chart-wrap">
+      <div class="vg-empty" id="vgEmpty">← Klik op een metric in de sidebar</div>
+      <div id="vgChart" style="display:none;width:100%;height:100%;position:relative"></div>
+    </div>
+
+    <!-- Sessie strip -->
+    <div class="vg-session-strip" id="vgSessionStrip"></div>
+
   </div>
 </div>
 
-<section>
-  <div class="section-inner">
-
-    <div class="vg-controls">
-      <span class="vg-lbl">Spel:</span>
-      <div class="vg-btn-group" id="gameFilter">
-        <button class="vg-btn active" data-game="all">Alles</button>
-        <button class="vg-btn" data-game="sym">Symmetrie</button>
-        <button class="vg-btn" data-game="holomoves">🎮 Holomoves</button>
-        <button class="vg-btn" data-game="blokki">🧱 Blokki</button>
-        <button class="vg-btn" data-game="ketel">🫙 Ketel</button>
-      </div>
-    </div>
-
-    <div class="vg-controls" style="margin-bottom:32px">
-      <span class="vg-lbl">Periode:</span>
-      <div class="vg-date-row">
-        <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">Van sessie</label>
-        <input type="number" id="fromSessie" min="1" value="1" class="vg-date-input" style="width:70px"/>
-        <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">tot sessie</label>
-        <input type="number" id="toSessie" min="1" value="99" class="vg-date-input" style="width:70px"/>
-        <button class="vg-btn" id="resetPeriode">Reset</button>
-        <span id="periodeInfo" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim)"></span>
-      </div>
-    </div>
-
-    <div class="vg-kpi-row" id="vgKpis"></div>
-    <div class="vg-grid" id="vgGrid"></div>
-    <div class="insight-box" id="insightBox" style="margin-top:24px"></div>
-
-  </div>
-</section>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
-    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a></div>
-    <div class="footer-note">IMU data — 2026</div>
-  </div>
-</footer>
-
 <script>
-var currentNr  = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
-var activeGame = 'all';
+// ── STATE ──
+const _urlPatient = new URLSearchParams(window.location.search).get('p');
+if (_urlPatient) localStorage.setItem('zivra_patient', _urlPatient);
+var currentNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
+window.addEventListener('beforeunload', function(){ localStorage.setItem('zivra_patient', currentNr); });
 
-// ── Patient selector ─────────────────────────────────────────
+var activeMetrics = new Set(['pijn']);
+
+// ── METRIC CONFIG ──
+function parseScore(v) {
+  if (!v || String(v).indexOf('/')===-1) return 0;
+  var p=String(v).split('/'); return p[1]>0?Math.round(p[0]/p[1]*100):0;
+}
+
+var METRICS = {
+  pijn:               { label:'Pijn',               color:'#ff7675', unit:'/10',  yMax:10,  lowerBetter:true,  parse:function(s){return s.pijn;} },
+  frustratie:         { label:'Frustratie',          color:'#FDCB6E', unit:'/10',  yMax:10,  lowerBetter:true,  parse:function(s){return s.frustratie;} },
+  energie:            { label:'Energie',             color:'#00B894', unit:'/10',  yMax:10,  lowerBetter:false, parse:function(s){return s.energie;} },
+  sym_index:          { label:'Symmetrie-index',     color:'#6C5CE7', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return s.sym_index;} },
+  gyr_links:          { label:'Gyro Links (°/s)',    color:'#4ECDC4', unit:'°/s',  yMax:null,lowerBetter:false, parse:function(s){return s.gyr_links;} },
+  gyr_rechts:         { label:'Gyro Rechts (°/s)',   color:'#A29BFE', unit:'°/s',  yMax:null,lowerBetter:false, parse:function(s){return s.gyr_rechts;} },
+  acc_max_links:      { label:'Max acc. (m/s²)',     color:'#FD79A8', unit:' m/s²',yMax:null,lowerBetter:false, parse:function(s){return s.acc_max_links;} },
+  reiken:             { label:'Reiken %',            color:'#FDCB6E', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return parseScore(s.reiken);} },
+  ROM:                { label:'ROM %',               color:'#45B7D1', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return parseScore(s.ROM);} },
+  hand_los:           { label:'Hand los %',          color:'#00B894', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return parseScore(s.hand_los);} },
+  vrije_ruimte:       { label:'Vrije ruimte %',      color:'#FF9F43', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return parseScore(s.vrije_ruimte);} },
+  palmaire_greep:     { label:'Palmaire greep %',    color:'#fd79a8', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return parseScore(s.palmaire_greep);} },
+  ketel_correct:      { label:'Ketel correct',       color:'#55efc4', unit:'',     yMax:null,lowerBetter:false, parse:function(s){return s.ketel_correct||0;} },
+  ketel_overgeslagen: { label:'Ketel overgeslagen',  color:'#ff7675', unit:'',     yMax:null,lowerBetter:true,  parse:function(s){return s.ketel_overgeslagen||0;} },
+  ketel_pct:          { label:'Ketel score %',       color:'#4ECDC4', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return s.ketel_aangeboden>0?Math.round(s.ketel_correct/s.ketel_aangeboden*100):0;} },
+  blokki_pijn:        { label:'Blokki pijn',         color:'#b2bec3', unit:'/10',  yMax:10,  lowerBetter:true,  parse:function(s){return s.blokki_pijn||0;} },
+};
+
+// ── PATIENT SELECTOR ──
 function buildPatientList() {
   var list = document.getElementById('psList');
-  ALL_PATIENTS_META.forEach(function(p) {
+  ALL_PATIENTS_META.forEach(function(p){
     var el = document.createElement('div');
-    el.className = 'ps-item'; el.dataset.nr = p.nr;
-    el.innerHTML = '<span class="ps-item-avatar">'+p.naam[0]+'</span><div class="ps-item-info"><div class="ps-item-name">'+p.naam+'</div><div class="ps-item-meta">#'+p.nr+' · '+p.kliniek+'</div></div><span class="ps-item-caras">'+p.caras+'</span>';
-    el.addEventListener('click', function(){selectPatient(p.nr);closeDropdown();});
+    el.className='ps-item'; el.dataset.nr=p.nr;
+    el.innerHTML='<span class="ps-item-avatar">'+p.naam[0]+'</span><div class="ps-item-info"><div class="ps-item-name">'+p.naam+'</div><div class="ps-item-meta">#'+p.nr+' · '+p.kliniek+'</div></div><span class="ps-item-caras">'+p.caras+'</span>';
+    el.addEventListener('click',function(){selectPatient(p.nr);closeDropdown();});
     list.appendChild(el);
   });
 }
@@ -122,275 +382,282 @@ document.addEventListener('click',function(e){if(!document.getElementById('patie
 document.getElementById('psSearch').addEventListener('input',function(e){filterList(e.target.value.toLowerCase());});
 function filterList(q){document.querySelectorAll('.ps-item').forEach(function(el){el.style.display=el.textContent.toLowerCase().includes(q)?'':'none';});}
 
-// ── Game filter ───────────────────────────────────────────────
-document.getElementById('gameFilter').addEventListener('click', function(e) {
-  var b = e.target.closest('.vg-btn'); if (!b) return;
-  document.querySelectorAll('#gameFilter .vg-btn').forEach(function(x){x.classList.remove('active');});
-  b.classList.add('active'); activeGame = b.dataset.game; rebuild();
+// ── CHIPS ──
+document.querySelectorAll('.vg-chip').forEach(function(chip){
+  chip.addEventListener('click',function(){
+    var m=chip.dataset.metric;
+    if(activeMetrics.has(m)){activeMetrics.delete(m);chip.classList.remove('active');}
+    else{activeMetrics.add(m);chip.classList.add('active');}
+    rebuild();
+  });
 });
 
-// ── Periode controls ──────────────────────────────────────────
-document.getElementById('fromSessie').addEventListener('input', rebuild);
-document.getElementById('toSessie').addEventListener('input', rebuild);
-document.getElementById('resetPeriode').addEventListener('click', function() {
-  document.getElementById('fromSessie').value = '1';
-  document.getElementById('toSessie').value = '99';
+document.getElementById('fromSessie').addEventListener('input',rebuild);
+document.getElementById('toSessie').addEventListener('input',rebuild);
+document.getElementById('resetRange').addEventListener('click',function(){
+  var ss=ALL_SESSIONS[currentNr]||[];
+  document.getElementById('fromSessie').value=1;
+  document.getElementById('toSessie').value=ss.length;
   rebuild();
 });
 
-// ── Filter sessions by sessie number range ─────────────────────
-function filterSessions(ss) {
-  var from = parseInt(document.getElementById('fromSessie').value) || 1;
-  var to   = parseInt(document.getElementById('toSessie').value)   || 99;
-  return ss.filter(function(s){ return s.sessie >= from && s.sessie <= to; });
-}
+// ── KPI BAR ──
+function buildKpiBar(ss) {
+  var bar=document.getElementById('vgKpiBar');
+  bar.innerHTML='';
+  if(!ss.length) return;
+  var first=ss[0],last=ss[ss.length-1];
+  var symDelta=last.sym_index-first.sym_index;
+  var pijnAvg=(ss.reduce(function(a,s){return a+s.pijn;},0)/ss.length).toFixed(1);
+  var enerAvg=(ss.reduce(function(a,s){return a+s.energie;},0)/ss.length).toFixed(1);
+  var ketelPct=ss.filter(function(s){return s.ketel_aangeboden>0;}).map(function(s){return s.ketel_correct/s.ketel_aangeboden*100;});
+  var ketelAvg=ketelPct.length?Math.round(ketelPct.reduce(function(a,v){return a+v;},0)/ketelPct.length):0;
 
-// ── D3 helpers ────────────────────────────────────────────────
-function makeSvg(id, h) {
-  var el = document.getElementById(id);
-  if (!el) return null;
-  el.innerHTML = '';
-  var m = {top:16,right:18,bottom:30,left:48};
-  var W = el.clientWidth || 460;
-  var H = h;
-  var w = W-m.left-m.right, ch = H-m.top-m.bottom;
-  var svg = d3.select(el).append('svg').attr('width',W).attr('height',H);
-  var g = svg.append('g').attr('transform','translate('+m.left+','+m.top+')');
-  return {g:g,w:w,h:ch};
-}
-function addGrid(g,ySc,w){
-  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickSize(-w).tickFormat(''))
-    .selectAll('line').style('stroke','rgba(255,255,255,0.05)').style('stroke-dasharray','3,3');
-  g.select('.domain').remove();
-}
-function addAxes(g,xSc,ySc,h,yFmt){
-  g.append('g').attr('transform','translate(0,'+h+')').call(d3.axisBottom(xSc).tickSize(0))
-    .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
-  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickFormat(yFmt||String))
-    .selectAll('text').style('fill','#555').style('font-family',"'DM Mono',monospace").style('font-size','10px');
-  g.selectAll('.domain,.tick line').style('stroke','rgba(255,255,255,0.08)');
-}
-function dCol(cur,prev,inv){
-  if(prev==null) return '#64748b';
-  var d = inv ? prev-cur : cur-prev;
-  return d>2?'#00B894':d>=-2?'#FDCB6E':'#ff7675';
-}
-function parseScore(v){
-  if(!v||String(v).indexOf('/')===-1) return 0;
-  var p=String(v).split('/'); return p[1]>0?Math.round(p[0]/p[1]*100):0;
-}
-
-// Generic line chart
-function lineChart(id, labels, datasets, h, yFmt) {
-  var d = makeSvg(id, h||220); if (!d) return;
-  var g=d.g, w=d.w, ch=d.h;
-  var allV = [];
-  datasets.forEach(function(ds){ ds.data.forEach(function(v){ if(v!=null) allV.push(v); }); });
-  if (!allV.length) return;
-  var yMin = Math.max(0, d3.min(allV)*0.88);
-  var yMax = d3.max(allV)*1.1||10;
-  var xSc = d3.scalePoint().domain(labels).range([0,w]);
-  var ySc = d3.scaleLinear().domain([yMin,yMax]).range([ch,0]);
-  addGrid(g,ySc,w);
-
-  datasets.forEach(function(ds) {
-    if (ds.refLine) {
-      var ry = ySc(ds.refLine);
-      if (ry>=0&&ry<=ch){
-        g.append('line').attr('x1',0).attr('y1',ry).attr('x2',w).attr('y2',ry)
-          .style('stroke',ds.color+'55').style('stroke-dasharray','5,4').style('stroke-width',1.5);
-      }
-      return;
-    }
-    if (ds.area) {
-      g.append('path').datum(ds.data)
-        .attr('fill',ds.color+'22')
-        .attr('d',d3.area().x(function(_,i){return xSc(labels[i]);}).y0(ch).y1(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
-    }
-    g.append('path').datum(ds.data)
-      .attr('fill','none').attr('stroke',ds.color).attr('stroke-width',ds.width||2.5)
-      .style('stroke-dasharray',ds.dash||'none')
-      .attr('d',d3.line().x(function(_,i){return xSc(labels[i]);}).y(function(v){return ySc(v);}).curve(d3.curveCatmullRom));
-    ds.data.forEach(function(v,i){
-      var col = ds.delta ? dCol(v,i>0?ds.data[i-1]:null,ds.inv||false) : ds.color;
-      g.append('circle').attr('cx',xSc(labels[i])).attr('cy',ySc(v)).attr('r',ds.r||5)
-        .attr('fill',col).attr('stroke','#0a0b0f').attr('stroke-width',1.5);
-    });
-  });
-
-  // Legend
-  var showLeg = datasets.filter(function(ds){return !ds.refLine && ds.label;});
-  if (showLeg.length > 1) {
-    var leg = g.append('g').attr('transform','translate(0,-2)');
-    showLeg.forEach(function(ds,i){
-      leg.append('rect').attr('x',i*100).attr('width',10).attr('height',3).attr('fill',ds.color).attr('rx',1);
-      leg.append('text').attr('x',i*100+14).attr('y',4).text(ds.label).style('fill','#888').style('font-size','9px').style('font-family',"'DM Mono',monospace");
-    });
-  }
-  addAxes(g,xSc,ySc,ch,yFmt);
-}
-
-function barChart(id, labels, vals, colorFn, h, yFmt) {
-  var d = makeSvg(id,h||220); if(!d) return;
-  var g=d.g, w=d.w, ch=d.h;
-  var mx = d3.max(vals)*1.15||10;
-  var xSc = d3.scaleBand().domain(labels).range([0,w]).padding(0.3);
-  var ySc = d3.scaleLinear().domain([0,mx]).range([ch,0]);
-  addGrid(g,ySc,w);
-  g.selectAll('.b').data(vals).enter().append('rect')
-    .attr('x',function(_,i){return xSc(labels[i]);})
-    .attr('y',function(v){return ySc(v);})
-    .attr('width',xSc.bandwidth()).attr('height',function(v){return ch-ySc(v);})
-    .attr('fill',function(v,i){return colorFn(v,i)+'BB';}).attr('stroke',function(v,i){return colorFn(v,i);})
-    .attr('stroke-width',1.5).attr('rx',4);
-  vals.forEach(function(v,i){
-    g.append('text').attr('x',xSc(labels[i])+xSc.bandwidth()/2).attr('y',ySc(v)-4)
-      .attr('text-anchor','middle').text(yFmt?yFmt(v):v)
-      .style('fill','#888').style('font-size','10px').style('font-family',"'DM Mono',monospace");
-  });
-  addAxes(g,xSc,ySc,ch,yFmt);
-}
-
-// ── Card helper ───────────────────────────────────────────────
-function addCard(id, title, sub, full) {
-  var grid = document.getElementById('vgGrid');
-  var div  = document.createElement('div');
-  div.className = 'vg-card'+(full?' full':'');
-  div.innerHTML = '<div class="vg-card-title">'+title+'</div><div class="vg-card-sub">'+sub+'</div><div id="'+id+'" style="height:220px"></div>';
-  grid.appendChild(div);
-}
-
-// ── Main rebuild ──────────────────────────────────────────────
-function rebuild() {
-  var p     = ALL_PATIENTS_META.find(function(x){return x.nr===currentNr;});
-  var allSS = ALL_SESSIONS[currentNr]||[];
-  var ss    = filterSessions(allSS);
-
-  // Update periode info
-  var fromV = parseInt(document.getElementById('fromSessie').value)||1;
-  var toV   = parseInt(document.getElementById('toSessie').value)||99;
-  var actualTo = Math.min(toV, allSS.length);
-  document.getElementById('periodeInfo').textContent =
-    ss.length > 0 ? ('Sessie '+ss[0].sessie+' – '+ss[ss.length-1].sessie+' ('+ss.length+' van '+allSS.length+' sessies)') : 'Geen sessies in range';
-
-  // ── KPIs ──
-  var first = allSS[0]||{}, last = allSS[allSS.length-1]||{};
-  var symD  = (typeof last.sym_index==='number'&&typeof first.sym_index==='number') ? last.sym_index-first.sym_index : 0;
-  var pijnD = (typeof last.pijn==='number'&&typeof first.pijn==='number') ? last.pijn-first.pijn : 0;
-  var enerD = (typeof last.energie==='number'&&typeof first.energie==='number') ? last.energie-first.energie : 0;
-  var ketelAvg = ss.length ? Math.round(ss.reduce(function(acc,x){ return acc+(x.ketel_aangeboden?x.ketel_correct/x.ketel_aangeboden*100:0); },0)/ss.length) : 0;
-
-  var kpis = [
-    {val:(last.pijn||'—')+'/10',    label:'Pijnscore nu',   delta:pijnD, unit:'/10', inv:true,  color:'#ff7675'},
-    {val:(last.energie||'—')+'/10', label:'Energie nu',     delta:enerD, unit:'/10', inv:false, color:'#00B894'},
-    {val:ketelAvg+'%',              label:'Ketel score gem.', delta:0,   unit:'',    inv:false, color:'#FDCB6E'},
-    {val:(last.sym_index||'—')+'%', label:'Symmetrie nu',   delta:symD,  unit:'pp',  inv:false, color:'#4ECDC4'},
+  var kpis=[
+    {label:'Sessies',    val:ss.length+'',                                        color:'var(--accent)'},
+    {label:'Sym. start', val:first.sym_index+'%',                                 color:'#6C5CE7'},
+    {label:'Sym. nu',    val:last.sym_index+'%',                                  color:'#6C5CE7'},
+    {label:'Sym. winst', val:(symDelta>=0?'+':'')+symDelta+'pp',                  color:symDelta>0?'#00B894':'#ff7675'},
+    {label:'Pijn ø',     val:pijnAvg+'/10',                                       color:'#ff7675'},
+    {label:'Energie ø',  val:enerAvg+'/10',                                       color:'#00B894'},
+    {label:'Ketel ø',    val:ketelAvg+'%',                                        color:'#55efc4'},
   ];
-  document.getElementById('vgKpis').innerHTML = kpis.map(function(k){
-    var good = k.inv?k.delta<0:k.delta>0;
-    var col  = k.delta===0?'#7a7f8e':good?'#00B894':'#ff7675';
-    var sign = k.delta>0?'+':'';
-    return '<div class="vg-kpi"><div class="vg-kpi-val" style="color:'+k.color+'">'+k.val+'</div><div class="vg-kpi-label">'+k.label+'</div>'+(k.delta!==0?'<div class="vg-kpi-delta" style="color:'+col+'">'+sign+k.delta+k.unit+' t.o.v. S1</div>':'')+'</div>';
-  }).join('');
+  kpis.forEach(function(k){
+    var el=document.createElement('div');
+    el.className='vg-kpi-item';
+    el.innerHTML='<div class="vg-kpi-val" style="color:'+k.color+'">'+k.val+'</div><div class="vg-kpi-lbl">'+k.label+'</div>';
+    bar.appendChild(el);
+  });
+}
 
-  document.getElementById('vgGrid').innerHTML = '';
+// ── SESSION STRIP ──
+function buildSessionStrip(ss) {
+  var strip=document.getElementById('vgSessionStrip');
+  strip.innerHTML='';
+  ss.forEach(function(s){
+    var welzijn=((10-s.pijn)+(10-s.frustratie)+s.energie)/3;
+    var emoji=welzijn>=7.5?'😄':welzijn>=6?'🙂':welzijn>=4.5?'😐':'😟';
+    var pill=document.createElement('div');
+    pill.className='vg-sess-pill';
+    var symCol=s.sym_index>=75?'#00B894':s.sym_index>=55?'#FDCB6E':'#ff7675';
+    pill.innerHTML=
+      '<span style="font-weight:700;color:var(--text)">S'+s.sessie+'</span>'+
+      '<span>'+emoji+'</span>'+
+      '<div class="vg-sess-divider"></div>'+
+      '<span style="color:'+symCol+'">'+s.sym_index+'%</span>'+
+      '<div class="vg-sess-divider"></div>'+
+      '<span style="color:#ff7675">p:'+s.pijn+'</span>'+
+      '<span style="color:#FDCB6E">f:'+s.frustratie+'</span>'+
+      '<span style="color:#00B894">e:'+s.energie+'</span>';
+    strip.appendChild(pill);
+  });
+}
 
-  if (!ss.length) {
-    document.getElementById('vgGrid').innerHTML = '<div class="vg-card full"><div class="vg-empty">Geen sessies in de geselecteerde range.<br>Pas de sessienummers aan.</div></div>';
-    document.getElementById('insightBox').innerHTML = '';
+// ── REBUILD ──
+function rebuild() {
+  var p=ALL_PATIENTS_META.find(function(x){return x.nr===currentNr;});
+  var allSS=ALL_SESSIONS[currentNr]||[];
+  var from=parseInt(document.getElementById('fromSessie').value)||1;
+  var to=parseInt(document.getElementById('toSessie').value)||allSS.length;
+  var ss=allSS.filter(function(s){return s.sessie>=from&&s.sessie<=to;});
+
+  if(p){
+    var aan=p.zijde;
+    document.getElementById('lbl-gyr-links').textContent  = aan==='Links'  ? 'Gyro Links (aangedaan)' : 'Gyro Links (gezond)';
+    document.getElementById('lbl-gyr-rechts').textContent = aan==='Rechts' ? 'Gyro Rechts (aangedaan)': 'Gyro Rechts (gezond)';
+  }
+
+  buildKpiBar(ss);
+  buildSessionStrip(ss);
+  document.getElementById('vgSessieInfo').textContent=ss.length+' van '+allSS.length+' sessies · '+(p?p.naam:'');
+
+  var metrics=Array.from(activeMetrics);
+  var labels=ss.map(function(s){return 'S'+s.sessie;});
+
+  var empty=document.getElementById('vgEmpty');
+  var chartEl=document.getElementById('vgChart');
+
+  if(!metrics.length||!ss.length){
+    empty.style.display='flex'; chartEl.style.display='none';
+    document.getElementById('vgChartTitle').textContent=metrics.length?'Geen sessies in deze range':'Selecteer metrics links →';
     return;
   }
 
-  var labels = ss.map(function(s){return 'S'+s.sessie;});
-  var lIsAan = p.zijde === 'Links';
-  var sess1  = allSS[0]||{};
-  var gyrGezRef = lIsAan ? (sess1.gyr_rechts||0) : (sess1.gyr_links||0);
+  empty.style.display='none'; chartEl.style.display='block';
 
-  // ── Symmetrie ──
-  if (activeGame === 'all' || activeGame === 'sym') {
-    addCard('c-sym','Symmetrie-index verloop','Punten = delta t.o.v. vorige sessie · Stippellijn = gezonde zijde referentie');
-    lineChart('c-sym', labels, [
-      {data:Array(labels.length).fill(100), color:'rgba(255,255,255,0.25)', width:1.5, dash:'6,4', label:null, refLine:null},
-      {data:ss.map(function(s){return s.sym_index;}), color:'#4ECDC4', area:true, delta:true, label:'Symmetrie-index'},
-    ], 220, function(v){return v+'%';});
-  }
+  var names=metrics.map(function(m){return METRICS[m]?METRICS[m].label:m;});
+  document.getElementById('vgChartTitle').textContent=names.length<=4?names.join(' · '):names.length+' metrics actief';
 
-  // ── Welzijn ──
-  if (activeGame === 'all' || activeGame === 'sym') {
-    addCard('c-wb','Welzijn — pijn, frustratie & energie','Pijn/frustratie lager = beter · Energie hoger = beter');
-    lineChart('c-wb', labels, [
-      {data:ss.map(function(s){return s.pijn;}),       color:'#ff7675', delta:true, inv:true,  label:'Pijn'},
-      {data:ss.map(function(s){return s.frustratie;}), color:'#FDCB6E', delta:true, inv:true,  label:'Frustratie'},
-      {data:ss.map(function(s){return s.energie;}),    color:'#00B894', delta:true, inv:false, label:'Energie'},
-    ], 220, function(v){return v+'/10';});
-  }
+  // ── D3 CHART ──
+  chartEl.innerHTML='';
+  var margin={top:24,right:24,bottom:32,left:48};
+  var W=chartEl.clientWidth||700;
+  var H=chartEl.clientHeight||360;
+  var w=W-margin.left-margin.right;
+  var h=H-margin.top-margin.bottom;
 
-  // ── Gyroscoop ──
-  if (activeGame === 'all' || activeGame === 'sym') {
-    addCard('c-gyr', 'Gyroscoop — '+p.zijde+' (aangedaan) vs '+(lIsAan?'Rechts':'Links')+' (gezond)', 'Hoe dichter bij elkaar, hoe beter het herstel');
-    lineChart('c-gyr', labels, [
-      {data:ss.map(function(s){return lIsAan?s.gyr_links:s.gyr_rechts;}),  color:'#ff7675', area:true, delta:true, label:p.zijde+' (aangedaan)'},
-      {data:ss.map(function(s){return lIsAan?s.gyr_rechts:s.gyr_links;}),  color:'#64748b', dash:'4,3', r:4, label:(lIsAan?'Rechts':'Links')+' (gezond)', width:2},
-    ], 220, function(v){return v+'°/s';});
-  }
+  var svg=d3.select(chartEl).append('svg')
+    .attr('width',W).attr('height',H);
+  var g=svg.append('g').attr('transform','translate('+margin.left+','+margin.top+')');
 
-  // ── Holomoves ──
-  if (activeGame === 'all' || activeGame === 'holomoves') {
-    addCard('c-holo','🎮 Holomoves — reikenscore %','Score als % van maximum per sessie');
-    barChart('c-holo', labels, ss.map(function(s){return parseScore(s.reiken);}),
-      function(v){return v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675';}, 220, function(v){return v+'%';});
+  // Build datasets
+  var datasets=metrics.map(function(m){
+    var cfg=METRICS[m]; if(!cfg) return null;
+    return {m:m, cfg:cfg, data:ss.map(function(s,i){return {i:i,s:s,v:cfg.parse(s)};})};
+  }).filter(Boolean);
 
-    addCard('c-holo2','🎮 Holomoves — alle categorieën','Score % per oefencategorie');
-    var cats = ['reiken','ROM','hand_los','vrije_ruimte','palmaire_greep'];
-    var cLbls = ['Reiken','ROM','Hand los','Vrije ruimte','Palm.'];
-    var cols  = ['#4ECDC4','#A29BFE','#FD79A8','#FDCB6E','#00B894'];
-    lineChart('c-holo2', labels,
-      cats.map(function(c,i){return {data:ss.map(function(s){return parseScore(s[c]);}), color:cols[i], label:cLbls[i], r:4};}),
-      220, function(v){return v+'%';});
-  }
+  // Scales
+  var xSc=d3.scalePoint().domain(labels).range([0,w]).padding(0.1);
 
-  // ── Blokki ──
-  if (activeGame === 'all' || activeGame === 'blokki') {
-    addCard('c-blokki','🧱 Blokki — pijnscore','Lagere pijn tijdens spel = beter draagbaar');
-    barChart('c-blokki', labels, ss.map(function(s){return s.blokki_pijn||0;}),
-      function(v){return v>6?'#ff7675':v>3?'#FDCB6E':'#00B894';}, 220, function(v){return v+'/10';});
-  }
+  var allVals=[];
+  datasets.forEach(function(ds){ds.data.forEach(function(d){allVals.push(d.v);});});
+  var yMin=d3.min(allVals), yMax=d3.max(allVals);
+  var pad=(yMax-yMin)*0.12||1;
+  var ySc=d3.scaleLinear().domain([Math.max(0,yMin-pad), yMax+pad]).range([h,0]).nice();
 
-  // ── Ketel ──
-  if (activeGame === 'all' || activeGame === 'ketel') {
-    addCard('c-ketel','🫙 Magische Ketel — treffscore %','Correct beantwoord als % van aangeboden per sessie');
-    barChart('c-ketel', labels, ss.map(function(s){return s.ketel_aangeboden?Math.round(s.ketel_correct/s.ketel_aangeboden*100):0;}),
-      function(v){return v>=75?'#00B894':v>=50?'#FDCB6E':'#ff7675';}, 220, function(v){return v+'%';});
-  }
+  // Grid lines
+  g.append('g')
+    .call(d3.axisLeft(ySc).ticks(5).tickSize(-w).tickFormat(''))
+    .selectAll('line').style('stroke','rgba(255,255,255,0.04)').style('stroke-dasharray','3,3');
+  g.select('.domain').remove();
 
-  // ── Insight ──
-  var trend = allSS.length>=2 ? allSS[allSS.length-1].sym_index-allSS[allSS.length-2].sym_index : 0;
-  var trendTxt = trend>2?'📈 Positieve trend':trend<-2?'📉 Lichte terugval':'→ Stabiel t.o.v. vorige sessie';
-  document.getElementById('insightBox').innerHTML =
-    '<div class="insight-icon">📊</div><div class="insight-text"><strong>Voortgang — '+p.naam+':</strong> ' +
-    'Van <strong>'+first.sym_index+'%</strong> → <strong>'+last.sym_index+'%</strong> symmetrie (+'+symD+'pp totaal). '+trendTxt+'. ' +
-    'Laatste pijn: <strong>'+last.pijn+'/10</strong>, energie: <strong>'+last.energie+'/10</strong>.' +
-    (ss.length!==allSS.length?'<br><em>Toont '+ss.length+' van '+allSS.length+' sessies.</em>':'')+'</div>';
+  // Tooltip element
+  var tip=d3.select(chartEl).append('div')
+    .style('position','absolute').style('pointer-events','none')
+    .style('background','#181b22').style('border','1px solid rgba(255,255,255,0.12)')
+    .style('border-radius','10px').style('padding','10px 14px')
+    .style('font-family',"'DM Mono',monospace").style('font-size','11px')
+    .style('color','#e8eaf0').style('display','none').style('z-index','999')
+    .style('min-width','160px').style('box-shadow','0 8px 32px rgba(0,0,0,0.6)');
+
+  // Vertical hover line
+  var hoverLine=g.append('line')
+    .attr('y1',0).attr('y2',h)
+    .style('stroke','rgba(255,255,255,0.15)').style('stroke-width',1)
+    .style('stroke-dasharray','4,3').style('display','none');
+
+  // Per dataset: area + line + dots
+  datasets.forEach(function(ds){
+    var color=ds.cfg.color;
+
+    // Area (alleen als 1 metric actief)
+    if(metrics.length===1){
+      var area=d3.area()
+        .x(function(d){return xSc(labels[d.i]);})
+        .y0(h).y1(function(d){return ySc(d.v);})
+        .curve(d3.curveCatmullRom);
+      g.append('path').datum(ds.data)
+        .attr('fill',color+'14').attr('d',area);
+    }
+
+    // Line
+    var line=d3.line()
+      .x(function(d){return xSc(labels[d.i]);})
+      .y(function(d){return ySc(d.v);})
+      .curve(d3.curveCatmullRom);
+    g.append('path').datum(ds.data)
+      .attr('fill','none').attr('stroke',color).attr('stroke-width',2.5)
+      .attr('stroke-linejoin','round').attr('d',line);
+
+    // Dots
+    ds.data.forEach(function(d){
+      var ptCol=color;
+      if(d.i>0){
+        var prev=ds.data[d.i-1].v;
+        var better=ds.cfg.lowerBetter?d.v<prev:d.v>prev;
+        var same=Math.abs(d.v-prev)<0.05;
+        ptCol=same?'#7a7f8e':better?'#00B894':'#ff7675';
+      }
+      g.append('circle')
+        .attr('cx',xSc(labels[d.i])).attr('cy',ySc(d.v))
+        .attr('r',5).attr('fill',ptCol)
+        .attr('stroke','#0a0b0f').attr('stroke-width',2);
+    });
+  });
+
+  // Axes
+  g.append('g').attr('transform','translate(0,'+h+')')
+    .call(d3.axisBottom(xSc).tickSize(0))
+    .selectAll('text').style('fill','#666').style('font-family',"'DM Mono',monospace").style('font-size','11px');
+  g.selectAll('.domain').style('stroke','rgba(255,255,255,0.08)');
+
+  g.append('g').call(d3.axisLeft(ySc).ticks(5))
+    .selectAll('text').style('fill','#666').style('font-family',"'DM Mono',monospace").style('font-size','11px');
+
+  // Legend
+  var legG=svg.append('g').attr('transform','translate('+margin.left+',6)');
+  var legX=0;
+  datasets.forEach(function(ds){
+    legG.append('rect').attr('x',legX).attr('y',0).attr('width',10).attr('height',3)
+      .attr('fill',ds.cfg.color).attr('rx',1);
+    var txt=legG.append('text').attr('x',legX+14).attr('y',8).text(ds.cfg.label)
+      .style('fill','#888').style('font-size','10px').style('font-family',"'DM Mono',monospace");
+    legX+=14+(ds.cfg.label.length*6.2)+16;
+  });
+
+  // Hover overlay
+  var overlay=g.append('rect')
+    .attr('width',w).attr('height',h)
+    .attr('fill','transparent')
+    .style('cursor','crosshair');
+
+  overlay.on('mousemove',function(event){
+    var mx=d3.pointer(event)[0];
+    // Snap to nearest x point
+    var closest=labels.reduce(function(a,lbl){
+      return Math.abs(xSc(lbl)-mx)<Math.abs(xSc(a)-mx)?lbl:a;
+    });
+    var idx=labels.indexOf(closest);
+    if(idx<0) return;
+
+    hoverLine.attr('x1',xSc(closest)).attr('x2',xSc(closest)).style('display',null);
+
+    var html='<div style="font-family:Syne,sans-serif;font-weight:700;font-size:13px;margin-bottom:8px;color:#e8eaf0">'+closest+'</div>';
+    datasets.forEach(function(ds){
+      var d=ds.data[idx];
+      var v=d.v;
+      var prev=idx>0?ds.data[idx-1].v:null;
+      var delta='';
+      if(prev!==null){
+        var diff=v-prev;
+        var better=ds.cfg.lowerBetter?diff<0:diff>0;
+        var same=Math.abs(diff)<0.05;
+        var arrow=same?'→':better?'↑':'↓';
+        var col=same?'#7a7f8e':better?'#00B894':'#ff7675';
+        delta=' <span style="color:'+col+'">'+arrow+(diff>=0?'+':'')+diff.toFixed(1)+'</span>';
+      }
+      html+='<div style="margin-bottom:3px"><span style="color:'+ds.cfg.color+'">'+ds.cfg.label+'</span>: <b>'+v+(ds.cfg.unit||'')+'</b>'+delta+'</div>';
+    });
+
+    var rect=chartEl.getBoundingClientRect();
+    var tx=event.clientX-rect.left+12;
+    var ty=event.clientY-rect.top-20;
+    if(tx+180>W) tx=event.clientX-rect.left-190;
+    tip.style('display','block').style('left',tx+'px').style('top',ty+'px').html(html);
+  });
+
+  overlay.on('mouseleave',function(){
+    tip.style('display','none');
+    hoverLine.style('display','none');
+  });
 }
 
-function selectPatient(nr) {
-  currentNr = nr;
-  localStorage.setItem('zivra_patient', nr);
-  var p = ALL_PATIENTS_META.find(function(x){return x.nr===nr;});
-  document.getElementById('psAvatar').textContent = p.naam[0];
-  document.getElementById('psName').textContent   = p.naam;
-  document.getElementById('psId').textContent     = '#'+p.nr;
-  document.getElementById('pageTitle').textContent = p.naam+' — Voortgang';
-  document.getElementById('pageDesc').textContent  = p.caras+' · '+p.kliniek+' · '+p.zijde+' aangedaan';
+// ── SELECT PATIENT ──
+function selectPatient(nr){
+  currentNr=nr;
+  localStorage.setItem('zivra_patient',nr);
+  var p=ALL_PATIENTS_META.find(function(x){return x.nr===nr;});
+  document.getElementById('psAvatar').textContent=p.naam[0];
+  document.getElementById('psName').textContent=p.naam;
+  document.getElementById('psId').textContent='#'+p.nr;
   document.querySelectorAll('.ps-item').forEach(function(el){el.classList.toggle('active',el.dataset.nr===nr);});
-  // Reset range to all sessions
-  var totalSS = (ALL_SESSIONS[nr]||[]).length;
-  document.getElementById('fromSessie').value = '1';
-  document.getElementById('toSessie').value   = String(totalSS);
+  var ss=ALL_SESSIONS[nr]||[];
+  document.getElementById('fromSessie').value=1;
+  document.getElementById('toSessie').value=ss.length;
   rebuild();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded',function(){
   buildPatientList();
   selectPatient(currentNr);
 });
