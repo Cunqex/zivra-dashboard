@@ -358,7 +358,7 @@ var currentNr = String(
   ALL_PATIENTS_META[0].nr
 );
 
-// 🔥 FIX: URL consistent houden
+//  FIX: URL consistent houden
 if (!urlPatient) {
   const newUrl = new URL(window.location.href);
   newUrl.searchParams.set('p', currentNr);
@@ -380,6 +380,19 @@ if (urlMetric) {
   activeMetrics.clear();
   activeMetrics.add(urlMetric);
 }
+
+//  UI sync voor geselecteerde metric
+if (urlMetric) {
+  document.querySelectorAll('[data-metric]').forEach(el => {
+    if (el.dataset.metric === urlMetric) {
+      el.classList.add('active');   // of 'selected'
+    } else {
+      el.classList.remove('active');
+    }
+  });
+}
+
+updateChart();
 // ── METRIC CONFIG ──
 function parseScore(v) {
   if (!v || String(v).indexOf('/')===-1) return 0;
