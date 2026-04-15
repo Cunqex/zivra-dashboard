@@ -1267,9 +1267,9 @@ function buildSessionSelector(nr) {
   ss.forEach((s, i) => {
     const item = document.createElement("div");
     item.className = "ss-item" + (window.selectedSessieIdx === i ? " active" : "");
-    const sym = s.sym_index;
-    const col = sym >= 80 ? '#00B894' : sym >= 60 ? '#FDCB6E' : '#ff7675';
-    item.innerHTML = `S${s.sessie} <span style="color:${col};font-size:11px">${sym}%</span>`;
+    const welzijn = ((10 - s.pijn) + (10 - s.frustratie) + s.energie) / 3;
+    const emoji = welzijn >= 7.5 ? '😄' : welzijn >= 6 ? '🙂' : welzijn >= 4.5 ? '😐' : '😟';
+    item.innerHTML = `S${s.sessie} <span style="font-size:13px">${emoji}</span>`;
     item.addEventListener("click", () => {
       window.selectedSessieIdx = i;
       val.textContent = "S" + s.sessie;
