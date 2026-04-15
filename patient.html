@@ -135,7 +135,7 @@
     <nav class="main-nav">
       <a href="index.html" class="nav-link">Dashboard</a>
       <a href="patient.html" class="nav-link active">Patiënt</a>
-      <a href="sessies.html" class="nav-link">Sessies</a>
+      
       <a href="voortgang.html" class="nav-link">Voortgang</a>
     </nav>
     <div class="patient-selector" id="patientSelector">
@@ -175,8 +175,8 @@
         <div class="pat-fullname" id="patName">—</div>
         <div class="pat-nr" id="patNr">—</div>
         <div id="patDetails"></div>
-        <a href="sessies.html" style="display:block;margin-top:20px;padding:10px;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.3);border-radius:10px;color:var(--accent);font-family:'DM Mono',monospace;font-size:12px;text-decoration:none;text-align:center">
-          → Bekijk alle sessies
+        <a href="voortgang.html" style="display:block;margin-top:20px;padding:10px;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.3);border-radius:10px;color:var(--accent);font-family:'DM Mono',monospace;font-size:12px;text-decoration:none;text-align:center">
+          → Bekijk voortgang
         </a>
       </div>
 
@@ -212,13 +212,13 @@
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-logo">ZIVRA <span>Bewegingsrevalidatie</span></div>
-    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="sessies.html">Sessies</a><a href="voortgang.html">Voortgang</a></div>
+    <div class="footer-links"><a href="index.html">Dashboard</a><a href="patient.html">Patiënt</a><a href="voortgang.html">Voortgang</a></div>
     <div class="footer-note">IMU data — 2026</div>
   </div>
 </footer>
 
 <script>
-let currentNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
+const _urlP = new URLSearchParams(window.location.search).get('p'); if(_urlP) localStorage.setItem('zivra_patient',_urlP); let currentNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
 let miniChart = null;
 
 function buildPatientList() {
@@ -242,7 +242,7 @@ function symColor(v) { return v>=80?'#00B894':v>=70?'#FDCB6E':v>=55?'#FF9F43':'#
 
 function selectPatient(nr) {
   currentNr = nr;
-  localStorage.setItem('zivra_patient', nr);
+  localStorage.setItem("zivra_patient", nr);
   const p  = ALL_PATIENTS_META.find(x => x.nr === nr);
   const ss = ALL_SESSIONS[nr] || [];
   const first = ss[0]||{}, last = ss[ss.length-1]||{};
