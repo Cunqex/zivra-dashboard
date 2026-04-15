@@ -345,54 +345,21 @@
 
 <script>
 // ── STATE ──
-// URL params (1x ophalen!)
-// URL params (1x ophalen!)
-const urlParams = new URLSearchParams(window.location.search);
-const urlPatient = urlParams.get('p');
-const urlMetric  = urlParams.get('metric');
+const _urlPatient = new URLSearchParams(window.location.search).get('p');
+const _urlMetric  = new URLSearchParams(window.location.search).get('metric');
+if (_urlPatient) localStorage.setItem('zivra_patient', _urlPatient);
+var currentNr = localStorage.getItem('zivra_patient') || ALL_PATIENTS_META[0].nr;
+window.addEventListener('beforeunload', function(){ localStorage.setItem('zivra_patient', currentNr); });
 
-// current patient bepalen
-var currentNr = String(
-  urlPatient || 
-  localStorage.getItem('zivra_patient') || 
-  ALL_PATIENTS_META[0].nr
-);
-
-//  FIX: URL consistent houden
-if (!urlPatient) {
-  const newUrl = new URL(window.location.href);
-  newUrl.searchParams.set('p', currentNr);
-  window.history.replaceState({}, '', newUrl);
-}
-
-// sync naar localStorage
-localStorage.setItem('zivra_patient', currentNr);
-
-// opslaan bij verlaten pagina
-window.addEventListener('beforeunload', function(){
-  localStorage.setItem('zivra_patient', currentNr);
-});
-
-// metrics
 var activeMetrics = new Set(['pijn']);
 
-if (urlMetric) {
+// Als we via sensor-klik binnenkomen, activeer die metric direct
+var _urlMetric = new URLSearchParams(window.location.search).get('metric');
+if (_urlMetric) {
   activeMetrics.clear();
-  activeMetrics.add(urlMetric);
+  activeMetrics.add(_urlMetric);
 }
 
-//  UI sync voor geselecteerde metric
-if (urlMetric) {
-  document.querySelectorAll('[data-metric]').forEach(el => {
-    if (el.dataset.metric === urlMetric) {
-      el.classList.add('active');   // of 'selected'
-    } else {
-      el.classList.remove('active');
-    }
-  });
-}
-
-updateChart();
 // ── METRIC CONFIG ──
 function parseScore(v) {
   if (!v || String(v).indexOf('/')===-1) return 0;
