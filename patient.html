@@ -171,7 +171,14 @@
 
       <!-- LEFT: ID CARD -->
       <div class="pat-id-card">
-        <div class="pat-avatar-big" id="patAvatar">V</div>
+        <div id="patAvatarWrap" style="position:relative;width:80px;height:80px;margin:0 auto 16px;cursor:pointer" onclick="document.getElementById('patFotoInput').click()" title="Klik om foto toe te voegen">
+          <div class="pat-avatar-big" id="patAvatar">V</div>
+          <div id="patAvatarImg" style="display:none;width:80px;height:80px;border-radius:50%;overflow:hidden;position:absolute;inset:0">
+            <img id="patAvatarImgEl" src="" style="width:100%;height:100%;object-fit:cover"/>
+          </div>
+          <div style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;border:2px solid var(--bg2)">📷</div>
+        </div>
+        <input type="file" id="patFotoInput" accept="image/*" style="display:none"/>
         <div class="pat-fullname" id="patName">—</div>
         <div class="pat-nr" id="patNr">—</div>
         <div id="patDetails"></div>
@@ -286,21 +293,13 @@ function selectPatient(nr) {
     diag("Energie laatste sessie", `${last.energie||'—'}/10`, (last.energie||0)>=7?'status-ok':(last.energie||0)>=4?'status-matig':'status-zorgelijk') +
     diag("Frustratie laatste sessie", `${last.frustratie||'—'}/10`, (last.frustratie||0)<=3?'status-ok':(last.frustratie||0)<=6?'status-matig':'status-zorgelijk');
 
-  // Foto placeholder
-  const fotoEl = document.getElementById('patFotoBlock');
-  if (fotoEl) {
-    fotoEl.innerHTML = `
-      <div style="width:100%;aspect-ratio:3/2;background:var(--bg3);border:2px dashed var(--border2);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:border-color 0.15s"
-           onclick="document.getElementById('patFotoInput').click()"
-           onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)'">
-        <div style="font-size:32px">📷</div>
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim)">Foto toevoegen</div>
-        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);opacity:0.6">Klik om te uploaden</div>
-      </div>
-      <input type="file" id="patFotoInput" accept="image/*" style="display:none" onchange="loadFoto(this, '${nr}')"/>`;
-    // Laad opgeslagen foto indien aanwezig
-    const saved = localStorage.getItem('zivra_foto_'+nr);
-    if (saved) showFoto(fotoEl, saved, nr);
+  // Foto laden indien opgeslagen
+  const savedFoto = localStorage.getItem('zivra_foto_'+nr);
+  if (savedFoto) {
+    showAvatarFoto(savedFoto);
+  } else {
+    document.getElementById('patAvatar').style.display = '';
+    document.getElementById('patAvatarImg').style.display = 'none';
   }
 
   // Inzicht
@@ -321,31 +320,30 @@ function loadFoto(input, nr) {
   const reader = new FileReader();
   reader.onload = function(e) {
     localStorage.setItem('zivra_foto_'+nr, e.target.result);
-    showFoto(document.getElementById('patFotoBlock'), e.target.result, nr);
+    showAvatarFoto(e.target.result);
   };
   reader.readAsDataURL(file);
 }
 
-function showFoto(container, src, nr) {
-  container.innerHTML = `
-    <div style="position:relative;border-radius:12px;overflow:hidden">
-      <img src="${src}" style="width:100%;aspect-ratio:3/2;object-fit:cover;display:block;border-radius:12px"/>
-      <button onclick="verwijderFoto('${nr}')"
-        style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:10px;padding:4px 8px;cursor:pointer">
-        Verwijderen
-      </button>
-    </div>`;
+function showAvatarFoto(src) {
+  document.getElementById('patAvatar').style.display = 'none';
+  const wrap = document.getElementById('patAvatarImg');
+  wrap.style.display = 'block';
+  document.getElementById('patAvatarImgEl').src = src;
 }
 
 function verwijderFoto(nr) {
   localStorage.removeItem('zivra_foto_'+nr);
-  selectPatient(nr);
+  document.getElementById('patAvatar').style.display = '';
+  document.getElementById('patAvatarImg').style.display = 'none';
+  document.getElementById('patAvatarImgEl').src = '';
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("psTrigger").addEventListener("click", e => { e.stopPropagation(); document.getElementById("psDropdown").classList.contains("open")?closeDropdown():openDropdown(); });
   document.addEventListener("click", e => { if(!document.getElementById("patientSelector").contains(e.target)) closeDropdown(); });
   document.getElementById("psSearch").addEventListener("input", e => filterList(e.target.value.toLowerCase()));
+  document.getElementById("patFotoInput").addEventListener("change", function(){ loadFoto(this, currentNr); });
   buildPatientList();
   selectPatient(currentNr);
 });
