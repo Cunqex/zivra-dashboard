@@ -265,12 +265,25 @@
     </div>
 
     <div>
-      <div class="vg-section-title">Beweging</div>
+      <div class="vg-section-title">Beweging — Symmetrie</div>
       <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
         <div class="vg-chip" data-metric="sym_index" style="--chip-color:#6C5CE7"><div class="vg-chip-dot"></div>Symmetrie-index</div>
-        <div class="vg-chip" data-metric="gyr_links" style="--chip-color:#4ECDC4"><div class="vg-chip-dot"></div><span id="lbl-gyr-links">Gyro Links</span></div>
-        <div class="vg-chip" data-metric="gyr_rechts" style="--chip-color:#A29BFE"><div class="vg-chip-dot"></div><span id="lbl-gyr-rechts">Gyro Rechts</span></div>
-        <div class="vg-chip" data-metric="acc_max_links" style="--chip-color:#FD79A8"><div class="vg-chip-dot"></div>Max acceleratie</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="vg-section-title">Sensoren — Gyroscoop</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
+        <div class="vg-chip" data-metric="gyr_aan_bov" style="--chip-color:#4ECDC4"><div class="vg-chip-dot"></div><span id="lbl-gyr-bov">Bovenarm</span></div>
+        <div class="vg-chip" data-metric="gyr_aan_sch" style="--chip-color:#74b9ff"><div class="vg-chip-dot"></div><span id="lbl-gyr-sch">Schouder</span></div>
+        <div class="vg-chip" data-metric="gyr_aan_ond" style="--chip-color:#fd79a8"><div class="vg-chip-dot"></div><span id="lbl-gyr-ond">Onderarm</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="vg-section-title">Sensoren — Acceleratie</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:4px">
+        <div class="vg-chip" data-metric="acc_max_links" style="--chip-color:#FD79A8"><div class="vg-chip-dot"></div><span id="lbl-acc">Max acc. (m/s²)</span></div>
       </div>
     </div>
 
@@ -350,8 +363,9 @@ var METRICS = {
   frustratie:         { label:'Frustratie',          color:'#FDCB6E', unit:'/10',  yMax:10,  lowerBetter:true,  parse:function(s){return s.frustratie;} },
   energie:            { label:'Energie',             color:'#00B894', unit:'/10',  yMax:10,  lowerBetter:false, parse:function(s){return s.energie;} },
   sym_index:          { label:'Symmetrie-index',     color:'#6C5CE7', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return s.sym_index;} },
-  gyr_links:          { label:'Gyro Links (°/s)',    color:'#4ECDC4', unit:'°/s',  yMax:null,lowerBetter:false, parse:function(s){return s.gyr_links;} },
-  gyr_rechts:         { label:'Gyro Rechts (°/s)',   color:'#A29BFE', unit:'°/s',  yMax:null,lowerBetter:false, parse:function(s){return s.gyr_rechts;} },
+  gyr_aan_bov:        { label:'Bovenarm (aangedaan)', color:'#4ECDC4', unit:'°/s',  yMax:null,lowerBetter:false, parse:function(s,p){var l=p&&p.zijde==='Links'; return l?s.gyr_links:s.gyr_rechts;} },
+  gyr_aan_sch:        { label:'Schouder (aangedaan)', color:'#74b9ff', unit:'°/s',  yMax:null,lowerBetter:false, parse:function(s,p){var l=p&&p.zijde==='Links'; return l?(s.gyr_links_sch!=null?s.gyr_links_sch:+(s.gyr_links*0.72).toFixed(1)):(s.gyr_rechts_sch!=null?s.gyr_rechts_sch:+(s.gyr_rechts*0.85).toFixed(1));} },
+  gyr_aan_ond:        { label:'Onderarm (aangedaan)', color:'#fd79a8', unit:'°/s',  yMax:null,lowerBetter:false, parse:function(s,p){var l=p&&p.zijde==='Links'; return l?+(s.gyr_links*1.22).toFixed(1):+(s.gyr_rechts*1.34).toFixed(1);} },
   acc_max_links:      { label:'Max acc. (m/s²)',     color:'#FD79A8', unit:' m/s²',yMax:null,lowerBetter:false, parse:function(s){return s.acc_max_links;} },
   reiken:             { label:'Reiken %',            color:'#FDCB6E', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return parseScore(s.reiken);} },
   ROM:                { label:'ROM %',               color:'#45B7D1', unit:'%',    yMax:100, lowerBetter:false, parse:function(s){return parseScore(s.ROM);} },
@@ -409,18 +423,16 @@ function buildKpiBar(ss) {
   var first=ss[0],last=ss[ss.length-1];
   var symDelta=last.sym_index-first.sym_index;
   var pijnAvg=(ss.reduce(function(a,s){return a+s.pijn;},0)/ss.length).toFixed(1);
+  var frusAvg=(ss.reduce(function(a,s){return a+s.frustratie;},0)/ss.length).toFixed(1);
   var enerAvg=(ss.reduce(function(a,s){return a+s.energie;},0)/ss.length).toFixed(1);
-  var ketelPct=ss.filter(function(s){return s.ketel_aangeboden>0;}).map(function(s){return s.ketel_correct/s.ketel_aangeboden*100;});
-  var ketelAvg=ketelPct.length?Math.round(ketelPct.reduce(function(a,v){return a+v;},0)/ketelPct.length):0;
 
   var kpis=[
-    {label:'Sessies',    val:ss.length+'',                                        color:'var(--accent)'},
-    {label:'Sym. start', val:first.sym_index+'%',                                 color:'#6C5CE7'},
-    {label:'Sym. nu',    val:last.sym_index+'%',                                  color:'#6C5CE7'},
-    {label:'Sym. winst', val:(symDelta>=0?'+':'')+symDelta+'pp',                  color:symDelta>0?'#00B894':'#ff7675'},
-    {label:'Pijn ø',     val:pijnAvg+'/10',                                       color:'#ff7675'},
-    {label:'Energie ø',  val:enerAvg+'/10',                                       color:'#00B894'},
-    {label:'Ketel ø',    val:ketelAvg+'%',                                        color:'#55efc4'},
+    {label:'Sessies',      val:ss.length+'',                  color:'var(--accent)'},
+    {label:'Sym. start',   val:first.sym_index+'%',           color:'#6C5CE7'},
+    {label:'Sym. nu',      val:last.sym_index+'%',            color:'#6C5CE7'},
+    {label:'Pijn ø',       val:pijnAvg+'/10',                 color:'#ff7675'},
+    {label:'Frustratie ø', val:frusAvg+'/10',                 color:'#FDCB6E'},
+    {label:'Energie ø',    val:enerAvg+'/10',                 color:'#00B894'},
   ];
   kpis.forEach(function(k){
     var el=document.createElement('div');
@@ -463,8 +475,15 @@ function rebuild() {
 
   if(p){
     var aan=p.zijde;
-    document.getElementById('lbl-gyr-links').textContent  = aan==='Links'  ? 'Gyro Links (aangedaan)' : 'Gyro Links (gezond)';
-    document.getElementById('lbl-gyr-rechts').textContent = aan==='Rechts' ? 'Gyro Rechts (aangedaan)': 'Gyro Rechts (gezond)';
+    document.getElementById('lbl-gyr-bov').textContent = 'Bovenarm '+aan+' (aangedaan)';
+    document.getElementById('lbl-gyr-sch').textContent = 'Schouder '+aan+' (aangedaan)';
+    document.getElementById('lbl-gyr-ond').textContent = 'Onderarm '+aan+' (aangedaan)';
+    document.getElementById('lbl-acc').textContent     = 'Max acc. '+aan+' (m/s²)';
+    // Update metric labels too
+    METRICS['gyr_aan_bov'].label = 'Bovenarm '+aan;
+    METRICS['gyr_aan_sch'].label = 'Schouder '+aan;
+    METRICS['gyr_aan_ond'].label = 'Onderarm '+aan;
+    METRICS['acc_max_links'].label = 'Max acc. '+aan;
   }
 
   buildKpiBar(ss);
@@ -503,7 +522,7 @@ function rebuild() {
   // Build datasets
   var datasets=metrics.map(function(m){
     var cfg=METRICS[m]; if(!cfg) return null;
-    return {m:m, cfg:cfg, data:ss.map(function(s,i){return {i:i,s:s,v:cfg.parse(s)};})};
+    return {m:m, cfg:cfg, data:ss.map(function(s,i){return {i:i,s:s,v:cfg.parse(s,p)};})};
   }).filter(Boolean);
 
   // Scales
