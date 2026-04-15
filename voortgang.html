@@ -353,13 +353,6 @@ window.addEventListener('beforeunload', function(){ localStorage.setItem('zivra_
 
 var activeMetrics = new Set(['pijn']);
 
-// Als we via sensor-klik binnenkomen, activeer die metric direct
-var _urlMetric = new URLSearchParams(window.location.search).get('metric');
-if (_urlMetric) {
-  activeMetrics.clear();
-  activeMetrics.add(_urlMetric);
-}
-
 // ── METRIC CONFIG ──
 function parseScore(v) {
   if (!v || String(v).indexOf('/')===-1) return 0;
