@@ -349,45 +349,45 @@
 
         <!-- SCHOUDER LINKS -->
         <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
-          <circle cx="358" cy="168" r="48" fill="#A29BFE" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle cx="358" cy="168" r="34" fill="#A29BFE" class="sensor-dot-main"/>
+          <circle cx="358" cy="168" r="48" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle cx="358" cy="168" r="34" fill="#4a5568" class="sensor-dot-main"/>
           <text id="lbl-schl-id"  x="358" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
           <text id="lbl-schl-sub" x="358" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
         </g>
 
         <!-- SCHOUDER RECHTS -->
         <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
-          <circle cx="542" cy="168" r="48" fill="#45B7D1" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle cx="542" cy="168" r="34" fill="#45B7D1" class="sensor-dot-main"/>
+          <circle cx="542" cy="168" r="48" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle cx="542" cy="168" r="34" fill="#4a5568" class="sensor-dot-main"/>
           <text id="lbl-schr-id"  x="542" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
           <text id="lbl-schr-sub" x="542" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
         </g>
 
         <!-- ARM SENSORS — positie door JS -->
         <g id="sensor-bovl" class="sensor-dot-group" data-sensor="Bovenarm Links" style="cursor:pointer">
-          <circle id="bg-bovl"  r="46" fill="#FD79A8" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle id="dot-bovl" r="32" fill="#FD79A8" class="sensor-dot-main"/>
+          <circle id="bg-bovl"  r="46" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle id="dot-bovl" r="32" fill="#4a5568" class="sensor-dot-main"/>
           <text id="lbl-bovl-id" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">—</text>
           <text id="lbl-bovl-sub" font-family="'DM Mono',monospace" font-size="13" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
         </g>
 
         <g id="sensor-ondl" class="sensor-dot-group" data-sensor="Onderarm Links" style="cursor:pointer">
-          <circle id="bg-ondl"  r="46" fill="#6C5CE7" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle id="dot-ondl" r="32" fill="#6C5CE7" class="sensor-dot-main"/>
+          <circle id="bg-ondl"  r="46" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle id="dot-ondl" r="32" fill="#4a5568" class="sensor-dot-main"/>
           <text id="lbl-ondl-id" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">—</text>
           <text id="lbl-ondl-sub" font-family="'DM Mono',monospace" font-size="13" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
         </g>
 
         <g id="sensor-bovr" class="sensor-dot-group" data-sensor="Bovenarm Rechts" style="cursor:pointer">
-          <circle id="bg-bovr"  r="46" fill="#FDCB6E" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle id="dot-bovr" r="32" fill="#FDCB6E" class="sensor-dot-main"/>
+          <circle id="bg-bovr"  r="46" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle id="dot-bovr" r="32" fill="#4a5568" class="sensor-dot-main"/>
           <text id="lbl-bovr-id" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">—</text>
           <text id="lbl-bovr-sub" font-family="'DM Mono',monospace" font-size="13" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
         </g>
 
         <g id="sensor-ondr" class="sensor-dot-group" data-sensor="Onderarm Rechts" style="cursor:pointer">
-          <circle id="bg-ondr"  r="46" fill="#00B894" fill-opacity="0.1" class="sensor-pulse-bg"/>
-          <circle id="dot-ondr" r="32" fill="#00B894" class="sensor-dot-main"/>
+          <circle id="bg-ondr"  r="46" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
+          <circle id="dot-ondr" r="32" fill="#4a5568" class="sensor-dot-main"/>
           <text id="lbl-ondr-id" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f" text-anchor="middle">—</text>
           <text id="lbl-ondr-sub" font-family="'DM Mono',monospace" font-size="13" font-weight="600" fill="#0a0b0f" text-anchor="middle">—</text>
         </g>
@@ -459,8 +459,8 @@
 // SENSOR CONFIG
 // ============================================================
 const COLORS = {
-  "Sternum (Borst)": "#8B5CF6","Schouder Links": "#A29BFE","Schouder Rechts": "#45B7D1",
-  "Bovenarm Links":  "#FD79A8","Bovenarm Rechts": "#FDCB6E","Onderarm Links": "#6C5CE7","Onderarm Rechts": "#00B894",
+  "Sternum (Borst)": "#64748b","Schouder Links": "#4a5568","Schouder Rechts": "#4a5568",
+  "Bovenarm Links":  "#4a5568","Bovenarm Rechts": "#4a5568","Onderarm Links": "#4a5568","Onderarm Rechts": "#4a5568",
 };
 const SENSORS = Object.keys(COLORS);
 const SIDE = {
