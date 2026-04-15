@@ -1070,7 +1070,7 @@ function buildBodyHero(p, ss, sd) {
   const lblSternumId  = document.getElementById('lbl-sternum-id');
   const lblSternumSub = document.getElementById('lbl-sternum-sub');
   if (lblSternumId)  lblSternumId.textContent  = sternumDelta !== null ? Math.abs(sternumDelta) + '%' : '—';
-  if (lblSternumSub) lblSternumSub.textContent = sternumDelta !== null ? (sternumDelta >= 0 ? '↑' : '↓') : '';
+  if (lblSternumSub) lblSternumSub.textContent = sternumDelta !== null ? (sternumCol === '#00B894' ? '↑' : '↓') : '';
 
   const bovLbl = sensorLabel(curAanBov, prevAanBov, lIsAangedaan ? kleurBov : kleurBovR);
   const ondLbl = sensorLabel(curAanOnd, prevAanOnd, lIsAangedaan ? kleurOnd : kleurOndR);
