@@ -399,9 +399,6 @@ function buildPatientList() {
 }
 function openDropdown(){document.getElementById('psDropdown').classList.add('open');document.getElementById('psSearch').focus();}
 function closeDropdown(){document.getElementById('psDropdown').classList.remove('open');document.getElementById('psSearch').value='';filterList('');}
-document.getElementById('psTrigger').addEventListener('click',function(e){e.stopPropagation();document.getElementById('psDropdown').classList.contains('open')?closeDropdown():openDropdown();});
-document.addEventListener('click',function(e){if(!document.getElementById('patientSelector').contains(e.target))closeDropdown();});
-document.getElementById('psSearch').addEventListener('input',function(e){filterList(e.target.value.toLowerCase());});
 function filterList(q){document.querySelectorAll('.ps-item').forEach(function(el){el.style.display=el.textContent.toLowerCase().includes(q)?'':'none';});}
 
 // ── CHIPS ──
@@ -726,12 +723,16 @@ function selectPatient(nr){
 }
 
 document.addEventListener('DOMContentLoaded',function(){
+  // Patient selector events
+  document.getElementById('psTrigger').addEventListener('click',function(e){e.stopPropagation();document.getElementById('psDropdown').classList.contains('open')?closeDropdown():openDropdown();});
+  document.addEventListener('click',function(e){if(!document.getElementById('patientSelector').contains(e.target))closeDropdown();});
+  document.getElementById('psSearch').addEventListener('input',function(e){filterList(e.target.value.toLowerCase());});
+
   buildPatientList();
   // Als een metric meegegeven via URL, activeer die ipv standaard pijn
   if(_urlMetric && METRICS[_urlMetric]){
     activeMetrics.clear();
     activeMetrics.add(_urlMetric);
-    // Deactiveer standaard pijn chip, activeer juiste chip
     document.querySelectorAll('.vg-chip').forEach(function(c){
       if(c.dataset.metric===_urlMetric) c.classList.add('active');
       else c.classList.remove('active');
