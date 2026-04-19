@@ -324,7 +324,8 @@
 
         <!-- AANGEDANE KANT LABEL — naast de schouder, BUITEN armbereik -->
         <!-- Linker schouder: cx=358. Label ver links buiten arm-zone -->
-        <g id="body-label-links" opacity="0">
+        <!-- Klinisch gespiegeld: links in beeld = rechts patiënt -->
+        <g id="body-label-rechts" opacity="0">
           <line x1="300" y1="168" x2="324" y2="168"
             stroke="#ff7675" stroke-width="1.5" stroke-dasharray="4,3"/>
           <rect x="210" y="154" width="88" height="28" rx="8"
@@ -332,8 +333,7 @@
           <text x="254" y="172" text-anchor="middle"
             font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#ff7675">⚠ Aangedaan</text>
         </g>
-        <!-- Rechter schouder: cx=542. Label ver rechts -->
-        <g id="body-label-rechts" opacity="0">
+        <g id="body-label-links" opacity="0">
           <line x1="566" y1="168" x2="590" y2="168"
             stroke="#ff7675" stroke-width="1.5" stroke-dasharray="4,3"/>
           <rect x="592" y="154" width="88" height="28" rx="8"
@@ -347,19 +347,19 @@
         <g id="arm-rechts-drawn"></g>
 
         <!-- SCHOUDER LINKS -->
-        <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
+        <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
           <circle cx="358" cy="168" r="48" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle cx="358" cy="168" r="34" fill="#4a5568" class="sensor-dot-main"/>
-          <text id="lbl-schl-id"  x="358" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
-          <text id="lbl-schl-sub" x="358" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schr-id"  x="542" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schr-sub" x="542" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
         </g>
 
         <!-- SCHOUDER RECHTS -->
-        <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
+        <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
           <circle cx="542" cy="168" r="48" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle cx="542" cy="168" r="34" fill="#4a5568" class="sensor-dot-main"/>
-          <text id="lbl-schr-id"  x="542" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
-          <text id="lbl-schr-sub" x="542" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schl-id"  x="358" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schl-sub" x="358" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
         </g>
 
         <!-- ARM SENSORS — positie door JS -->
@@ -900,8 +900,9 @@ function buildBodyHero(p, ss, sd) {
 
   const spreadL = 10 + ratioL * 55;
   const spreadR = 10 + ratioR * 55;
-  const SL = { x: 375, y: 168 };
-  const SR = { x: 525, y: 168 };
+  // Spiegeld: vanuit klinisch perspectief is links in beeld = rechts van patiënt
+  const SL = { x: 525, y: 168 }; // linker kant beeld = rechts patiënt
+  const SR = { x: 375, y: 168 }; // rechter kant beeld = links patiënt
   const upperLen = 155, lowerLen = 135;
 
   function armPoints(sx, sy, angle, side) {
@@ -952,8 +953,8 @@ function buildBodyHero(p, ss, sd) {
   }
 
   // Schouder sensor kleuren + labels updaten
-  const schLDot = document.querySelector('[data-sensor="Schouder Links"] circle.sensor-dot-main');
-  const schRDot = document.querySelector('[data-sensor="Schouder Rechts"] circle.sensor-dot-main');
+  const schLDot = document.querySelector('[data-sensor="Schouder Rechts"] circle.sensor-dot-main');
+  const schRDot = document.querySelector('[data-sensor="Schouder Links"] circle.sensor-dot-main');
   if (schLDot) schLDot.setAttribute('fill', lIsAangedaan ? kleurSch : '#64748b');
   if (schRDot) schRDot.setAttribute('fill', !lIsAangedaan ? kleurSchR : '#64748b');
 
@@ -1011,8 +1012,8 @@ function buildBodyHero(p, ss, sd) {
     const ptsL = armPoints(SL.x, SL.y, spreadL * ease, 'L');
     const ptsR = armPoints(SR.x, SR.y, spreadR * ease, 'R');
 
-    drawArm('arm-links-drawn',  SL.x, SL.y, ptsL, kleurL);
-    drawArm('arm-rechts-drawn', SR.x, SR.y, ptsR, kleurR);
+    drawArm('arm-rechts-drawn', SL.x, SL.y, ptsL, kleurL);
+    drawArm('arm-links-drawn',  SR.x, SR.y, ptsR, kleurR);
 
     const kleurBovL  = lIsAangedaan ? kleurBov : '#64748b';
     const kleurOndL  = lIsAangedaan ? kleurOnd : '#64748b';
