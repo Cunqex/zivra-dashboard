@@ -324,8 +324,7 @@
 
         <!-- AANGEDANE KANT LABEL — naast de schouder, BUITEN armbereik -->
         <!-- Linker schouder: cx=358. Label ver links buiten arm-zone -->
-        <!-- Klinisch gespiegeld: links in beeld = rechts patiënt -->
-        <g id="body-label-rechts" opacity="0">
+        <g id="body-label-links" opacity="0">
           <line x1="300" y1="168" x2="324" y2="168"
             stroke="#ff7675" stroke-width="1.5" stroke-dasharray="4,3"/>
           <rect x="210" y="154" width="88" height="28" rx="8"
@@ -333,7 +332,7 @@
           <text x="254" y="172" text-anchor="middle"
             font-family="'DM Mono',monospace" font-size="10" font-weight="700" fill="#ff7675">⚠ Aangedaan</text>
         </g>
-        <g id="body-label-links" opacity="0">
+        <g id="body-label-rechts" opacity="0">
           <line x1="566" y1="168" x2="590" y2="168"
             stroke="#ff7675" stroke-width="1.5" stroke-dasharray="4,3"/>
           <rect x="592" y="154" width="88" height="28" rx="8"
@@ -347,19 +346,19 @@
         <g id="arm-rechts-drawn"></g>
 
         <!-- SCHOUDER LINKS -->
-        <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
+        <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
           <circle cx="358" cy="168" r="48" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle cx="358" cy="168" r="34" fill="#4a5568" class="sensor-dot-main"/>
-          <text id="lbl-schr-id"  x="542" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
-          <text id="lbl-schr-sub" x="542" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schl-id"  x="358" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schl-sub" x="358" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
         </g>
 
         <!-- SCHOUDER RECHTS -->
-        <g class="sensor-dot-group" data-sensor="Schouder Links" style="cursor:pointer">
+        <g class="sensor-dot-group" data-sensor="Schouder Rechts" style="cursor:pointer">
           <circle cx="542" cy="168" r="48" fill="#4a5568" fill-opacity="0.1" class="sensor-pulse-bg"/>
           <circle cx="542" cy="168" r="34" fill="#4a5568" class="sensor-dot-main"/>
-          <text id="lbl-schl-id"  x="358" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
-          <text id="lbl-schl-sub" x="358" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schr-id"  x="542" y="164" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" font-weight="700" fill="#0a0b0f">—</text>
+          <text id="lbl-schr-sub" x="542" y="179" text-anchor="middle" font-family="'DM Mono',monospace" font-size="12" font-weight="700" fill="#0a0b0f">—</text>
         </g>
 
         <!-- ARM SENSORS — positie door JS -->
@@ -640,8 +639,9 @@ function buildBodyHero(p, ss, sd) {
   document.getElementById("bhZijde").style.color     = '#ff7675';
   document.getElementById("bhZijdeSub").textContent  = `Aangedane zijde — verlamd / beperkt`;
 
-  // ---- GYRO — lIsAangedaan nog nodig voor arm-kleuren ----
-  const lIsAangedaan = aangedaan === "Links";
+  // ---- GYRO — lIsAangedaan voor data, rIsAangedaan voor visueel (klinisch gespiegeld) ----
+  const lIsAangedaan = aangedaan === "Links";  // data: links = gyr_links
+  const visLIsAan = !lIsAangedaan;             // visueel: links in beeld = rechts patiënt
 
   // (signaalkaartjes worden verderop gebouwd, na sensorkleur-berekeningen)
 
@@ -718,8 +718,9 @@ function buildBodyHero(p, ss, sd) {
 
   // Voor armbalk (één kleur = bovenarm, meest representatief)
   const kleurAangedaan = aanIdx ? kleurBov : kleurBovR;
-  const kleurL = aanIdx ? kleurBov : '#64748b';
-  const kleurR = !aanIdx ? kleurBovR : '#64748b';
+  // Klinisch gespiegeld: links in beeld = rechts patiënt
+  const kleurL = !aanIdx ? kleurBovR : '#64748b';
+  const kleurR = aanIdx  ? kleurBov  : '#64748b';
 
   // ---- STATUS BANNER — één slimme boodschap ----
   {
@@ -900,9 +901,8 @@ function buildBodyHero(p, ss, sd) {
 
   const spreadL = 10 + ratioL * 55;
   const spreadR = 10 + ratioR * 55;
-  // Spiegeld: vanuit klinisch perspectief is links in beeld = rechts van patiënt
-  const SL = { x: 525, y: 168 }; // linker kant beeld = rechts patiënt
-  const SR = { x: 375, y: 168 }; // rechter kant beeld = links patiënt
+  const SL = { x: 375, y: 168 };
+  const SR = { x: 525, y: 168 };
   const upperLen = 155, lowerLen = 135;
 
   function armPoints(sx, sy, angle, side) {
@@ -953,10 +953,10 @@ function buildBodyHero(p, ss, sd) {
   }
 
   // Schouder sensor kleuren + labels updaten
-  const schLDot = document.querySelector('[data-sensor="Schouder Rechts"] circle.sensor-dot-main');
-  const schRDot = document.querySelector('[data-sensor="Schouder Links"] circle.sensor-dot-main');
-  if (schLDot) schLDot.setAttribute('fill', lIsAangedaan ? kleurSch : '#64748b');
-  if (schRDot) schRDot.setAttribute('fill', !lIsAangedaan ? kleurSchR : '#64748b');
+  const schLDot = document.querySelector('[data-sensor="Schouder Links"] circle.sensor-dot-main');
+  const schRDot = document.querySelector('[data-sensor="Schouder Rechts"] circle.sensor-dot-main');
+  if (schLDot) schLDot.setAttribute('fill', visLIsAan ? kleurSch : '#64748b');
+  if (schRDot) schRDot.setAttribute('fill', !visLIsAan ? kleurSchR : '#64748b');
 
   // Schouder labels
   const lblSchLId  = document.getElementById('lbl-schl-id');
@@ -967,10 +967,10 @@ function buildBodyHero(p, ss, sd) {
   const schLGyrPrev = prevGyrAanSchOvr;
   const schLbl = sensorLabel(schLGyrCur, schLGyrPrev, lIsAangedaan ? kleurSch : '#64748b');
   const schRbl = sensorLabel(curGyrAanSchOvr, prevGyrAanSchOvr, !lIsAangedaan ? kleurSchR : '#64748b');
-  if (lblSchLId)  { lblSchLId.textContent  = lIsAangedaan ? schLbl.top : '—'; lblSchLId.setAttribute('fill', '#0a0b0f'); }
-  if (lblSchLSub) { lblSchLSub.textContent = lIsAangedaan ? schLbl.sub : '';  lblSchLSub.setAttribute('fill', '#0a0b0f'); }
-  if (lblSchRId)  { lblSchRId.textContent  = !lIsAangedaan ? schRbl.top : '—'; lblSchRId.setAttribute('fill', '#0a0b0f'); }
-  if (lblSchRSub) { lblSchRSub.textContent = !lIsAangedaan ? schRbl.sub : '';  lblSchRSub.setAttribute('fill', '#0a0b0f'); }
+  if (lblSchLId)  { lblSchLId.textContent  = visLIsAan ? schLbl.top : '—'; lblSchLId.setAttribute('fill', '#0a0b0f'); }
+  if (lblSchLSub) { lblSchLSub.textContent = visLIsAan ? schLbl.sub : '';  lblSchLSub.setAttribute('fill', '#0a0b0f'); }
+  if (lblSchRId)  { lblSchRId.textContent  = !visLIsAan ? schRbl.top : '—'; lblSchRId.setAttribute('fill', '#0a0b0f'); }
+  if (lblSchRSub) { lblSchRSub.textContent = !visLIsAan ? schRbl.sub : '';  lblSchRSub.setAttribute('fill', '#0a0b0f'); }
 
   // Sternum: sym delta als label
   const sternumDot = document.querySelector('[data-sensor="Sternum (Borst)"] circle.sensor-dot-main');
@@ -1012,13 +1012,14 @@ function buildBodyHero(p, ss, sd) {
     const ptsL = armPoints(SL.x, SL.y, spreadL * ease, 'L');
     const ptsR = armPoints(SR.x, SR.y, spreadR * ease, 'R');
 
-    drawArm('arm-rechts-drawn', SL.x, SL.y, ptsL, kleurL);
-    drawArm('arm-links-drawn',  SR.x, SR.y, ptsR, kleurR);
+    drawArm('arm-links-drawn',  SL.x, SL.y, ptsL, kleurL);
+    drawArm('arm-rechts-drawn', SR.x, SR.y, ptsR, kleurR);
 
-    const kleurBovL  = lIsAangedaan ? kleurBov : '#64748b';
-    const kleurOndL  = lIsAangedaan ? kleurOnd : '#64748b';
-    const kleurBovR2 = !lIsAangedaan ? kleurBovR : '#64748b';
-    const kleurOndR2 = !lIsAangedaan ? kleurOndR : '#64748b';
+    // Klinisch gespiegeld: links in beeld = rechts patiënt
+    const kleurBovL  = !lIsAangedaan ? kleurBovR : '#64748b';
+    const kleurOndL  = !lIsAangedaan ? kleurOndR : '#64748b';
+    const kleurBovR2 = lIsAangedaan  ? kleurBov  : '#64748b';
+    const kleurOndR2 = lIsAangedaan  ? kleurOnd  : '#64748b';
     positionSensor('bg-bovl','dot-bovl','lbl-bovl-id','lbl-bovl-sub', ptsL.bovAcc.x, ptsL.bovAcc.y, kleurBovL);
     positionSensor('bg-ondl','dot-ondl','lbl-ondl-id','lbl-ondl-sub', ptsL.ondAcc.x, ptsL.ondAcc.y, kleurOndL);
     positionSensor('bg-bovr','dot-bovr','lbl-bovr-id','lbl-bovr-sub', ptsR.bovAcc.x, ptsR.bovAcc.y, kleurBovR2);
@@ -1032,10 +1033,10 @@ function buildBodyHero(p, ss, sd) {
         if (idEl)  idEl.textContent  = actief ? lbl.top : '—';
         if (subEl) subEl.textContent = actief ? lbl.sub : '';
       };
-      setLbl('lbl-bovl-id','lbl-bovl-sub', bovLbl,  lIsAangedaan);
-      setLbl('lbl-ondl-id','lbl-ondl-sub', ondLbl,  lIsAangedaan);
-      setLbl('lbl-bovr-id','lbl-bovr-sub', bovLbl,  !lIsAangedaan);
-      setLbl('lbl-ondr-id','lbl-ondr-sub', ondLbl,  !lIsAangedaan);
+      setLbl('lbl-bovl-id','lbl-bovl-sub', bovLbl, !lIsAangedaan);
+      setLbl('lbl-ondl-id','lbl-ondl-sub', ondLbl, !lIsAangedaan);
+      setLbl('lbl-bovr-id','lbl-bovr-sub', bovLbl,  lIsAangedaan);
+      setLbl('lbl-ondr-id','lbl-ondr-sub', ondLbl,  lIsAangedaan);
       clearInterval(window._armAnim);
     }
   }, 1200 / steps);
