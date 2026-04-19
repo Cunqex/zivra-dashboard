@@ -955,8 +955,9 @@ function buildBodyHero(p, ss, sd) {
   // Schouder sensor kleuren + labels updaten
   const schLDot = document.querySelector('[data-sensor="Schouder Links"] circle.sensor-dot-main');
   const schRDot = document.querySelector('[data-sensor="Schouder Rechts"] circle.sensor-dot-main');
-  if (schLDot) schLDot.setAttribute('fill', visLIsAan ? kleurSch : '#64748b');
-  if (schRDot) schRDot.setAttribute('fill', !visLIsAan ? kleurSchR : '#64748b');
+  const kleurSchAan = aanIdx ? kleurSch : kleurSchR;
+  if (schLDot) schLDot.setAttribute('fill', visLIsAan ? kleurSchAan : '#64748b');
+  if (schRDot) schRDot.setAttribute('fill', !visLIsAan ? kleurSchAan : '#64748b');
 
   // Schouder labels
   const lblSchLId  = document.getElementById('lbl-schl-id');
@@ -965,8 +966,8 @@ function buildBodyHero(p, ss, sd) {
   const lblSchRSub = document.getElementById('lbl-schr-sub');
   const schLGyrCur  = curGyrAanSchOvr;
   const schLGyrPrev = prevGyrAanSchOvr;
-  const schLbl = sensorLabel(schLGyrCur, schLGyrPrev, lIsAangedaan ? kleurSch : '#64748b');
-  const schRbl = sensorLabel(curGyrAanSchOvr, prevGyrAanSchOvr, !lIsAangedaan ? kleurSchR : '#64748b');
+  const schLbl = sensorLabel(schLGyrCur, schLGyrPrev, visLIsAan ? kleurSchAan : '#64748b');
+  const schRbl = sensorLabel(curGyrAanSchOvr, prevGyrAanSchOvr, !visLIsAan ? kleurSchAan : '#64748b');
   if (lblSchLId)  { lblSchLId.textContent  = visLIsAan ? schLbl.top : '—'; lblSchLId.setAttribute('fill', '#0a0b0f'); }
   if (lblSchLSub) { lblSchLSub.textContent = visLIsAan ? schLbl.sub : '';  lblSchLSub.setAttribute('fill', '#0a0b0f'); }
   if (lblSchRId)  { lblSchRId.textContent  = !visLIsAan ? schRbl.top : '—'; lblSchRId.setAttribute('fill', '#0a0b0f'); }
