@@ -1107,13 +1107,18 @@ function initBodyHero() {
 
     const p = ALL_PATIENTS_META.find(x => x.nr === currentPatientNr);
     const aangedaan = p?.zijde || "Onbekend";
-    const isAangedaan = name.includes(aangedaan) || (aangedaan === "Rechts" && name.includes("Rechts")) || (aangedaan === "Links" && name.includes("Links"));
+    const isAangedaan = name.includes(aangedaan);
+
+    // Klinisch gespiegeld: toon de gespiegelde naam (Links <-> Rechts)
+    const displayName = name
+      .replace('Links', 'TEMP').replace('Rechts', 'Links').replace('TEMP', 'Rechts');
+
     const statusColor = isAangedaan ? "var(--danger)" : "var(--ok)";
     const statusLabel = isAangedaan ? "⚠ Aangedane zijde" : "✓ Gezonde zijde";
 
     tooltip.innerHTML = `
-      <div class="tt-name" style="color:${COLORS[name]}">${name}</div>
-      ${isAangedaan !== undefined && !name.includes("Sternum") ? `<div class="tt-status" style="color:${statusColor}">${statusLabel}</div>` : ''}
+      <div class="tt-name" style="color:${COLORS[name]}">${displayName}</div>
+      ${!name.includes("Sternum") ? `<div class="tt-status" style="color:${statusColor}">${statusLabel}</div>` : ''}
       <div class="tt-divider"></div>
 
       <div class="tt-section-label">Meetwaarden</div>
